@@ -1,0 +1,113 @@
+{
+  "version": "1.0.0",
+  "players": [
+    {
+      "id": "p1",
+      "name": "Player1",
+      "seat": 0,
+      "generals": { "main": "cao-cao", "deputy": "dian-wei" },
+      "faction": "WEI"
+    },
+    {
+      "id": "p2",
+      "name": "Player2",
+      "seat": 1,
+      "generals": { "main": "liu-bei", "deputy": "guan-yu" },
+      "faction": "SHU"
+    },
+    {
+      "id": "p3",
+      "name": "Player3",
+      "seat": 2,
+      "generals": { "main": "sun-quan", "deputy": "zhou-yu" },
+      "faction": "WU"
+    },
+    {
+      "id": "p4",
+      "name": "Player4",
+      "seat": 3,
+      "generals": { "main": "hua-tuo", "deputy": "diao-chan" },
+      "faction": "QUN"
+    }
+  ],
+  "turns": [
+    {
+      "turnNumber": 1,
+      "player": "p1",
+      "actions": [
+        { "type": "drawCards", "player": "p1", "count": 2 },
+        { "type": "playCard", "card": "slash", "targets": ["p2"] },
+        { "type": "damage", "from": "p1", "to": "p2", "amount": 1 },
+        { "type": "discard", "player": "p1", "cards": ["dodge"] }
+      ]
+    },
+    {
+      "turnNumber": 2,
+      "player": "p2",
+      "actions": [
+        { "type": "drawCards", "player": "p2", "count": 2 },
+        { "type": "useSkill", "skill": "ren-de", "targets": ["p3"] },
+        { "type": "playCard", "card": "peach", "targets": [] }
+      ]
+    },
+    {
+      "turnNumber": 3,
+      "player": "p3",
+      "actions": [
+        { "type": "drawCards", "player": "p3", "count": 2 },
+        { "type": "playCard", "card": "slash", "targets": ["p4"] },
+        { "type": "response", "card": "dodge", "to": "slash" },
+        { "type": "playCard", "card": "duel", "targets": ["p1"] },
+        { "type": "damage", "from": "p3", "to": "p1", "amount": 1 }
+      ]
+    },
+    {
+      "turnNumber": 4,
+      "player": "p4",
+      "actions": [
+        { "type": "drawCards", "player": "p4", "count": 2 },
+        { "type": "useSkill", "skill": "ji-jiu", "targets": ["p4"] },
+        { "type": "playCard", "card": "slash", "targets": ["p1"] },
+        { "type": "damage", "from": "p4", "to": "p1", "amount": 1 },
+        { "type": "discard", "player": "p4", "cards": ["slash", "dodge"] }
+      ]
+    },
+    {
+      "turnNumber": 5,
+      "player": "p1",
+      "actions": [
+        { "type": "drawCards", "player": "p1", "count": 2 },
+        { "type": "useSkill", "skill": "jian-xiong", "targets": [] },
+        { "type": "playCard", "card": "barbarian-invasion", "targets": ["p2", "p3", "p4"] },
+        { "type": "response", "card": "slash", "to": "barbarian-invasion" },
+        { "type": "damage", "from": "p1", "to": "p3", "amount": 1 },
+        { "type": "damage", "from": "p1", "to": "p4", "amount": 1 }
+      ]
+    },
+    {
+      "turnNumber": 6,
+      "player": "p2",
+      "actions": [
+        { "type": "drawCards", "player": "p2", "count": 2 },
+        { "type": "playCard", "card": "slash", "targets": ["p4"] },
+        { "type": "damage", "from": "p2", "to": "p4", "amount": 1 },
+        { "type": "damage", "from": "p2", "to": "p4", "amount": 1 },
+        { "type": "death", "player": "p4" }
+      ]
+    },
+    {
+      "turnNumber": 7,
+      "player": "p3",
+      "actions": [
+        { "type": "drawCards", "player": "p3", "count": 2 },
+        { "type": "playCard", "card": "slash", "targets": ["p1"] },
+        { "type": "damage", "from": "p3", "to": "p1", "amount": 1 },
+        { "type": "death", "player": "p1" }
+      ]
+    }
+  ],
+  "result": {
+    "winner": "SHU-WU",
+    "reason": "WEI and QUN forces eliminated"
+  }
+}
