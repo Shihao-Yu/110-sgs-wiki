@@ -599,7 +599,7 @@ export class CardManager {
       throw new Error(`${cardName} requires exactly one target`);
     }
 
-    const [target] = targets;
+    const target = targets[0]!;
     if (!target.alive) {
       throw new Error(`${cardName} cannot target dead players`);
     }
