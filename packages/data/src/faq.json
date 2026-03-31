@@ -1,0 +1,195 @@
+[
+  {
+    "id": "faq_rule_001",
+    "question": "国战模式的胜利条件是什么?",
+    "answer": "国战模式中，当全场只剩下同一势力的角色存活时，该势力获胜。若场上存活角色均未确定势力（全暗将），则继续游戏直到满足胜利条件。野心家需要成为全场唯一存活的角色才能获胜。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_002",
+    "question": "双将体力值怎么计算?",
+    "answer": "国战模式中，双将的体力上限为两名武将各自体力上限之和减去一个阴阳鱼，即主将体力值 + 副将体力值 - 1。例如主将4体力 + 副将3体力 = 6体力上限。游戏开始时体力值等于体力上限。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_003",
+    "question": "什么时候可以亮将?",
+    "answer": "你可以在以下时机选择亮将：1）回合开始时可以亮出主将和/或副将；2）当你需要发动武将技能时，亮出拥有该技能的武将（主将或副将）。亮将后该武将的技能才能使用。注意：亮出主将时须同时声明势力。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_004",
+    "question": "珠联璧合是什么? 怎么触发?",
+    "answer": "珠联璧合是国战模式的特殊机制。当你同时亮出主将和副将，且这两名武将形成特定的珠联璧合组合时，你可以立即摸两张牌作为奖励。珠联璧合的组合是游戏预设的固定搭配，例如刘备与关羽、曹操与典韦等经典组合。只在首次同时亮出两张武将牌时触发一次。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_005",
+    "question": "暗将状态下可以发动技能吗?",
+    "answer": "不可以。暗将状态下，你的武将技能均不生效，也不能主动发动技能。你需要先亮出拥有该技能的武将牌（主将或副将），之后才能发动该武将的技能。锁定技在亮将后立即生效。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_006",
+    "question": "主将和副将有什么区别?",
+    "answer": "主将和副将的主要区别：1）主将决定你的势力归属；2）主将的体力贡献中保留完整阴阳鱼，副将扣除一个阴阳鱼；3）只有主将可以发动主公技（若有）；4）主将先亮时须声明势力；5）副将被替换时不影响势力。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_007",
+    "question": "势力相同的玩家可以互相攻击吗?",
+    "answer": "可以。国战模式中同势力的角色之间可以互相攻击，使用【杀】和锦囊牌均不受限制。是否攻击同势力玩家是策略选择。但需注意，杀死同势力的角色仍会触发死亡结算中的惩罚——击杀同势力角色需弃置所有手牌和装备。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_008",
+    "question": "如何判断势力归属?",
+    "answer": "势力归属由主将决定。亮出主将时须声明势力（若武将有唯一势力则自动确定）。未亮出主将的角色视为无势力（暗将状态），不属于任何势力，不能触发势力相关的技能效果。仅亮出副将而未亮出主将时，同样视为无势力。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_009",
+    "question": "死亡结算的流程是什么?",
+    "answer": "国战模式死亡结算流程：1）角色体力降至0且无法被救回时死亡；2）亮出所有未亮出的武将牌，展示所有手牌；3）判断击杀奖惩——若击杀的是不同势力角色，击杀者摸该死亡角色势力中存活角色数量张牌；若击杀的是同势力角色，击杀者须弃置所有手牌和装备区的牌；4）移除死亡角色。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_010",
+    "question": "弃牌阶段手牌上限怎么算?",
+    "answer": "国战模式中，手牌上限等于角色当前体力值（而非体力上限）。弃牌阶段结束时，若手牌数超过手牌上限，须弃置多余的手牌至等于手牌上限。暗将状态下手牌上限同样为当前体力值。某些技能可以修改手牌上限的计算方式。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_011",
+    "question": "野心家是什么?怎么成为野心家?",
+    "answer": "当一名角色亮出主将声明势力时，若场上（包括已亮出的角色中）该势力的存活角色数达到或超过总存活角色数的一半，则该角色成为野心家。野心家独立为一个势力，需要成为全场唯一存活角色才能获胜。野心家一旦确定不可改变。",
+    "category": "rule"
+  },
+  {
+    "id": "faq_rule_012",
+    "question": "国战中可以使用铁索连环吗?",
+    "answer": "可以。国战模式中【铁索连环】正常使用，横置目标角色的武将牌表示其处于连环状态。当连环状态的角色受到属性伤害（火焰伤害或雷电伤害）时，伤害会传导给其他处于连环状态的角色。连环传导的伤害来源不变。",
+    "category": "rule",
+    "relatedCardIds": ["tiesuolianhuan_01"]
+  },
+  {
+    "id": "faq_general_caocao_001",
+    "question": "曹操的【奸雄】可以获得哪些牌?",
+    "answer": "【奸雄】在曹操受到伤害后触发，可以获得造成此伤害的牌。这包括【杀】、【决斗】等对曹操造成伤害的牌。若造成伤害的牌已进入弃牌堆，则从弃牌堆获得；若该牌不在弃牌堆中（如铁索连环传导伤害），则无法获得。",
+    "category": "general",
+    "relatedGeneralIds": ["general_caocao"],
+    "relatedSkillIds": ["skill_jianxiong"]
+  },
+  {
+    "id": "faq_general_caocao_002",
+    "question": "曹操的【护驾】在国战中如何使用?",
+    "answer": "【护驾】是主公技，曹操需要亮出主将才能发动。当曹操需要使用或打出【闪】时，可以令其他魏势力角色打出一张【闪】视为由曹操使用或打出。在国战中，只有已亮出势力为魏的角色才能响应护驾。暗将角色不能响应主公技。",
+    "category": "general",
+    "relatedGeneralIds": ["general_caocao"],
+    "relatedSkillIds": ["skill_hujia"]
+  },
+  {
+    "id": "faq_general_caocao_003",
+    "question": "曹操受到多点伤害时【奸雄】触发几次?",
+    "answer": "受到多点伤害时，【奸雄】只触发一次（受到伤害后），可以获得造成伤害的牌。伤害结算是一次事件，不会按照伤害点数多次触发【奸雄】。",
+    "category": "general",
+    "relatedGeneralIds": ["general_caocao"],
+    "relatedSkillIds": ["skill_jianxiong"]
+  },
+  {
+    "id": "faq_general_liubei_001",
+    "question": "刘备的【仁德】给出牌后回复体力的条件是什么?",
+    "answer": "在同一个出牌阶段内，当刘备通过【仁德】累计给出第二张牌时，回复1点体力。注意是累计给出第二张牌时触发，可以分多次给出（例如先给一名角色1张，再给另一名角色1张，给出第二张时回复体力）。每个出牌阶段最多回复1点体力。",
+    "category": "general",
+    "relatedGeneralIds": ["general_liubei"],
+    "relatedSkillIds": ["skill_rende"]
+  },
+  {
+    "id": "faq_general_liubei_002",
+    "question": "刘备的【激将】在国战中怎么用?",
+    "answer": "【激将】是主公技，刘备需作为主将亮出才能发动。当刘备需要使用或打出【杀】时，可以令其他蜀势力角色打出一张【杀】视为由刘备使用或打出。在国战中，只有已亮出势力为蜀的角色才能响应激将。若无人响应，刘备仍可自行使用【杀】。",
+    "category": "general",
+    "relatedGeneralIds": ["general_liubei"],
+    "relatedSkillIds": ["skill_jijiang"]
+  },
+  {
+    "id": "faq_general_liubei_003",
+    "question": "【仁德】可以给出装备区的牌吗?",
+    "answer": "不可以。【仁德】的描述是将手牌交给其他角色，只能给出手牌，不能给出装备区或判定区的牌。",
+    "category": "general",
+    "relatedGeneralIds": ["general_liubei"],
+    "relatedSkillIds": ["skill_rende"]
+  },
+  {
+    "id": "faq_general_sunquan_001",
+    "question": "孙权的【制衡】弃置的牌可以包括装备区的牌吗?",
+    "answer": "可以。【制衡】弃置的是任意张牌，包括手牌和装备区的牌。弃置后摸等量的牌。例如弃置2张手牌和1件装备，共弃置3张牌，则摸3张牌。每个出牌阶段限使用一次。",
+    "category": "general",
+    "relatedGeneralIds": ["general_sunquan"],
+    "relatedSkillIds": ["skill_zhiheng"]
+  },
+  {
+    "id": "faq_general_sunquan_002",
+    "question": "孙权的【救援】在国战中如何生效?",
+    "answer": "【救援】是主公技且为锁定技，孙权需作为主将亮出才能生效。效果为：其他吴势力角色对孙权使用【桃】时，回复的体力值+1（即回复2点体力而非1点）。在国战中，只有已亮出势力为吴的角色对孙权使用的【桃】才能触发额外回复。",
+    "category": "general",
+    "relatedGeneralIds": ["general_sunquan"],
+    "relatedSkillIds": ["skill_jiuyuan"]
+  },
+  {
+    "id": "faq_general_sunquan_003",
+    "question": "【制衡】可以弃置0张牌吗?",
+    "answer": "不可以。【制衡】需要弃置至少一张牌才能发动，弃置任意张牌意味着至少一张。弃置0张牌等于未发动技能。",
+    "category": "general",
+    "relatedGeneralIds": ["general_sunquan"],
+    "relatedSkillIds": ["skill_zhiheng"]
+  },
+  {
+    "id": "faq_general_zhugeliang_001",
+    "question": "诸葛亮的【观星】可以看几张牌?",
+    "answer": "【观星】在准备阶段触发，可以观看牌堆顶的X张牌，X为存活角色数且至多为5。例如场上有7名存活角色，则观看5张牌；场上有3名存活角色，则观看3张牌。将任意数量的牌以任意顺序置于牌堆顶，其余以任意顺序置于牌堆底。",
+    "category": "general",
+    "relatedGeneralIds": ["general_zhugeliang_shu004"],
+    "relatedSkillIds": ["skill_guanxing"]
+  },
+  {
+    "id": "faq_general_zhugeliang_002",
+    "question": "诸葛亮的【空城】在什么情况下失效?",
+    "answer": "【空城】是锁定技，当诸葛亮没有手牌时自动生效，使其不能成为【杀】或【决斗】的目标。若诸葛亮有手牌，则【空城】不生效，可以正常成为【杀】和【决斗】的目标。注意：【空城】只防御【杀】和【决斗】，其他牌（如锦囊牌【南蛮入侵】【万箭齐发】等）不受影响。",
+    "category": "general",
+    "relatedGeneralIds": ["general_zhugeliang_shu004"],
+    "relatedSkillIds": ["skill_kongcheng"]
+  },
+  {
+    "id": "faq_general_zhugeliang_003",
+    "question": "【观星】置于牌堆底的牌顺序重要吗?",
+    "answer": "重要。【观星】将牌置于牌堆底时可以选择任意顺序，这会影响其他角色后续摸牌或判定。在实际游戏中，牌堆底的牌通常较难被摸到，但某些技能（如观星本身在后续回合）可能会涉及牌堆底部的牌。",
+    "category": "general",
+    "relatedGeneralIds": ["general_zhugeliang_shu004"],
+    "relatedSkillIds": ["skill_guanxing"]
+  },
+  {
+    "id": "faq_general_lvbu_001",
+    "question": "吕布的【无双】对【杀】和【决斗】分别有什么效果?",
+    "answer": "【无双】是锁定技，有两个效果：1）吕布使用【杀】时，目标角色需要连续使用两张【闪】才能抵消；2）吕布使用【决斗】或成为【决斗】目标时，对方每次需要连续打出两张【杀】来响应。这大大增强了吕布的攻击能力。",
+    "category": "general",
+    "relatedGeneralIds": ["general_lvbu"],
+    "relatedSkillIds": ["skill_wushuang"]
+  },
+  {
+    "id": "faq_general_lvbu_002",
+    "question": "【无双】在决斗中，对方打出一张【杀】后可以不打第二张吗?",
+    "answer": "可以选择不打第二张【杀】，但这意味着对方未能成功响应，需要受到【决斗】造成的1点伤害。【无双】要求对方每次须连续打出两张【杀】，若只打出一张则视为未能成功响应。",
+    "category": "general",
+    "relatedGeneralIds": ["general_lvbu"],
+    "relatedSkillIds": ["skill_wushuang"]
+  },
+  {
+    "id": "faq_general_lvbu_003",
+    "question": "吕布作为暗将时【无双】生效吗?",
+    "answer": "不生效。【无双】虽然是锁定技，但暗将状态下所有武将技能均不生效。吕布需要先亮出武将牌，【无双】才能生效。亮将后，【无双】作为锁定技立即自动生效。",
+    "category": "general",
+    "relatedGeneralIds": ["general_lvbu"],
+    "relatedSkillIds": ["skill_wushuang"]
+  }
+]
