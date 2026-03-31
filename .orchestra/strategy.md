@@ -27,7 +27,7 @@ evaluator: verifies and scores the task against the review rubric
 main_branch: main
 
 ## Execution Backend
-executor: claude
+executor: codex
 # codex  — run implementation tasks with `codex exec`
 # claude — run implementation tasks with `claude -p`
 
