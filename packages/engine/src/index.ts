@@ -1,2 +1,2 @@
 // @sgs/engine — game engine (isomorphic)
-export {};
+export * from './state/index.js';
