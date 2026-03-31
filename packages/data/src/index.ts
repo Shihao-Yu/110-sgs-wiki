@@ -1,2 +1,2 @@
 // @sgs/data — data types and schemas
-export {};
+export * from './types/index.js';
