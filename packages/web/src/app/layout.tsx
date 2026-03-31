@@ -1,19 +1,37 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
+import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sanguosha Wiki",
-  description: "Sanguosha Kingdom War Wiki and Simulator",
+  metadataBase: new URL("https://sgs-wiki.local"),
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="zh-CN">
+      <body>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+      </body>
     </html>
   );
 }
