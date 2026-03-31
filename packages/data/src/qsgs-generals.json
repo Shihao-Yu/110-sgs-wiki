@@ -1,0 +1,931 @@
+[
+  {
+    "id": "general_caocao",
+    "name": "曹操",
+    "title": "魏武帝",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_jianxiong",
+      "skill_hujia"
+    ],
+    "image": "generals/caocao.webp",
+    "pack": "标准版",
+    "isEmperor": true
+  },
+  {
+    "id": "general_simayi",
+    "name": "司马懿",
+    "title": "狼顾之鬼",
+    "faction": "WEI",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_fankui",
+      "skill_guicai"
+    ],
+    "image": "generals/simayi.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_xiahoudun",
+    "name": "夏侯惇",
+    "title": "独眼的罗刹",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_ganglie"
+    ],
+    "image": "generals/xiahoudun.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_zhangliao",
+    "name": "张辽",
+    "title": "前将军",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_tuxi"
+    ],
+    "image": "generals/zhangliao.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_xuchu",
+    "name": "许褚",
+    "title": "虎痴",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_luoyi"
+    ],
+    "image": "generals/xuchu.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_guojia",
+    "name": "郭嘉",
+    "title": "早终的先知",
+    "faction": "WEI",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_tiandu",
+      "skill_yiji"
+    ],
+    "image": "generals/guojia.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_zhenji",
+    "name": "甄姬",
+    "title": "薄幸的美人",
+    "faction": "WEI",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "female",
+    "skills": [
+      "skill_qingguo",
+      "skill_luoshen"
+    ],
+    "image": "generals/zhenji.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_dianwei",
+    "name": "典韦",
+    "title": "古之恶来",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_qiangxi"
+    ],
+    "image": "generals/dianwei.webp",
+    "pack": "风"
+  },
+  {
+    "id": "general_xunyu",
+    "name": "荀彧",
+    "title": "王佐之才",
+    "faction": "WEI",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_quhu",
+      "skill_jieming"
+    ],
+    "image": "generals/xunyu.webp",
+    "pack": "火"
+  },
+  {
+    "id": "general_caoren",
+    "name": "曹仁",
+    "title": "大将军",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_jushou"
+    ],
+    "image": "generals/caoren.webp",
+    "pack": "火"
+  },
+  {
+    "id": "general_xiahоuyuan",
+    "name": "夏侯渊",
+    "title": "疾行的猎豹",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_shensu"
+    ],
+    "image": "generals/xiahоuyuan.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_zhanghe",
+    "name": "张郃",
+    "title": "料敌机先",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_qiaobian"
+    ],
+    "image": "generals/zhanghe.webp",
+    "pack": "风"
+  },
+  {
+    "id": "general_liubei",
+    "name": "刘备",
+    "title": "乱世的枭雄",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_rende",
+      "skill_jijiang"
+    ],
+    "image": "generals/liubei.webp",
+    "pack": "标准版",
+    "isEmperor": true
+  },
+  {
+    "id": "general_guanyu",
+    "name": "关羽",
+    "title": "美髯公",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_wusheng"
+    ],
+    "image": "generals/guanyu.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_zhangfei",
+    "name": "张飞",
+    "title": "万夫不当",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_paoxiao"
+    ],
+    "image": "generals/zhangfei.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_zhugeliang",
+    "name": "诸葛亮",
+    "title": "迟暮的丞相",
+    "faction": "SHU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_guanxing",
+      "skill_kongcheng"
+    ],
+    "image": "generals/zhugeliang.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_zhaoyun",
+    "name": "赵云",
+    "title": "少年将军",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_longdan"
+    ],
+    "image": "generals/zhaoyun.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_machao",
+    "name": "马超",
+    "title": "一骑当千",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_mashu",
+      "skill_tieqi"
+    ],
+    "image": "generals/machao.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_huangzhong",
+    "name": "黄忠",
+    "title": "老当益壮",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_liegong"
+    ],
+    "image": "generals/huangzhong.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_weiyan",
+    "name": "魏延",
+    "title": "嗜血的独狼",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_kuanggu"
+    ],
+    "image": "generals/weiyan.webp",
+    "pack": "风"
+  },
+  {
+    "id": "general_pangtong",
+    "name": "庞统",
+    "title": "凤雏",
+    "faction": "SHU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_lianhuan",
+      "skill_niepan"
+    ],
+    "image": "generals/pangtong.webp",
+    "pack": "火"
+  },
+  {
+    "id": "general_huangyueying",
+    "name": "黄月英",
+    "title": "归隐的杰女",
+    "faction": "SHU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "female",
+    "skills": [
+      "skill_jizhi",
+      "skill_qicai"
+    ],
+    "image": "generals/huangyueying.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_jiangwei",
+    "name": "姜维",
+    "title": "龙的衣钵",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_tiaoxin",
+      "skill_zhiji"
+    ],
+    "image": "generals/jiangwei.webp",
+    "pack": "山"
+  },
+  {
+    "id": "general_fazheng",
+    "name": "法正",
+    "title": "蜀汉的辅翼",
+    "faction": "SHU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_enyuan",
+      "skill_xuanhuo"
+    ],
+    "image": "generals/fazheng.webp",
+    "pack": "山"
+  },
+  {
+    "id": "general_sunquan",
+    "name": "孙权",
+    "title": "年轻的贤君",
+    "faction": "WU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_zhiheng",
+      "skill_jiuyuan"
+    ],
+    "image": "generals/sunquan.webp",
+    "pack": "标准版",
+    "isEmperor": true
+  },
+  {
+    "id": "general_ganning",
+    "name": "甘宁",
+    "title": "锦帆游侠",
+    "faction": "WU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_qixi"
+    ],
+    "image": "generals/ganning.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_lvmeng",
+    "name": "吕蒙",
+    "title": "白衣渡江",
+    "faction": "WU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_keji"
+    ],
+    "image": "generals/lvmeng.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_huanggai",
+    "name": "黄盖",
+    "title": "轻身为国",
+    "faction": "WU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_kurou"
+    ],
+    "image": "generals/huanggai.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_zhouyu",
+    "name": "周瑜",
+    "title": "大都督",
+    "faction": "WU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_yingzi",
+      "skill_fanjian"
+    ],
+    "image": "generals/zhouyu.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_daqiao",
+    "name": "大乔",
+    "title": "矜持之花",
+    "faction": "WU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "female",
+    "skills": [
+      "skill_guose",
+      "skill_liuli"
+    ],
+    "image": "generals/daqiao.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_luxun",
+    "name": "陆逊",
+    "title": "儒生雄才",
+    "faction": "WU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_qianxun",
+      "skill_lianying"
+    ],
+    "image": "generals/luxun.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_sunshangxiang",
+    "name": "孙尚香",
+    "title": "弓腰姬",
+    "faction": "WU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "female",
+    "skills": [
+      "skill_jieyin",
+      "skill_xiaoji"
+    ],
+    "image": "generals/sunshangxiang.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_taishici",
+    "name": "太史慈",
+    "title": "笃烈之士",
+    "faction": "WU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_tianyi"
+    ],
+    "image": "generals/taishici.webp",
+    "pack": "火"
+  },
+  {
+    "id": "general_zhoutai",
+    "name": "周泰",
+    "title": "历战之躯",
+    "faction": "WU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_buqu"
+    ],
+    "image": "generals/zhoutai.webp",
+    "pack": "风"
+  },
+  {
+    "id": "general_xiaoqiao",
+    "name": "小乔",
+    "title": "矫情之花",
+    "faction": "WU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "female",
+    "skills": [
+      "skill_tianxiang",
+      "skill_hongyan"
+    ],
+    "image": "generals/xiaoqiao.webp",
+    "pack": "风"
+  },
+  {
+    "id": "general_lusu",
+    "name": "鲁肃",
+    "title": "独断的外交家",
+    "faction": "WU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_haoshi",
+      "skill_dimeng"
+    ],
+    "image": "generals/lusu.webp",
+    "pack": "山"
+  },
+  {
+    "id": "general_huatuo",
+    "name": "华佗",
+    "title": "神医",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_qingnang",
+      "skill_jijiu"
+    ],
+    "image": "generals/huatuo.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_lvbu",
+    "name": "吕布",
+    "title": "武的化身",
+    "faction": "QUN",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_wushuang"
+    ],
+    "image": "generals/lvbu.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_diaochan",
+    "name": "貂蝉",
+    "title": "绝世的舞姬",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "female",
+    "skills": [
+      "skill_lijian",
+      "skill_biyue"
+    ],
+    "image": "generals/diaochan.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_yuanshao",
+    "name": "袁绍",
+    "title": "高贵的名门",
+    "faction": "QUN",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_luanji"
+    ],
+    "image": "generals/yuanshao.webp",
+    "pack": "火"
+  },
+  {
+    "id": "general_dongzhuo",
+    "name": "董卓",
+    "title": "魔王",
+    "faction": "QUN",
+    "hp": 8,
+    "maxHp": 8,
+    "gender": "male",
+    "skills": [
+      "skill_jiuchi",
+      "skill_roulin",
+      "skill_benghuai",
+      "skill_baonue"
+    ],
+    "image": "generals/dongzhuo.webp",
+    "pack": "林"
+  },
+  {
+    "id": "general_jiaxu",
+    "name": "贾诩",
+    "title": "毒士",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_wansha",
+      "skill_luanwu",
+      "skill_weimu"
+    ],
+    "image": "generals/jiaxu.webp",
+    "pack": "林"
+  },
+  {
+    "id": "general_pangde",
+    "name": "庞德",
+    "title": "人马一体",
+    "faction": "QUN",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_mashu_pangde",
+      "skill_mengjin"
+    ],
+    "image": "generals/pangde.webp",
+    "pack": "火"
+  },
+  {
+    "id": "general_zuoci",
+    "name": "左慈",
+    "title": "迷之仙人",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_huashen",
+      "skill_xinsheng"
+    ],
+    "image": "generals/zuoci.webp",
+    "pack": "山"
+  },
+  {
+    "id": "general_zhangjiao",
+    "name": "张角",
+    "title": "天公将军",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_leiji",
+      "skill_guidao",
+      "skill_huangtian"
+    ],
+    "image": "generals/zhangjiao.webp",
+    "pack": "风"
+  },
+  {
+    "id": "general_caiwenjii",
+    "name": "蔡文姬",
+    "title": "金璧之才",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "female",
+    "skills": [
+      "skill_beige",
+      "skill_duanchang"
+    ],
+    "image": "generals/caiwenjii.webp",
+    "pack": "山"
+  },
+  {
+    "id": "general_yuanshu",
+    "name": "袁术",
+    "title": "仲家帝",
+    "faction": "QUN",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_wangzun",
+      "skill_tongji"
+    ],
+    "image": "generals/yuanshu.webp",
+    "pack": "林"
+  },
+  {
+    "id": "general_zhangxiu",
+    "name": "张绣",
+    "title": "北地枪王",
+    "faction": "QUN",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_congjian"
+    ],
+    "image": "generals/zhangxiu.webp",
+    "pack": "一将成名"
+  },
+  {
+    "id": "general_xuzhu_sp",
+    "name": "徐晃",
+    "title": "周亚夫之风",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_duanliang"
+    ],
+    "image": "generals/xuzhu_sp.webp",
+    "pack": "标准版"
+  },
+  {
+    "id": "general_caozhang",
+    "name": "曹彰",
+    "title": "黄须儿",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_jiangchi"
+    ],
+    "image": "generals/caozhang.webp",
+    "pack": "一将成名"
+  },
+  {
+    "id": "general_yujin",
+    "name": "于禁",
+    "title": "毅重的将军",
+    "faction": "WEI",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_zhenjun"
+    ],
+    "image": "generals/yujin.webp",
+    "pack": "一将成名"
+  },
+  {
+    "id": "general_menghuo",
+    "name": "孟获",
+    "title": "南蛮王",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_huoshou",
+      "skill_zaiqi"
+    ],
+    "image": "generals/menghuo.webp",
+    "pack": "林"
+  },
+  {
+    "id": "general_zhurong",
+    "name": "祝融",
+    "title": "野性的女王",
+    "faction": "SHU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "female",
+    "skills": [
+      "skill_juxiang",
+      "skill_lieren"
+    ],
+    "image": "generals/zhurong.webp",
+    "pack": "林"
+  },
+  {
+    "id": "general_sunce",
+    "name": "孙策",
+    "title": "江东的小霸王",
+    "faction": "WU",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_jiang",
+      "skill_hunzi",
+      "skill_zhiba"
+    ],
+    "image": "generals/sunce.webp",
+    "pack": "林"
+  },
+  {
+    "id": "general_zhangzhao_zhanghong",
+    "name": "张昭张纮",
+    "title": "经天纬地",
+    "faction": "WU",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_zhijian",
+      "skill_guzheng"
+    ],
+    "image": "generals/zhangzhao_zhanghong.webp",
+    "pack": "山"
+  },
+  {
+    "id": "general_yanliangwenchou",
+    "name": "颜良文丑",
+    "title": "河北上将",
+    "faction": "QUN",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_shuangxiong"
+    ],
+    "image": "generals/yanliangwenchou.webp",
+    "pack": "火"
+  },
+  {
+    "id": "general_chengong",
+    "name": "陈宫",
+    "title": "刚直壮烈",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_mingce",
+      "skill_zhichi"
+    ],
+    "image": "generals/chengong.webp",
+    "pack": "一将成名"
+  },
+  {
+    "id": "general_jiling",
+    "name": "纪灵",
+    "title": "袁术的走狗",
+    "faction": "QUN",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
+    "skills": [
+      "skill_shuangren"
+    ],
+    "image": "generals/jiling.webp",
+    "pack": "一将成名"
+  },
+  {
+    "id": "general_liubiao",
+    "name": "刘表",
+    "title": "跨蹈汉南",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_zishou",
+      "skill_zongshi"
+    ],
+    "image": "generals/liubiao.webp",
+    "pack": "山"
+  },
+  {
+    "id": "general_manchong",
+    "name": "满宠",
+    "title": "计略过人",
+    "faction": "WEI",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_junxing",
+      "skill_yuce"
+    ],
+    "image": "generals/manchong.webp",
+    "pack": "一将成名"
+  },
+  {
+    "id": "general_xunyou",
+    "name": "荀攸",
+    "title": "曹操的谋主",
+    "faction": "WEI",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_qice",
+      "skill_zhiyu"
+    ],
+    "image": "generals/xunyou.webp",
+    "pack": "一将成名"
+  },
+  {
+    "id": "general_liru",
+    "name": "李儒",
+    "title": "魔仕",
+    "faction": "QUN",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "male",
+    "skills": [
+      "skill_juece",
+      "skill_mieji",
+      "skill_fencheng"
+    ],
+    "image": "generals/liru.webp",
+    "pack": "一将成名"
+  },
+  {
+    "id": "general_zhangchunhua",
+    "name": "张春华",
+    "title": "冷血皇后",
+    "faction": "WEI",
+    "hp": 3,
+    "maxHp": 3,
+    "gender": "female",
+    "skills": [
+      "skill_jueqing",
+      "skill_shangshi"
+    ],
+    "image": "generals/zhangchunhua.webp",
+    "pack": "一将成名"
+  }
+]
