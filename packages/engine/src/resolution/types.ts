@@ -9,7 +9,7 @@ import type { PhaseType, PlayerId } from '../state/types.js';
 export type GameEvent =
   | { type: 'playCard'; player: PlayerId; card: Card; targets?: PlayerId[] }
   | { type: 'useSkill'; player: PlayerId; skillId: string; targets?: PlayerId[] }
-  | { type: 'damage'; source: PlayerId; target: PlayerId; amount: number; element?: 'fire' | 'thunder' }
+  | { type: 'damage'; source?: PlayerId; target: PlayerId; amount: number; element?: 'fire' | 'thunder' }
   | { type: 'recover'; target: PlayerId; amount: number }
   | { type: 'drawCards'; player: PlayerId; count: number }
   | { type: 'discardCards'; player: PlayerId; cards: Card[] }

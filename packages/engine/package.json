@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc --project tsconfig.json"
+    "build": "tsc --project tsconfig.json",
+    "test": "cd ../.. && vitest run packages/engine/src/"
   },
   "dependencies": {
     "@sgs/data": "workspace:*"
