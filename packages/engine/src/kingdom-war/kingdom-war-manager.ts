@@ -1,112 +1,248 @@
-/**
- * Kingdom War (国战) manager — dual-general assignment, HP calculation,
- * reveal mechanics, and faction-based ally detection.
- *
- * In Kingdom War each player receives two generals (main + deputy).
- * Both start face-down. Revealing a general exposes the player's faction
- * and unlocks that general's skills. HP is calculated as
- * ceil(mainHp / 2) + ceil(deputyHp / 2).
- */
-
-import type { Faction, General, SkillId } from '@sgs/data';
+import type { Faction, General, GeneralId, SkillId } from '@sgs/data';
 import type { GameState } from '../state/game.js';
-import type { PlayerState } from '../state/player.js';
-import type { PlayerId } from '../state/types.js';
+import type { GeneralSlot, PlayerState } from '../state/player.js';
 import type { DualGeneralSetup } from './types.js';
 
+export type GeneralRole = 'main' | 'deputy';
+export type EffectiveFaction = Faction | 'unknown';
+
+interface AssignedGeneral {
+  slot: GeneralSlot;
+  general: General;
+}
+
+/** Kingdom War dual-general state management. */
 export class KingdomWarManager {
-  /**
-   * Assign a main and deputy general to a player.
-   * Both generals start hidden; skills are not yet active.
-   */
+  private readonly generals = new Map<GeneralId, General>();
+
+  /** Assign a concealed main/deputy pair and initialize HP/skills. */
   assignGenerals(player: PlayerState, main: General, deputy: General): void {
-    player.mainGeneral = { generalId: main.id, revealed: false };
-    player.deputyGeneral = { generalId: deputy.id, revealed: false };
+    this.registerGeneral(main);
+    this.registerGeneral(deputy);
 
-    const hp = this.calculateDualHp(main, deputy);
-    player.hp = hp;
-    player.maxHp = hp;
+    player.mainGeneral = {
+      generalId: main.id,
+      revealed: false,
+    };
+    player.deputyGeneral = {
+      generalId: deputy.id,
+      revealed: false,
+    };
 
-    // Faction stays hidden until a general is revealed.
+    const dualHp = this.calculateDualHp(main, deputy);
+    player.maxHp = dualHp;
+    player.hp = dualHp;
     player.faction = null;
-    // No skills active while both generals are hidden.
+    player.alive = true;
     player.skills = [];
   }
 
-  /**
-   * Kingdom War HP formula: ceil(mainHp / 2) + ceil(deputyHp / 2).
-   */
+  /** Combined HP uses the requested ceil-half formula for both generals. */
   calculateDualHp(main: General, deputy: General): number {
     return Math.ceil(main.hp / 2) + Math.ceil(deputy.hp / 2);
   }
 
-  /**
-   * Reveal a player's main or deputy general.
-   * - Exposes the player's faction (from the main general).
-   * - Unlocks that general's skills.
-   */
+  /** Reveal one general and activate its skills. */
   revealGeneral(
     _game: GameState,
     player: PlayerState,
-    slot: 'main' | 'deputy',
-    generals: { main: General; deputy: General },
+    which: GeneralRole,
+    generals?: { main: General; deputy: General },
   ): void {
-    const generalSlot = slot === 'main' ? player.mainGeneral : player.deputyGeneral;
-    if (!generalSlot || generalSlot.revealed) return;
+    if (generals) {
+      this.registerGeneral(generals.main);
+      this.registerGeneral(generals.deputy);
+    }
 
-    generalSlot.revealed = true;
+    const assigned = this.getAssignedGeneral(player, which);
+    if (!assigned || assigned.slot.revealed) {
+      return;
+    }
 
-    // Unlock the revealed general's skills.
-    const general = slot === 'main' ? generals.main : generals.deputy;
-    const newSkills: SkillId[] = general.skills.filter(
-      (s: SkillId) => !player.skills.includes(s),
-    );
-    player.skills.push(...newSkills);
+    assigned.slot.revealed = true;
 
-    // Reveal faction (derived from the main general's faction).
-    // Once any general is revealed, the player's faction becomes known.
-    player.faction = generals.main.faction;
+    if (player.faction === null) {
+      player.faction = this.getFactionSource(player)?.faction ?? assigned.general.faction;
+    }
+
+    this.refreshSkills(player);
   }
 
-  /** Whether the player's faction has been revealed (at least one general face-up). */
+  /** Returns whether the player's faction is publicly known. */
   isFactionRevealed(player: PlayerState): boolean {
-    const mainRevealed = player.mainGeneral?.revealed ?? false;
-    const deputyRevealed = player.deputyGeneral?.revealed ?? false;
-    return mainRevealed || deputyRevealed;
+    return this.getEffectiveFaction(player) !== 'unknown';
   }
 
-  /**
-   * Get the faction visible to other players.
-   * Returns the faction if revealed, otherwise 'unknown'.
-   */
-  getEffectiveFaction(player: PlayerState): Faction | 'unknown' {
-    if (this.isFactionRevealed(player) && player.faction) {
+  /** Faction stays unknown until one of the generals is revealed. */
+  getEffectiveFaction(player: PlayerState): EffectiveFaction {
+    if (player.faction !== null) {
       return player.faction;
     }
+
+    const factionSource = this.getFactionSource(player);
+    if (factionSource && this.isAnyGeneralRevealed(player)) {
+      return factionSource.faction;
+    }
+
     return 'unknown';
   }
 
-  /**
-   * Check if two players are allies (same revealed faction).
-   * Both players must have their faction revealed; hidden players
-   * are never considered allies.
-   */
+  /** Allies are players with the same revealed faction. */
   areAllies(_game: GameState, p1: PlayerState, p2: PlayerState): boolean {
-    const f1 = this.getEffectiveFaction(p1);
-    const f2 = this.getEffectiveFaction(p2);
-    if (f1 === 'unknown' || f2 === 'unknown') return false;
-    return f1 === f2;
+    const faction1 = this.getEffectiveFaction(p1);
+    const faction2 = this.getEffectiveFaction(p2);
+
+    return faction1 !== 'unknown' && faction1 === faction2;
   }
 
-  /**
-   * Initialize a full Kingdom War game: assign dual generals to every player.
-   */
-  setupGame(_game: GameState, playerGenerals: DualGeneralSetup[]): void {
-    for (const pg of playerGenerals) {
-      const player = _game.players.find(p => p.id === pg.playerId);
-      if (player) {
-        this.assignGenerals(player, pg.main, pg.deputy);
+  /** Assign all players their concealed pairs and reset core game flags. */
+  setupGame(
+    game: GameState,
+    playerGenerals: Map<string, [General, General]> | DualGeneralSetup[],
+  ): void {
+    const assignments = this.normalizeAssignments(playerGenerals);
+
+    for (const player of game.players) {
+      const generals = assignments.get(player.id);
+      if (!generals) {
+        throw new Error(`Missing general pair for player ${player.id}`);
+      }
+
+      this.assignGenerals(player, generals[0], generals[1]);
+    }
+
+    game.currentPlayerIndex = 0;
+    game.currentPhase = 'prepare';
+    game.turnCount = 1;
+    game.activeEffects = [];
+    game.gameOver = false;
+    game.winnerFaction = null;
+  }
+
+  /** Hidden generals do not provide active skills until revealed. */
+  canUseSkill(player: PlayerState, skillId: SkillId): boolean {
+    return player.skills.includes(skillId);
+  }
+
+  /** First skill use from a hidden general automatically reveals that slot. */
+  useSkill(
+    game: GameState,
+    player: PlayerState,
+    which: GeneralRole,
+    skillId: SkillId,
+  ): boolean {
+    const assigned = this.getAssignedGeneral(player, which);
+    if (!assigned || !assigned.general.skills.includes(skillId)) {
+      return false;
+    }
+
+    if (!assigned.slot.revealed) {
+      this.revealGeneral(game, player, which);
+    }
+
+    return this.canUseSkill(player, skillId);
+  }
+
+  /** Remove a dead general slot and recalculate the survivor's state. */
+  handleGeneralDeath(player: PlayerState, which: GeneralRole): void {
+    const assigned = this.getAssignedGeneral(player, which);
+    if (!assigned) {
+      return;
+    }
+
+    if (which === 'main') {
+      player.mainGeneral = player.deputyGeneral
+        ? { ...player.deputyGeneral }
+        : null;
+      player.deputyGeneral = null;
+    } else {
+      player.deputyGeneral = null;
+    }
+
+    const remainingHp = this.calculateRemainingHp(player);
+    player.maxHp = remainingHp;
+    player.hp = Math.min(player.hp, remainingHp);
+
+    if (remainingHp === 0) {
+      player.hp = 0;
+      player.alive = false;
+      player.skills = [];
+      return;
+    }
+
+    this.refreshSkills(player);
+  }
+
+  private registerGeneral(general: General): void {
+    this.generals.set(general.id, general);
+  }
+
+  private getAssignedGeneral(player: PlayerState, which: GeneralRole): AssignedGeneral | null {
+    const slot = which === 'main' ? player.mainGeneral : player.deputyGeneral;
+    if (!slot) {
+      return null;
+    }
+
+    const general = this.generals.get(slot.generalId);
+    if (!general) {
+      return null;
+    }
+
+    return { slot, general };
+  }
+
+  private getFactionSource(player: PlayerState): General | null {
+    return this.getAssignedGeneral(player, 'main')?.general
+      ?? this.getAssignedGeneral(player, 'deputy')?.general
+      ?? null;
+  }
+
+  private isAnyGeneralRevealed(player: PlayerState): boolean {
+    return Boolean(player.mainGeneral?.revealed || player.deputyGeneral?.revealed);
+  }
+
+  private calculateRemainingHp(player: PlayerState): number {
+    const slots: GeneralRole[] = ['main', 'deputy'];
+
+    return slots.reduce((total, which) => {
+      const assigned = this.getAssignedGeneral(player, which);
+      if (!assigned) {
+        return total;
+      }
+
+      return total + Math.ceil(assigned.general.hp / 2);
+    }, 0);
+  }
+
+  private refreshSkills(player: PlayerState): void {
+    const activeSkills = new Set<SkillId>();
+
+    const main = this.getAssignedGeneral(player, 'main');
+    if (main?.slot.revealed) {
+      for (const skillId of main.general.skills) {
+        activeSkills.add(skillId);
       }
     }
+
+    const deputy = this.getAssignedGeneral(player, 'deputy');
+    if (deputy?.slot.revealed) {
+      for (const skillId of deputy.general.skills) {
+        activeSkills.add(skillId);
+      }
+    }
+
+    player.skills = [...activeSkills];
+  }
+
+  private normalizeAssignments(
+    playerGenerals: Map<string, [General, General]> | DualGeneralSetup[],
+  ): Map<string, [General, General]> {
+    if (playerGenerals instanceof Map) {
+      return playerGenerals;
+    }
+
+    return new Map<string, [General, General]>(
+      playerGenerals.map(entry => [entry.playerId, [entry.main, entry.deputy]]),
+    );
   }
 }

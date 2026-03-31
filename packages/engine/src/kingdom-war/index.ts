@@ -1,2 +1,10 @@
-export { KingdomWarManager } from './kingdom-war-manager.js';
-export type { RevealState, DualGeneralSetup, KingdomWarIdentity } from './types.js';
+export {
+  KingdomWarManager,
+  type EffectiveFaction,
+  type GeneralRole,
+} from './kingdom-war-manager.js';
+export type {
+  DualGeneralSetup,
+  KingdomWarIdentity,
+  RevealState,
+} from './types.js';
