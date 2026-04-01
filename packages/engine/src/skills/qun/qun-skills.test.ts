@@ -14,6 +14,11 @@ import { shuangxiong } from './qun005-yanliang-wenchou.js';
 import { benghuai, jiuchi } from './qun006-dongzhuo.js';
 import { weimu, wansha } from './qun007-jiaxu.js';
 import { mashuPangde, mengjin } from './qun008-pangde.js';
+import { tiejia } from './qun034-wutugu.js';
+import { lirang } from './qun037-kongrong.js';
+import { mieji } from './qun043-liru.js';
+import { sougua } from './qun054-zhangrang.js';
+import { pinping } from './qun060-xushao.js';
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                           */
@@ -99,15 +104,15 @@ function makeGame(
 /* ------------------------------------------------------------------ */
 
 describe('QUN skill registration', () => {
-  it('registers all 30 generals worth of skills without duplicate IDs', () => {
+  it('registers all 60 generals worth of skills without duplicate IDs', () => {
     const registry = new SkillRegistry();
     registerQunSkills(registry);
 
     const ids = new Set(qunSkills.map(s => s.id));
     expect(ids.size).toBe(qunSkills.length);
 
-    // At minimum: 30 generals, most with 1-3 skills
-    expect(qunSkills.length).toBeGreaterThanOrEqual(30);
+    // At minimum: 60 generals, most with 1-3 skills
+    expect(qunSkills.length).toBeGreaterThanOrEqual(60);
   });
 
   it('retrieves every skill by its event triggers', () => {
@@ -643,5 +648,271 @@ describe('qun_mengjin (庞德 — Advance)', () => {
     });
 
     expect(mengjin.canActivate(ctx)).toBe(false);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  QUN034 兀突骨 — 铁甲 (Iron Armor)                                    */
+/* ------------------------------------------------------------------ */
+
+describe('qun_tiejia (兀突骨 — Iron Armor)', () => {
+  it('reduces non-fire damage by 1', () => {
+    const wutugu = makePlayer('wutugu', {
+      mainGeneralId: 'QUN034',
+      skills: ['qun_tiejia'],
+      hp: 4,
+      maxHp: 4,
+    });
+    const attacker = makePlayer('attacker', { seat: 1 });
+    const game = makeGame([wutugu, attacker]);
+
+    const event = {
+      type: 'damage' as const,
+      source: attacker.id,
+      target: wutugu.id,
+      amount: 2,
+    };
+
+    const ctx = createSkillContext({
+      game,
+      player: wutugu,
+      event,
+    });
+
+    expect(tiejia.canActivate(ctx)).toBe(true);
+    tiejia.activate(ctx);
+
+    expect(event.amount).toBe(1);
+  });
+
+  it('does not reduce fire damage', () => {
+    const wutugu = makePlayer('wutugu', {
+      mainGeneralId: 'QUN034',
+      skills: ['qun_tiejia'],
+      hp: 4,
+      maxHp: 4,
+    });
+    const attacker = makePlayer('attacker', { seat: 1 });
+    const game = makeGame([wutugu, attacker]);
+
+    const event = {
+      type: 'damage' as const,
+      source: attacker.id,
+      target: wutugu.id,
+      amount: 2,
+      element: 'fire' as const,
+    };
+
+    const ctx = createSkillContext({
+      game,
+      player: wutugu,
+      event,
+    });
+
+    expect(tiejia.canActivate(ctx)).toBe(false);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  QUN037 孔融 — 礼让 (Courtesy)                                       */
+/* ------------------------------------------------------------------ */
+
+describe('qun_lirang (孔融 — Courtesy)', () => {
+  it('transfers excess cards to another player during discard phase', () => {
+    const kongrong = makePlayer('kongrong', {
+      mainGeneralId: 'QUN037',
+      skills: ['qun_lirang'],
+      hp: 2,
+      maxHp: 4,
+      handCards: [
+        makeCard('k1'),
+        makeCard('k2'),
+        makeCard('k3'),
+        makeCard('k4'),
+      ],
+    });
+    const ally = makePlayer('ally', { seat: 1, handCards: [] });
+    const game = makeGame([kongrong, ally]);
+
+    const ctx = createSkillContext({
+      game,
+      player: kongrong,
+      event: { type: 'phaseChange', player: kongrong.id, phase: 'discard' },
+    });
+
+    // HP is 2, hand has 4 cards → 2 excess
+    expect(lirang.canActivate(ctx)).toBe(true);
+    lirang.activate(ctx);
+
+    expect(kongrong.handCards).toHaveLength(2);
+    expect(ally.handCards).toHaveLength(2);
+  });
+
+  it('does not activate when hand size is within HP limit', () => {
+    const kongrong = makePlayer('kongrong', {
+      mainGeneralId: 'QUN037',
+      hp: 4,
+      maxHp: 4,
+      handCards: [makeCard('k1'), makeCard('k2')],
+    });
+    const game = makeGame([kongrong]);
+
+    const ctx = createSkillContext({
+      game,
+      player: kongrong,
+      event: { type: 'phaseChange', player: kongrong.id, phase: 'discard' },
+    });
+
+    expect(lirang.canActivate(ctx)).toBe(false);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  QUN043 李儒 — 灭计 (Annihilate)                                      */
+/* ------------------------------------------------------------------ */
+
+describe('qun_mieji (李儒 — Annihilate)', () => {
+  it('forces target to discard 2 cards when they have enough', () => {
+    const liru = makePlayer('liru', {
+      mainGeneralId: 'QUN043',
+      skills: ['qun_mieji'],
+      handCards: [makeCard('b1', { suit: 'spade' })],
+    });
+    const target = makePlayer('target', {
+      seat: 1,
+      hp: 3,
+      maxHp: 4,
+      handCards: [makeCard('t1'), makeCard('t2'), makeCard('t3')],
+    });
+    const game = makeGame([liru, target]);
+
+    const ctx = createSkillContext({
+      game,
+      player: liru,
+      event: { type: 'phaseChange', player: liru.id, phase: 'play' },
+    });
+
+    expect(mieji.canActivate(ctx)).toBe(true);
+    mieji.activate(ctx);
+
+    // Liru discarded the black card
+    expect(liru.handCards).toHaveLength(0);
+    // Target had 3 cards, forced to discard 2
+    expect(target.handCards).toHaveLength(1);
+    expect(target.hp).toBe(3); // HP unchanged
+  });
+
+  it('forces target to lose 1 HP when they have fewer than 2 cards', () => {
+    const liru = makePlayer('liru', {
+      mainGeneralId: 'QUN043',
+      skills: ['qun_mieji'],
+      handCards: [makeCard('b1', { suit: 'club' })],
+    });
+    const target = makePlayer('target', {
+      seat: 1,
+      hp: 3,
+      maxHp: 4,
+      handCards: [makeCard('t1')],
+    });
+    const game = makeGame([liru, target]);
+
+    const ctx = createSkillContext({
+      game,
+      player: liru,
+      event: { type: 'phaseChange', player: liru.id, phase: 'play' },
+    });
+
+    mieji.activate(ctx);
+
+    expect(liru.handCards).toHaveLength(0);
+    expect(target.handCards).toHaveLength(1); // Cards untouched
+    expect(target.hp).toBe(2); // Lost 1 HP
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  QUN054 张让 — 搜刮 (Extortion)                                       */
+/* ------------------------------------------------------------------ */
+
+describe('qun_sougua (张让 — Extortion)', () => {
+  it('takes 1 card from up to 2 opponents during draw phase', () => {
+    const zhangrang = makePlayer('zhangrang', {
+      mainGeneralId: 'QUN054',
+      skills: ['qun_sougua'],
+      handCards: [],
+    });
+    const p2 = makePlayer('p2', {
+      seat: 1,
+      handCards: [makeCard('a1'), makeCard('a2')],
+    });
+    const p3 = makePlayer('p3', {
+      seat: 2,
+      handCards: [makeCard('b1')],
+    });
+    const game = makeGame([zhangrang, p2, p3]);
+
+    const ctx = createSkillContext({
+      game,
+      player: zhangrang,
+      event: { type: 'phaseChange', player: zhangrang.id, phase: 'draw' },
+    });
+
+    expect(sougua.canActivate(ctx)).toBe(true);
+    sougua.activate(ctx);
+
+    // Took 1 from each
+    expect(zhangrang.handCards).toHaveLength(2);
+    expect(p2.handCards).toHaveLength(1);
+    expect(p3.handCards).toHaveLength(0);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  QUN060 许劭 — 品评 (Appraisal)                                       */
+/* ------------------------------------------------------------------ */
+
+describe('qun_pinping (许劭 — Appraisal)', () => {
+  it('rearranges top 3 draw pile cards by number descending', () => {
+    const xushao = makePlayer('xushao', {
+      mainGeneralId: 'QUN060',
+      skills: ['qun_pinping'],
+    });
+    const drawPile = [
+      makeCard('d1', { number: 3 }),
+      makeCard('d2', { number: 10 }),
+      makeCard('d3', { number: 7 }),
+      makeCard('d4', { number: 1 }),
+    ];
+    const game = makeGame([xushao], drawPile);
+
+    const ctx = createSkillContext({
+      game,
+      player: xushao,
+      event: { type: 'phaseChange', player: xushao.id, phase: 'prepare' },
+    });
+
+    expect(pinping.canActivate(ctx)).toBe(true);
+    pinping.activate(ctx);
+
+    // Top 3 sorted descending: 10, 7, 3 — then the untouched 4th card
+    expect(game.drawPile[0].number).toBe(10);
+    expect(game.drawPile[1].number).toBe(7);
+    expect(game.drawPile[2].number).toBe(3);
+    expect(game.drawPile[3].number).toBe(1);
+  });
+
+  it('does not activate when draw pile has fewer than 3 cards', () => {
+    const xushao = makePlayer('xushao', {
+      mainGeneralId: 'QUN060',
+    });
+    const game = makeGame([xushao], [makeCard('d1'), makeCard('d2')]);
+
+    const ctx = createSkillContext({
+      game,
+      player: xushao,
+      event: { type: 'phaseChange', player: xushao.id, phase: 'prepare' },
+    });
+
+    expect(pinping.canActivate(ctx)).toBe(false);
   });
 });
