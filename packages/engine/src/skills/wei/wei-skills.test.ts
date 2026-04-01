@@ -75,7 +75,7 @@ function makeGame(players: PlayerState[], drawPile: Card[] = []): GameState {
 /* ------------------------------------------------------------------ */
 
 describe('WEI skill registration', () => {
-  it('registers all 60 generals worth of skills without duplicate IDs', () => {
+  it('registers all 88 generals worth of skills without duplicate IDs', () => {
     const registry = new SkillRegistry();
     registerWeiSkills(registry);
 
@@ -83,8 +83,8 @@ describe('WEI skill registration', () => {
     const ids = new Set(allWeiSkills.map(s => s.id));
     expect(ids.size).toBe(allWeiSkills.length);
 
-    // At minimum we expect the 60 generals worth of skills (some have 2+)
-    expect(allWeiSkills.length).toBeGreaterThanOrEqual(60);
+    // At minimum we expect the 88 generals worth of skills (some have 2+)
+    expect(allWeiSkills.length).toBeGreaterThanOrEqual(88);
   });
 });
 
@@ -397,5 +397,65 @@ describe('WEI031-060 skill coverage', () => {
     // All IDs should be unique
     const uniqueIds = new Set(wei031to060Ids);
     expect(uniqueIds.size).toBe(wei031to060Ids.length);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  WEI061-088 registration and placeholder validation                 */
+/* ------------------------------------------------------------------ */
+
+describe('WEI061-088 skill coverage', () => {
+  it('every general 061-088 contributes at least one skill with a unique ID', () => {
+    const registry = new SkillRegistry();
+    registerWeiSkills(registry);
+
+    // Collect IDs for skills from generals 061-088
+    const wei061to088Ids = allWeiSkills
+      .filter(s => s.id.startsWith('skill_wei06') ||
+                   s.id.startsWith('skill_wei07') ||
+                   s.id.startsWith('skill_wei08'))
+      .map(s => s.id);
+
+    // We should have at least 28 skills from the 28 new generals
+    expect(wei061to088Ids.length).toBeGreaterThanOrEqual(28);
+
+    // All IDs should be unique
+    const uniqueIds = new Set(wei061to088Ids);
+    expect(uniqueIds.size).toBe(wei061to088Ids.length);
+  });
+
+  it('all 061-088 placeholders have canActivate returning false', () => {
+    const wei061to088 = allWeiSkills.filter(
+      s => s.id.startsWith('skill_wei06') ||
+           s.id.startsWith('skill_wei07') ||
+           s.id.startsWith('skill_wei08'),
+    );
+
+    const dummyCtx = createSkillContext({
+      game: makeGame([makePlayer('p1')]),
+      player: makePlayer('p1'),
+      event: { type: 'phaseChange', player: 'p1' as PlayerId, phase: 'prepare' },
+    });
+
+    for (const skill of wei061to088) {
+      expect(skill.canActivate(dummyCtx)).toBe(false);
+    }
+  });
+
+  it('full WEI registry covers all 88 generals', () => {
+    // Verify we have skills spanning the entire WEI001-088 range
+    const allIds = allWeiSkills.map(s => s.id);
+
+    // Check representative skills from each batch
+    expect(allIds).toContain('skill_jianxiong');        // WEI001
+    expect(allIds).toContain('skill_fankui');            // WEI002
+    expect(allIds).toContain('skill_chengxiang');        // WEI031
+    expect(allIds).toContain('skill_daoshu');            // WEI060
+    expect(allIds).toContain('skill_wei061_placeholder'); // WEI061
+    expect(allIds).toContain('skill_wei075_placeholder'); // WEI075
+    expect(allIds).toContain('skill_wei088_placeholder'); // WEI088
+
+    // Total should be >= 88 (some generals have multiple skills)
+    expect(allWeiSkills.length).toBeGreaterThanOrEqual(88);
   });
 });
