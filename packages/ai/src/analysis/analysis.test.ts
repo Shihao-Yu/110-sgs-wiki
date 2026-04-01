@@ -4,6 +4,7 @@ import type { General, GeneralId, Skill, SkillId } from '@sgs/data';
 import { WinRateCalculator } from './winrate.js';
 import { MultiDimensionalScorer } from './scoring.js';
 import { FactorAnalyzer } from './factors.js';
+import { AnalysisReportGenerator } from './report.js';
 import { GeneralEvaluator } from '../strategy/evaluator.js';
 
 // ---------------------------------------------------------------------------
@@ -256,7 +257,7 @@ describe('MultiDimensionalScorer', () => {
 });
 
 // ---------------------------------------------------------------------------
-// FactorAnalyzer
+// FactorAnalyzer — Basic Methods (existing)
 // ---------------------------------------------------------------------------
 
 describe('FactorAnalyzer', () => {
@@ -349,6 +350,430 @@ describe('FactorAnalyzer', () => {
       for (const pos of positions) {
         expect(pos.gamesPlayed).toBe(0);
         expect(pos.winRate).toBe(0);
+      }
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// FactorAnalyzer — Skill Impact
+// ---------------------------------------------------------------------------
+
+describe('FactorAnalyzer — analyzeSkillImpact', () => {
+  const skillA = makeSkill('sk_a', '摸两张牌');
+  const skillB = makeSkill('sk_b', '造成伤害');
+
+  const genA = makeGeneral('gen_a', ['sk_a'], { hp: 3, maxHp: 3 });
+  const genB = makeGeneral('gen_b', ['sk_b'], { hp: 4, maxHp: 4 });
+  const genC = makeGeneral('gen_c', ['sk_a', 'sk_b'], { hp: 4, maxHp: 4 });
+
+  it('returns empty when no generals/skills provided', () => {
+    const analyzer = new FactorAnalyzer();
+    const sim = makeSimResult();
+    expect(analyzer.analyzeSkillImpact([sim])).toEqual([]);
+  });
+
+  it('isolates skill impact across generals', () => {
+    const analyzer = new FactorAnalyzer(
+      [genA, genB, genC],
+      [skillA, skillB],
+    );
+
+    const sim = makeSimResult({
+      totalGames: 30,
+      generalStats: new Map([
+        ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 7, winRate: 70 })],
+        ['gen_b', makeGeneralStats({ gamesPlayed: 10, wins: 3, winRate: 30 })],
+        ['gen_c', makeGeneralStats({ gamesPlayed: 10, wins: 5, winRate: 50 })],
+      ]),
+    });
+
+    const impact = analyzer.analyzeSkillImpact([sim]);
+
+    expect(impact).toHaveLength(2);
+
+    // sk_a is on gen_a (70%) and gen_c (50%) -> 12/20 = 60%
+    const skA = impact.find((s) => s.skillId === 'sk_a')!;
+    expect(skA).toBeDefined();
+    expect(skA.generalsWithSkill).toBe(2);
+    expect(skA.gamesPlayed).toBe(20);
+    expect(skA.wins).toBe(12);
+    expect(skA.winRate).toBeCloseTo(60, 0);
+
+    // sk_b is on gen_b (30%) and gen_c (50%) -> 8/20 = 40%
+    const skB = impact.find((s) => s.skillId === 'sk_b')!;
+    expect(skB).toBeDefined();
+    expect(skB.generalsWithSkill).toBe(2);
+    expect(skB.gamesPlayed).toBe(20);
+    expect(skB.wins).toBe(8);
+    expect(skB.winRate).toBeCloseTo(40, 0);
+
+    // Sorted by winRateDelta descending: sk_a should come first
+    expect(impact[0]!.skillId).toBe('sk_a');
+  });
+
+  it('computes winRateDelta relative to overall average', () => {
+    const analyzer = new FactorAnalyzer(
+      [genA, genB],
+      [skillA, skillB],
+    );
+
+    const sim = makeSimResult({
+      totalGames: 20,
+      generalStats: new Map([
+        ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 8, winRate: 80 })],
+        ['gen_b', makeGeneralStats({ gamesPlayed: 10, wins: 2, winRate: 20 })],
+      ]),
+    });
+
+    const impact = analyzer.analyzeSkillImpact([sim]);
+
+    // Overall: 10/20 = 50%
+    // sk_a: 80% -> delta = +30
+    // sk_b: 20% -> delta = -30
+    const skA = impact.find((s) => s.skillId === 'sk_a')!;
+    const skB = impact.find((s) => s.skillId === 'sk_b')!;
+
+    expect(skA.winRateDelta).toBeCloseTo(30, 0);
+    expect(skB.winRateDelta).toBeCloseTo(-30, 0);
+  });
+
+  it('handles generals not present in simulation results', () => {
+    const analyzer = new FactorAnalyzer(
+      [genA, genB, genC],
+      [skillA, skillB],
+    );
+
+    // Only gen_a appears in the sim
+    const sim = makeSimResult({
+      totalGames: 10,
+      generalStats: new Map([
+        ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 5, winRate: 50 })],
+      ]),
+    });
+
+    const impact = analyzer.analyzeSkillImpact([sim]);
+
+    // sk_a appears (gen_a has it), sk_b also appears (gen_c has it, but
+    // gen_c is not in sim, so its games/wins = 0; gen_b also not in sim)
+    const skA = impact.find((s) => s.skillId === 'sk_a')!;
+    expect(skA.gamesPlayed).toBe(10);  // only gen_a contributes
+    expect(skA.wins).toBe(5);
+
+    const skB = impact.find((s) => s.skillId === 'sk_b')!;
+    expect(skB.gamesPlayed).toBe(0);
+    expect(skB.winRate).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// FactorAnalyzer — HP Correlation
+// ---------------------------------------------------------------------------
+
+describe('FactorAnalyzer — analyzeHpCorrelation', () => {
+  const gen3hp = makeGeneral('gen_3hp', [], { hp: 3, maxHp: 3 });
+  const gen4hp_a = makeGeneral('gen_4hp_a', [], { hp: 4, maxHp: 4 });
+  const gen4hp_b = makeGeneral('gen_4hp_b', [], { hp: 4, maxHp: 4 });
+  const gen5hp = makeGeneral('gen_5hp', [], { hp: 5, maxHp: 5 });
+
+  it('returns empty when no generals provided', () => {
+    const analyzer = new FactorAnalyzer();
+    const sim = makeSimResult();
+    expect(analyzer.analyzeHpCorrelation([sim])).toEqual([]);
+  });
+
+  it('groups generals by HP and computes win rates', () => {
+    const analyzer = new FactorAnalyzer(
+      [gen3hp, gen4hp_a, gen4hp_b, gen5hp],
+      [],
+    );
+
+    const sim = makeSimResult({
+      totalGames: 40,
+      generalStats: new Map([
+        ['gen_3hp', makeGeneralStats({ gamesPlayed: 10, wins: 2, winRate: 20 })],
+        ['gen_4hp_a', makeGeneralStats({ gamesPlayed: 10, wins: 5, winRate: 50 })],
+        ['gen_4hp_b', makeGeneralStats({ gamesPlayed: 10, wins: 6, winRate: 60 })],
+        ['gen_5hp', makeGeneralStats({ gamesPlayed: 10, wins: 8, winRate: 80 })],
+      ]),
+    });
+
+    const correlation = analyzer.analyzeHpCorrelation([sim]);
+
+    expect(correlation).toHaveLength(3);  // HP buckets: 3, 4, 5
+
+    // Sorted by HP ascending
+    expect(correlation[0]!.hp).toBe(3);
+    expect(correlation[1]!.hp).toBe(4);
+    expect(correlation[2]!.hp).toBe(5);
+
+    // HP 3: gen_3hp only -> 2/10 = 20%
+    expect(correlation[0]!.generalCount).toBe(1);
+    expect(correlation[0]!.gamesPlayed).toBe(10);
+    expect(correlation[0]!.wins).toBe(2);
+    expect(correlation[0]!.winRate).toBeCloseTo(20, 0);
+
+    // HP 4: gen_4hp_a + gen_4hp_b -> (5+6)/(10+10) = 55%
+    expect(correlation[1]!.generalCount).toBe(2);
+    expect(correlation[1]!.gamesPlayed).toBe(20);
+    expect(correlation[1]!.wins).toBe(11);
+    expect(correlation[1]!.winRate).toBeCloseTo(55, 0);
+
+    // HP 5: gen_5hp -> 8/10 = 80%
+    expect(correlation[2]!.generalCount).toBe(1);
+    expect(correlation[2]!.winRate).toBeCloseTo(80, 0);
+  });
+
+  it('produces valid data with no matching sim results', () => {
+    const analyzer = new FactorAnalyzer([gen3hp], []);
+
+    const sim = makeSimResult({
+      totalGames: 10,
+      generalStats: new Map([
+        // gen_3hp not present
+        ['other_gen', makeGeneralStats({ gamesPlayed: 10, wins: 5, winRate: 50 })],
+      ]),
+    });
+
+    const correlation = analyzer.analyzeHpCorrelation([sim]);
+    expect(correlation).toHaveLength(1);
+    expect(correlation[0]!.hp).toBe(3);
+    expect(correlation[0]!.gamesPlayed).toBe(0);
+    expect(correlation[0]!.winRate).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// FactorAnalyzer — generateReport
+// ---------------------------------------------------------------------------
+
+describe('FactorAnalyzer — generateReport', () => {
+  const skillA = makeSkill('sk_a', '摸牌');
+  const genA = makeGeneral('gen_a', ['sk_a'], { hp: 4, maxHp: 4 });
+  const genB = makeGeneral('gen_b', [], { hp: 3, maxHp: 3 });
+
+  it('generates a comprehensive report with all sections', () => {
+    const analyzer = new FactorAnalyzer([genA, genB], [skillA]);
+
+    const sim = makeSimResult({
+      totalGames: 20,
+      factionWinRates: { WEI: 50, SHU: 50 },
+      generalStats: new Map([
+        ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 6, winRate: 60 })],
+        ['gen_b', makeGeneralStats({ gamesPlayed: 10, wins: 4, winRate: 40 })],
+      ]),
+    });
+
+    const report = analyzer.generateReport([sim], 4);
+
+    // All sections present
+    expect(report.pairings).toBeDefined();
+    expect(report.factionBalance).toBeDefined();
+    expect(report.positionEffect).toBeDefined();
+    expect(report.skillImpact).toBeDefined();
+    expect(report.hpCorrelation).toBeDefined();
+    expect(report.meta).toBeDefined();
+
+    // Position effect has correct seat count
+    expect(report.positionEffect).toHaveLength(4);
+
+    // Skill impact has data
+    expect(report.skillImpact.length).toBeGreaterThan(0);
+
+    // HP correlation has data
+    expect(report.hpCorrelation.length).toBeGreaterThan(0);
+
+    // Meta
+    expect(report.meta.totalSimulations).toBe(1);
+    expect(report.meta.totalGames).toBe(20);
+    expect(report.meta.generatedAt).toBeTruthy();
+  });
+
+  it('handles empty simulation input', () => {
+    const analyzer = new FactorAnalyzer([genA], [skillA]);
+    const report = analyzer.generateReport([], 4);
+
+    expect(report.pairings).toEqual([]);
+    expect(report.factionBalance).toEqual([]);
+    expect(report.positionEffect).toHaveLength(4);
+    expect(report.meta.totalGames).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AnalysisReportGenerator
+// ---------------------------------------------------------------------------
+
+describe('AnalysisReportGenerator', () => {
+  const skillDraw = makeSkill('sk_draw', '摸两张牌');
+  const skillBurst = makeSkill('sk_burst', '造成伤害');
+
+  const genA = makeGeneral('gen_a', ['sk_draw'], { hp: 3, maxHp: 3 });
+  const genB = makeGeneral('gen_b', ['sk_burst'], { hp: 4, maxHp: 4 });
+
+  it('generates a complete report with all sections', () => {
+    const generator = new AnalysisReportGenerator(
+      [genA, genB],
+      [skillDraw, skillBurst],
+      4,
+    );
+
+    const sim = makeSimResult({
+      totalGames: 20,
+      factionWinRates: { WEI: 60, SHU: 40 },
+      generalStats: new Map([
+        ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 7, winRate: 70 })],
+        ['gen_b', makeGeneralStats({ gamesPlayed: 10, wins: 3, winRate: 30 })],
+      ]),
+    });
+
+    const report = generator.generate([sim]);
+
+    // Leaderboard
+    expect(report.leaderboard).toHaveLength(2);
+    expect(report.leaderboard[0]!.generalId).toBe('gen_a');
+    expect(report.leaderboard[0]!.rank).toBe(1);
+    expect(report.leaderboard[1]!.generalId).toBe('gen_b');
+
+    // Radar chart
+    expect(report.radarChart.dimensions).toEqual([
+      'draw', 'control', 'burst', 'defense',
+    ]);
+    // Only generals found in evaluator will appear (gen_a, gen_b)
+    expect(report.radarChart.labels.length).toBeLessThanOrEqual(2);
+
+    // Factors
+    expect(report.factors.factionBalance).toBeDefined();
+    expect(report.factors.skillImpact).toBeDefined();
+    expect(report.factors.hpCorrelation).toBeDefined();
+    expect(report.factors.pairings).toBeDefined();
+    expect(report.factors.positionEffect).toBeDefined();
+
+    // Meta
+    expect(report.meta.totalSimulations).toBe(1);
+    expect(report.meta.totalGames).toBe(20);
+    expect(report.meta.generalCount).toBe(2);
+    expect(report.meta.playerCount).toBe(4);
+    expect(report.meta.generatedAt).toBeTruthy();
+  });
+
+  it('returns an empty report when given no simulations', () => {
+    const generator = new AnalysisReportGenerator(
+      [genA, genB],
+      [skillDraw, skillBurst],
+    );
+
+    const report = generator.generate([]);
+
+    expect(report.leaderboard).toEqual([]);
+    expect(report.radarChart.values).toEqual([]);
+    expect(report.radarChart.labels).toEqual([]);
+    expect(report.factors.pairings).toEqual([]);
+    expect(report.meta.totalGames).toBe(0);
+    expect(report.meta.totalSimulations).toBe(0);
+  });
+
+  it('merges stats across multiple simulation results', () => {
+    const generator = new AnalysisReportGenerator(
+      [genA, genB],
+      [skillDraw, skillBurst],
+    );
+
+    const sim1 = makeSimResult({
+      totalGames: 10,
+      factionWinRates: { WEI: 60 },
+      generalStats: new Map([
+        ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 6, winRate: 60 })],
+      ]),
+    });
+    const sim2 = makeSimResult({
+      totalGames: 10,
+      factionWinRates: { WEI: 40 },
+      generalStats: new Map([
+        ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 4, winRate: 40 })],
+      ]),
+    });
+
+    const report = generator.generate([sim1, sim2]);
+
+    // Merged: gen_a played 20 games, won 10 -> 50%
+    expect(report.leaderboard).toHaveLength(1);
+    expect(report.leaderboard[0]!.gamesPlayed).toBe(20);
+    expect(report.leaderboard[0]!.wins).toBe(10);
+    expect(report.leaderboard[0]!.winRate).toBeCloseTo(50, 0);
+
+    expect(report.meta.totalGames).toBe(20);
+    expect(report.meta.totalSimulations).toBe(2);
+  });
+
+  describe('toJSON — serialisation', () => {
+    it('produces valid JSON', () => {
+      const generator = new AnalysisReportGenerator(
+        [genA],
+        [skillDraw],
+      );
+
+      const sim = makeSimResult({
+        totalGames: 10,
+        generalStats: new Map([
+          ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 5, winRate: 50 })],
+        ]),
+      });
+
+      const report = generator.generate([sim]);
+      const json = AnalysisReportGenerator.toJSON(report);
+
+      // Verify it parses back correctly
+      const parsed = JSON.parse(json);
+      expect(parsed.leaderboard).toBeDefined();
+      expect(parsed.radarChart).toBeDefined();
+      expect(parsed.factors).toBeDefined();
+      expect(parsed.meta).toBeDefined();
+      expect(parsed.meta.totalGames).toBe(10);
+    });
+
+    it('cross-tabulation output contains all factor sections', () => {
+      const generator = new AnalysisReportGenerator(
+        [genA, genB],
+        [skillDraw, skillBurst],
+      );
+
+      const sim = makeSimResult({
+        totalGames: 20,
+        factionWinRates: { WEI: 50, SHU: 50 },
+        generalStats: new Map([
+          ['gen_a', makeGeneralStats({ gamesPlayed: 10, wins: 6, winRate: 60 })],
+          ['gen_b', makeGeneralStats({ gamesPlayed: 10, wins: 4, winRate: 40 })],
+        ]),
+      });
+
+      const report = generator.generate([sim]);
+      const json = AnalysisReportGenerator.toJSON(report);
+      const parsed = JSON.parse(json);
+
+      // Cross-tabulation: factors object must contain all sub-analyses
+      const factors = parsed.factors;
+      expect(factors).toHaveProperty('pairings');
+      expect(factors).toHaveProperty('factionBalance');
+      expect(factors).toHaveProperty('positionEffect');
+      expect(factors).toHaveProperty('skillImpact');
+      expect(factors).toHaveProperty('hpCorrelation');
+      expect(factors).toHaveProperty('meta');
+
+      // Verify skill impact entries have the expected shape
+      for (const si of factors.skillImpact) {
+        expect(si).toHaveProperty('skillId');
+        expect(si).toHaveProperty('skillName');
+        expect(si).toHaveProperty('generalsWithSkill');
+        expect(si).toHaveProperty('winRate');
+        expect(si).toHaveProperty('winRateDelta');
+      }
+
+      // Verify HP correlation entries have the expected shape
+      for (const hc of factors.hpCorrelation) {
+        expect(hc).toHaveProperty('hp');
+        expect(hc).toHaveProperty('generalCount');
+        expect(hc).toHaveProperty('winRate');
       }
     });
   });

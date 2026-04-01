@@ -14,4 +14,12 @@ export {
   type PairingStats,
   type FactionBalance,
   type PositionEffect,
+  type SkillImpact,
+  type HpCorrelation,
+  type FactorReport,
 } from './factors.js';
+
+export {
+  AnalysisReportGenerator,
+  type AnalysisReport,
+} from './report.js';

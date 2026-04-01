@@ -3,11 +3,14 @@
  *   - Dual-general pairings (which two generals together perform best)
  *   - Faction balance (which faction wins most / least)
  *   - Seat position effect (does going first / last matter)
+ *   - Skill impact analysis (which skills contribute most to wins)
+ *   - HP correlation (how HP value relates to win rate)
  *
  * All methods accept one or more SimulationResult objects so callers
  * can aggregate across multiple simulation runs.
  */
 
+import type { General, Skill } from '@sgs/data';
 import type { SimulationResult } from '../simulation/index.js';
 
 // ---------------------------------------------------------------------------
@@ -39,11 +42,64 @@ export interface PositionEffect {
   winRate: number;
 }
 
+/** How a specific skill correlates with winning. */
+export interface SkillImpact {
+  skillId: string;
+  skillName: string;
+  /** Number of generals possessing this skill that appeared in sims. */
+  generalsWithSkill: number;
+  /** Aggregate games played by generals with this skill. */
+  gamesPlayed: number;
+  /** Aggregate wins by generals with this skill. */
+  wins: number;
+  /** Win rate percentage for generals possessing this skill. */
+  winRate: number;
+  /** Delta vs overall average win rate (positive = skill helps). */
+  winRateDelta: number;
+}
+
+/** HP bucket and its associated win rate. */
+export interface HpCorrelation {
+  hp: number;
+  /** Number of generals at this HP value in the sim pool. */
+  generalCount: number;
+  gamesPlayed: number;
+  wins: number;
+  winRate: number;
+}
+
+/** Comprehensive factor analysis report combining all analyses. */
+export interface FactorReport {
+  pairings: PairingStats[];
+  factionBalance: FactionBalance[];
+  positionEffect: PositionEffect[];
+  skillImpact: SkillImpact[];
+  hpCorrelation: HpCorrelation[];
+  meta: {
+    totalSimulations: number;
+    totalGames: number;
+    generatedAt: string;
+  };
+}
+
 // ---------------------------------------------------------------------------
 // FactorAnalyzer
 // ---------------------------------------------------------------------------
 
 export class FactorAnalyzer {
+  private generals: Map<string, General>;
+  private skills: Map<string, Skill>;
+
+  /**
+   * @param generals Array of General objects for skill/HP lookups.
+   *                 Optional — methods that need general data will
+   *                 return empty arrays when not provided.
+   * @param skills   Array of Skill objects for skill name resolution.
+   */
+  constructor(generals: General[] = [], skills: Skill[] = []) {
+    this.generals = new Map(generals.map((g) => [g.id as string, g]));
+    this.skills = new Map(skills.map((s) => [s.id as string, s]));
+  }
   /**
    * Analyse which dual-general pairings (co-appearing on the same
    * winning faction in a single game) have the best combined win rates.
@@ -198,5 +254,180 @@ export class FactorAnalyzer {
     }
 
     return results;
+  }
+
+  // -------------------------------------------------------------------------
+  // Skill Impact Analysis
+  // -------------------------------------------------------------------------
+
+  /**
+   * Analyse which skills contribute most to wins.
+   *
+   * For each skill in the skill pool, finds all generals that possess it,
+   * aggregates their win rates from simulation results, and computes a
+   * delta against the overall average win rate.
+   *
+   * Requires generals and skills to have been provided to the constructor.
+   * Results are sorted by winRateDelta descending (most impactful first).
+   */
+  analyzeSkillImpact(simResults: SimulationResult[]): SkillImpact[] {
+    if (this.generals.size === 0 || this.skills.size === 0) {
+      return [];
+    }
+
+    // Build a map: skillId -> set of generalIds that have it
+    const skillToGenerals = new Map<string, Set<string>>();
+    for (const [gid, general] of this.generals) {
+      for (const sid of general.skills) {
+        const sidStr = sid as string;
+        let genSet = skillToGenerals.get(sidStr);
+        if (!genSet) {
+          genSet = new Set();
+          skillToGenerals.set(sidStr, genSet);
+        }
+        genSet.add(gid);
+      }
+    }
+
+    // Compute overall average win rate across all generals in all sims
+    let totalGamesAll = 0;
+    let totalWinsAll = 0;
+    for (const sim of simResults) {
+      for (const [, stats] of sim.generalStats) {
+        totalGamesAll += stats.gamesPlayed;
+        totalWinsAll += stats.wins;
+      }
+    }
+    const overallWinRate =
+      totalGamesAll > 0 ? (totalWinsAll / totalGamesAll) * 100 : 0;
+
+    // For each skill, aggregate stats of generals that have it
+    const results: SkillImpact[] = [];
+
+    for (const [skillId, generalIds] of skillToGenerals) {
+      const skill = this.skills.get(skillId);
+      if (!skill) continue;
+
+      let gamesPlayed = 0;
+      let wins = 0;
+
+      for (const sim of simResults) {
+        for (const gid of generalIds) {
+          const stats = sim.generalStats.get(gid);
+          if (stats) {
+            gamesPlayed += stats.gamesPlayed;
+            wins += stats.wins;
+          }
+        }
+      }
+
+      const winRate = gamesPlayed > 0 ? (wins / gamesPlayed) * 100 : 0;
+
+      results.push({
+        skillId,
+        skillName: skill.name,
+        generalsWithSkill: generalIds.size,
+        gamesPlayed,
+        wins,
+        winRate,
+        winRateDelta: winRate - overallWinRate,
+      });
+    }
+
+    results.sort((a, b) => b.winRateDelta - a.winRateDelta);
+    return results;
+  }
+
+  // -------------------------------------------------------------------------
+  // HP Correlation Analysis
+  // -------------------------------------------------------------------------
+
+  /**
+   * Analyse how HP value correlates with win rate.
+   *
+   * Groups generals by their maxHp, aggregates win statistics from
+   * simulation results for each bucket, and returns sorted by HP ascending.
+   *
+   * Requires generals to have been provided to the constructor.
+   */
+  analyzeHpCorrelation(simResults: SimulationResult[]): HpCorrelation[] {
+    if (this.generals.size === 0) {
+      return [];
+    }
+
+    // Build map: hp -> set of generalIds
+    const hpToGenerals = new Map<number, Set<string>>();
+    for (const [gid, general] of this.generals) {
+      const hp = general.maxHp;
+      let genSet = hpToGenerals.get(hp);
+      if (!genSet) {
+        genSet = new Set();
+        hpToGenerals.set(hp, genSet);
+      }
+      genSet.add(gid);
+    }
+
+    const results: HpCorrelation[] = [];
+
+    for (const [hp, generalIds] of hpToGenerals) {
+      let gamesPlayed = 0;
+      let wins = 0;
+
+      for (const sim of simResults) {
+        for (const gid of generalIds) {
+          const stats = sim.generalStats.get(gid);
+          if (stats) {
+            gamesPlayed += stats.gamesPlayed;
+            wins += stats.wins;
+          }
+        }
+      }
+
+      results.push({
+        hp,
+        generalCount: generalIds.size,
+        gamesPlayed,
+        wins,
+        winRate: gamesPlayed > 0 ? (wins / gamesPlayed) * 100 : 0,
+      });
+    }
+
+    results.sort((a, b) => a.hp - b.hp);
+    return results;
+  }
+
+  // -------------------------------------------------------------------------
+  // Comprehensive Report
+  // -------------------------------------------------------------------------
+
+  /**
+   * Generate a comprehensive JSON report combining all factor analyses.
+   *
+   * The output is structured for direct consumption by frontend heatmap
+   * and chart rendering components.
+   *
+   * @param playerCount  Seat count for position analysis (defaults to 4).
+   */
+  generateReport(
+    simResults: SimulationResult[],
+    playerCount: 4 | 6 | 8 = 4,
+  ): FactorReport {
+    let totalGames = 0;
+    for (const sim of simResults) {
+      totalGames += sim.totalGames;
+    }
+
+    return {
+      pairings: this.analyzePairings(simResults),
+      factionBalance: this.analyzeFactionBalance(simResults),
+      positionEffect: this.analyzePositionEffect(simResults, playerCount),
+      skillImpact: this.analyzeSkillImpact(simResults),
+      hpCorrelation: this.analyzeHpCorrelation(simResults),
+      meta: {
+        totalSimulations: simResults.length,
+        totalGames,
+        generatedAt: new Date().toISOString(),
+      },
+    };
   }
 }
