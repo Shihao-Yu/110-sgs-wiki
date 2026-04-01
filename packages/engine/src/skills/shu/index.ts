@@ -1,5 +1,5 @@
 /**
- * SHU faction skill registry — generals SHU001 through SHU060.
+ * SHU faction skill registry — generals SHU001 through SHU093.
  *
  * Re-exports every skill plugin and provides a convenience array
  * for bulk registration with SkillRegistry.
@@ -84,6 +84,43 @@ export { shu059Skills } from './shu059-zhaotong-zhaoguang.js';
 export { shu060Skills } from './shu060-chenqun.js';
 
 /* ------------------------------------------------------------------
+ * SHU061–SHU093  (batch 3 — placeholders)
+ * ------------------------------------------------------------------ */
+export { shu061Skills } from './shu061-guansuo.js';
+export { shu062Skills } from './shu062-zhangnan.js';
+export { shu063Skills } from './shu063-fengxi.js';
+export { shu064Skills } from './shu064-liufeng.js';
+export { shu065Skills } from './shu065-shamoke.js';
+export { shu066Skills } from './shu066-zhangyi-sp.js';
+export { shu067Skills } from './shu067-mateng.js';
+export { shu068Skills } from './shu068-wutugu.js';
+export { shu069Skills } from './shu069-zhuran.js';
+export { shu070Skills } from './shu070-liru.js';
+export { shu071Skills } from './shu071-zhangren.js';
+export { shu072Skills } from './shu072-yanxiang.js';
+export { shu073Skills } from './shu073-zhangbao-sp.js';
+export { shu074Skills } from './shu074-chendao.js';
+export { shu075Skills } from './shu075-wuban.js';
+export { shu076Skills } from './shu076-guanyue.js';
+export { shu077Skills } from './shu077-gaoxiang.js';
+export { shu078Skills } from './shu078-dengzhi.js';
+export { shu079Skills } from './shu079-zhoujing.js';
+export { shu080Skills } from './shu080-luji.js';
+export { shu081Skills } from './shu081-zhangwan.js';
+export { shu082Skills } from './shu082-sungan.js';
+export { shu083Skills } from './shu083-qinmi.js';
+export { shu084Skills } from './shu084-zhangsong-sp.js';
+export { shu085Skills } from './shu085-zhangxiu.js';
+export { shu086Skills } from './shu086-luban.js';
+export { shu087Skills } from './shu087-caoshuang.js';
+export { shu088Skills } from './shu088-wuguotai-sp.js';
+export { shu089Skills } from './shu089-sunshangxiang-sp.js';
+export { shu090Skills } from './shu090-liubiao.js';
+export { shu091Skills } from './shu091-panfeng.js';
+export { shu092Skills } from './shu092-chenlin.js';
+export { shu093Skills } from './shu093-liubei-lord.js';
+
+/* ------------------------------------------------------------------
  * Aggregated arrays
  * ------------------------------------------------------------------ */
 import type { SkillPlugin } from '../types.js';
@@ -151,6 +188,39 @@ import { shu057Skills } from './shu057-xingcai.js';
 import { shu058Skills } from './shu058-liuchen.js';
 import { shu059Skills } from './shu059-zhaotong-zhaoguang.js';
 import { shu060Skills } from './shu060-chenqun.js';
+import { shu061Skills } from './shu061-guansuo.js';
+import { shu062Skills } from './shu062-zhangnan.js';
+import { shu063Skills } from './shu063-fengxi.js';
+import { shu064Skills } from './shu064-liufeng.js';
+import { shu065Skills } from './shu065-shamoke.js';
+import { shu066Skills } from './shu066-zhangyi-sp.js';
+import { shu067Skills } from './shu067-mateng.js';
+import { shu068Skills } from './shu068-wutugu.js';
+import { shu069Skills } from './shu069-zhuran.js';
+import { shu070Skills } from './shu070-liru.js';
+import { shu071Skills } from './shu071-zhangren.js';
+import { shu072Skills } from './shu072-yanxiang.js';
+import { shu073Skills } from './shu073-zhangbao-sp.js';
+import { shu074Skills } from './shu074-chendao.js';
+import { shu075Skills } from './shu075-wuban.js';
+import { shu076Skills } from './shu076-guanyue.js';
+import { shu077Skills } from './shu077-gaoxiang.js';
+import { shu078Skills } from './shu078-dengzhi.js';
+import { shu079Skills } from './shu079-zhoujing.js';
+import { shu080Skills } from './shu080-luji.js';
+import { shu081Skills } from './shu081-zhangwan.js';
+import { shu082Skills } from './shu082-sungan.js';
+import { shu083Skills } from './shu083-qinmi.js';
+import { shu084Skills } from './shu084-zhangsong-sp.js';
+import { shu085Skills } from './shu085-zhangxiu.js';
+import { shu086Skills } from './shu086-luban.js';
+import { shu087Skills } from './shu087-caoshuang.js';
+import { shu088Skills } from './shu088-wuguotai-sp.js';
+import { shu089Skills } from './shu089-sunshangxiang-sp.js';
+import { shu090Skills } from './shu090-liubiao.js';
+import { shu091Skills } from './shu091-panfeng.js';
+import { shu092Skills } from './shu092-chenlin.js';
+import { shu093Skills } from './shu093-liubei-lord.js';
 
 /** Legacy array — SHU001-SHU008 only (backward compat). */
 export const shuSkills: SkillPlugin[] = [
@@ -166,7 +236,7 @@ export const shuSkills: SkillPlugin[] = [
   kuanggu,
 ];
 
-/** All SHU faction skills — generals SHU001 through SHU060. */
+/** All SHU faction skills — generals SHU001 through SHU093. */
 export const allShuSkills: SkillPlugin[] = [
   // SHU001–SHU008 (original)
   rende,
@@ -232,4 +302,38 @@ export const allShuSkills: SkillPlugin[] = [
   ...shu058Skills,
   ...shu059Skills,
   ...shu060Skills,
+  // SHU061–SHU093
+  ...shu061Skills,
+  ...shu062Skills,
+  ...shu063Skills,
+  ...shu064Skills,
+  ...shu065Skills,
+  ...shu066Skills,
+  ...shu067Skills,
+  ...shu068Skills,
+  ...shu069Skills,
+  ...shu070Skills,
+  ...shu071Skills,
+  ...shu072Skills,
+  ...shu073Skills,
+  ...shu074Skills,
+  ...shu075Skills,
+  ...shu076Skills,
+  ...shu077Skills,
+  ...shu078Skills,
+  ...shu079Skills,
+  ...shu080Skills,
+  ...shu081Skills,
+  ...shu082Skills,
+  ...shu083Skills,
+  ...shu084Skills,
+  ...shu085Skills,
+  ...shu086Skills,
+  ...shu087Skills,
+  ...shu088Skills,
+  ...shu089Skills,
+  ...shu090Skills,
+  ...shu091Skills,
+  ...shu092Skills,
+  ...shu093Skills,
 ];

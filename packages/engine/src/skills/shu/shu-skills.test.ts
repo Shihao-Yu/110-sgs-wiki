@@ -564,14 +564,14 @@ describe('SHU008 kuanggu (Crazy Bone)', () => {
 /*  SHU009–SHU060 Tests                                                */
 /* ------------------------------------------------------------------ */
 
-describe('SHU skills — full roster registration (SHU001–SHU060)', () => {
+describe('SHU skills — full roster registration (SHU001–SHU093)', () => {
   it('registers all SHU skills without id collision', () => {
     const registry = new SkillRegistry();
     for (const skill of allShuSkills) {
       registry.register(skill);
     }
-    // 10 original + new generals each contributing 1-2 skills
-    expect(allShuSkills.length).toBeGreaterThanOrEqual(60);
+    // 10 original + generals SHU009-SHU093 each contributing 1-2 skills
+    expect(allShuSkills.length).toBeGreaterThanOrEqual(93);
 
     // Verify no duplicate IDs
     const ids = allShuSkills.map((s) => s.id);
@@ -581,6 +581,26 @@ describe('SHU skills — full roster registration (SHU001–SHU060)', () => {
 
   it('legacy shuSkills array still has exactly 10 entries', () => {
     expect(shuSkills).toHaveLength(10);
+  });
+
+  it('covers all SHU generals from SHU061 through SHU093', () => {
+    const generalIds = new Set(allShuSkills.map((s) => s.generalId));
+    for (let i = 61; i <= 93; i++) {
+      const id = `SHU${String(i).padStart(3, '0')}`;
+      expect(generalIds.has(id as GeneralId)).toBe(true);
+    }
+  });
+
+  it('every skill in allShuSkills has required fields', () => {
+    for (const skill of allShuSkills) {
+      expect(skill.id).toBeTruthy();
+      expect(skill.name).toBeTruthy();
+      expect(skill.generalId).toBeTruthy();
+      expect(skill.type).toBeTruthy();
+      expect(skill.triggers.length).toBeGreaterThan(0);
+      expect(typeof skill.canActivate).toBe('function');
+      expect(typeof skill.activate).toBe('function');
+    }
   });
 });
 
