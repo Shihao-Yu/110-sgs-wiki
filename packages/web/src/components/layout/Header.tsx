@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Navigation from "@/components/layout/Navigation";
+import GlobalSearch from "@/components/search/GlobalSearch";
 import { siteConfig } from "@/lib/site";
 
 export default function Header() {
@@ -22,7 +23,10 @@ export default function Header() {
           </Link>
         </div>
 
-        <Navigation />
+        <div className="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
+          <GlobalSearch />
+          <Navigation />
+        </div>
       </div>
     </header>
   );
