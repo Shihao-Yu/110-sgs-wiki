@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ReplayParser, type ReplayData } from "@/lib/replay";
 import ReplayViewer from "./components/ReplayViewer";
 
@@ -10,10 +11,15 @@ import ReplayViewer from "./components/ReplayViewer";
 
 import sampleReplayJson from "../../../../../replays/sample-4player.json";
 
-export default function ReplayPage() {
+/* ------------------------------------------------------------------ */
+/*  Inner component that uses useSearchParams                          */
+/* ------------------------------------------------------------------ */
+
+function ReplayPageInner() {
   const [replay, setReplay] = useState<ReplayData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const searchParams = useSearchParams();
 
   const loadReplay = useCallback((text: string) => {
     try {
@@ -26,6 +32,20 @@ export default function ReplayPage() {
       setReplay(null);
     }
   }, []);
+
+  /* Auto-load sandbox replay from sessionStorage when navigated from sandbox */
+  useEffect(() => {
+    if (searchParams.get("source") !== "sandbox") return;
+    try {
+      const json = sessionStorage.getItem("sandbox-replay");
+      if (json) {
+        loadReplay(json);
+        sessionStorage.removeItem("sandbox-replay");
+      }
+    } catch {
+      // sessionStorage unavailable — ignore
+    }
+  }, [searchParams, loadReplay]);
 
   const handleFileSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -225,5 +245,17 @@ export default function ReplayPage() {
         </div>
       )}
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Page wrapper with Suspense boundary for useSearchParams            */
+/* ------------------------------------------------------------------ */
+
+export default function ReplayPage() {
+  return (
+    <Suspense>
+      <ReplayPageInner />
+    </Suspense>
   );
 }
