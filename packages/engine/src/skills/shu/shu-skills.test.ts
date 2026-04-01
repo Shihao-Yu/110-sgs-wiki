@@ -5,7 +5,7 @@ import type { PlayerState } from '../../state/player.js';
 import type { PlayerId } from '../../state/types.js';
 import { createSkillContext } from '../skill-context.js';
 import { SkillRegistry } from '../skill-registry.js';
-import { shuSkills } from './index.js';
+import { shuSkills, allShuSkills } from './index.js';
 import { rende } from './shu001-rende.js';
 import { paoxiao } from './shu003-paoxiao.js';
 import { guanxing } from './shu004-guanxing.js';
@@ -14,6 +14,10 @@ import { longdan } from './shu005-longdan.js';
 import { tieqi } from './shu006-tieqi.js';
 import { liegong } from './shu007-liegong.js';
 import { kuanggu } from './shu008-kuanggu.js';
+import { jizhi, qicai } from './shu009-huangyueying.js';
+import { lianhuan, niepan } from './shu010-pangtong.js';
+import { tiaoxin } from './shu011-jiangwei.js';
+import { enyuanGratitude, enyuanGrudge } from './shu012-fazheng.js';
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -553,5 +557,257 @@ describe('SHU008 kuanggu (Crazy Bone)', () => {
     });
 
     expect(kuanggu.canActivate(ctx)).toBe(false);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  SHU009–SHU060 Tests                                                */
+/* ------------------------------------------------------------------ */
+
+describe('SHU skills — full roster registration (SHU001–SHU060)', () => {
+  it('registers all SHU skills without id collision', () => {
+    const registry = new SkillRegistry();
+    for (const skill of allShuSkills) {
+      registry.register(skill);
+    }
+    // 10 original + new generals each contributing 1-2 skills
+    expect(allShuSkills.length).toBeGreaterThanOrEqual(60);
+
+    // Verify no duplicate IDs
+    const ids = allShuSkills.map((s) => s.id);
+    const uniqueIds = new Set(ids);
+    expect(uniqueIds.size).toBe(ids.length);
+  });
+
+  it('legacy shuSkills array still has exactly 10 entries', () => {
+    expect(shuSkills).toHaveLength(10);
+  });
+});
+
+describe('SHU009 jizhi (Wisdom)', () => {
+  it('draws 1 card when playing a non-delayed trick', () => {
+    const hyy = makePlayer('p1', {
+      mainGeneralId: 'SHU009',
+      skills: ['jizhi'],
+      handCards: [],
+    });
+    const trickCard = makeCard('t1', '过河拆桥', 'spade');
+    // Override the type to trick
+    (trickCard as Record<string, unknown>).type = 'trick';
+    const drawPile = [makeCard('d1'), makeCard('d2')];
+    const game = makeGame([hyy], drawPile);
+
+    const ctx = createSkillContext({
+      game,
+      player: hyy,
+      event: {
+        type: 'playCard',
+        player: hyy.id,
+        card: trickCard,
+      },
+    });
+
+    expect(jizhi.canActivate(ctx)).toBe(true);
+    jizhi.activate(ctx);
+
+    // Drew 1 card from draw pile
+    expect(hyy.handCards).toHaveLength(1);
+    expect(game.drawPile).toHaveLength(1);
+  });
+
+  it('does not trigger for delayed tricks', () => {
+    const hyy = makePlayer('p1', {
+      mainGeneralId: 'SHU009',
+      skills: ['jizhi'],
+    });
+    const delayedTrick = makeCard('t1', '乐不思蜀', 'heart');
+    (delayedTrick as Record<string, unknown>).type = 'trick';
+    const game = makeGame([hyy]);
+
+    const ctx = createSkillContext({
+      game,
+      player: hyy,
+      event: {
+        type: 'playCard',
+        player: hyy.id,
+        card: delayedTrick,
+      },
+    });
+
+    expect(jizhi.canActivate(ctx)).toBe(false);
+  });
+});
+
+describe('SHU010 niepan (Nirvana)', () => {
+  it('recovers to 3 HP and draws 3 cards when dying (limited)', () => {
+    const pt = makePlayer('p1', {
+      mainGeneralId: 'SHU010',
+      skills: ['niepan'],
+      hp: 0,
+      maxHp: 4,
+      handCards: [makeCard('c1'), makeCard('c2')],
+    });
+    pt.mainGeneral = { generalId: 'SHU010' as GeneralId, revealed: true };
+    const drawPile = [makeCard('d1'), makeCard('d2'), makeCard('d3'), makeCard('d4')];
+    const game = makeGame([pt], drawPile);
+
+    const ctx = createSkillContext({
+      game,
+      player: pt,
+      event: { type: 'loseHp', player: pt.id, amount: 1 },
+    });
+
+    expect(niepan.canActivate(ctx)).toBe(true);
+    niepan.activate(ctx);
+
+    // HP recovered to 3
+    expect(pt.hp).toBe(3);
+    // Old hand cards discarded, 3 new cards drawn
+    expect(pt.handCards).toHaveLength(3);
+    // Limited — marked as used
+    expect(pt.marks['niepan_used']).toBe(1);
+    // General card flipped
+    expect(pt.mainGeneral!.revealed).toBe(false);
+  });
+
+  it('cannot activate twice (limited skill)', () => {
+    const pt = makePlayer('p1', {
+      mainGeneralId: 'SHU010',
+      skills: ['niepan'],
+      hp: 0,
+      maxHp: 4,
+    });
+    pt.marks['niepan_used'] = 1;
+    const game = makeGame([pt]);
+
+    const ctx = createSkillContext({
+      game,
+      player: pt,
+      event: { type: 'loseHp', player: pt.id, amount: 1 },
+    });
+
+    expect(niepan.canActivate(ctx)).toBe(false);
+  });
+});
+
+describe('SHU011 tiaoxin (Provoke)', () => {
+  it('deals 1 damage when target has no 杀', () => {
+    const jw = makePlayer('p1', {
+      seat: 0,
+      mainGeneralId: 'SHU011',
+      skills: ['tiaoxin'],
+      hp: 4,
+      maxHp: 4,
+    });
+    const target = makePlayer('p2', {
+      seat: 1,
+      hp: 4,
+      maxHp: 4,
+      handCards: [makeCard('c1', '闪')], // no 杀
+    });
+    const game = makeGame([jw, target]);
+
+    const ctx = createSkillContext({
+      game,
+      player: jw,
+      event: { type: 'phaseChange', player: jw.id, phase: 'play' },
+    });
+
+    expect(tiaoxin.canActivate(ctx)).toBe(true);
+    tiaoxin.activate(ctx);
+
+    // Target took 1 damage (hp 4 -> 3)
+    expect(target.hp).toBe(3);
+  });
+
+  it('pushes mustSlash effect when target has 杀', () => {
+    const jw = makePlayer('p1', {
+      seat: 0,
+      mainGeneralId: 'SHU011',
+      skills: ['tiaoxin'],
+    });
+    const target = makePlayer('p2', {
+      seat: 1,
+      handCards: [makeCard('c1', '杀')],
+    });
+    const game = makeGame([jw, target]);
+
+    const ctx = createSkillContext({
+      game,
+      player: jw,
+      event: { type: 'phaseChange', player: jw.id, phase: 'play' },
+    });
+
+    tiaoxin.activate(ctx);
+
+    const effect = game.activeEffects.find((e) => e.name === 'tiaoxin');
+    expect(effect).toBeDefined();
+    expect(effect!.properties['mustSlash']).toBe(jw.id);
+  });
+});
+
+describe('SHU012 enyuan (Gratitude & Grudge)', () => {
+  it('grudge: takes hand card from damage source', () => {
+    const fz = makePlayer('p1', {
+      seat: 0,
+      mainGeneralId: 'SHU012',
+      skills: ['enyuan_grudge'],
+      hp: 3,
+      maxHp: 4,
+      handCards: [],
+    });
+    const attacker = makePlayer('p2', {
+      seat: 1,
+      handCards: [makeCard('c1'), makeCard('c2')],
+    });
+    const game = makeGame([fz, attacker]);
+
+    const ctx = createSkillContext({
+      game,
+      player: fz,
+      event: {
+        type: 'damage',
+        source: attacker.id,
+        target: fz.id,
+        amount: 1,
+      },
+    });
+
+    expect(enyuanGrudge.canActivate(ctx)).toBe(true);
+    enyuanGrudge.activate(ctx);
+
+    // Fa Zheng got 1 card from attacker
+    expect(fz.handCards).toHaveLength(1);
+    expect(attacker.handCards).toHaveLength(1);
+  });
+
+  it('grudge: source loses 1 HP when no hand cards', () => {
+    const fz = makePlayer('p1', {
+      seat: 0,
+      mainGeneralId: 'SHU012',
+      skills: ['enyuan_grudge'],
+    });
+    const attacker = makePlayer('p2', {
+      seat: 1,
+      hp: 4,
+      maxHp: 4,
+      handCards: [],
+    });
+    const game = makeGame([fz, attacker]);
+
+    const ctx = createSkillContext({
+      game,
+      player: fz,
+      event: {
+        type: 'damage',
+        source: attacker.id,
+        target: fz.id,
+        amount: 1,
+      },
+    });
+
+    enyuanGrudge.activate(ctx);
+
+    expect(attacker.hp).toBe(3);
   });
 });
