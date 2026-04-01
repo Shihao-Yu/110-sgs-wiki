@@ -4,6 +4,10 @@
  * Syncs engine state into the Zustand store on each action so that all
  * existing UI components (GameTable, HandCards, SkillPanel, etc.) continue
  * to work without modification.
+ *
+ * After the human player ends their turn, the hook auto-executes AI turns
+ * for every other alive player using setTimeout pacing so actions are
+ * visible in the UI rather than instant.
  */
 
 "use client";
@@ -28,12 +32,26 @@ function getController(): GameController {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Pacing constants                                                   */
+/* ------------------------------------------------------------------ */
+
+/** Delay before an AI player's turn starts (ms). */
+const AI_TURN_START_DELAY = 600;
+/** Delay between individual AI actions within a turn (ms). */
+const AI_ACTION_DELAY = 500;
+/** Delay after the last AI action before ending the turn (ms). */
+const AI_TURN_END_DELAY = 400;
+
+/* ------------------------------------------------------------------ */
 /*  Hook return type                                                   */
 /* ------------------------------------------------------------------ */
 
 export interface UseGameControllerReturn {
   /** Whether a game is currently active (initGame has been called). */
   isActive: boolean;
+
+  /** Whether AI players are currently executing turns. */
+  aiThinking: boolean;
 
   /** Initialise a new game with the given configuration. */
   initGame: (config: GameConfig) => void;
@@ -50,7 +68,7 @@ export interface UseGameControllerReturn {
   /** Respond to an active response prompt. */
   respondToPrompt: (accepted: boolean, cardId?: string) => void;
 
-  /** End the current player's turn. */
+  /** End the current player's turn (triggers AI turns for remaining players). */
   endTurn: () => void;
 
   /** What the current player can do right now. */
@@ -72,9 +90,13 @@ export function useGameController(): UseGameControllerReturn {
   const controller = useRef(getController()).current;
   const setGameState = useGameStore((s) => s.setGameState);
   const [isActive, setIsActive] = useState(false);
+  const [aiThinking, setAiThinking] = useState(false);
   const [validActions, setValidActions] = useState<ValidActions | null>(null);
 
-  /* -- Sync engine snapshot → Zustand store ------------------------ */
+  /** Ref to track whether AI loop should be cancelled (e.g. new game). */
+  const aiCancelRef = useRef(0);
+
+  /* -- Sync engine snapshot -> Zustand store ------------------------ */
 
   const syncToStore = useCallback(
     (snapshot: GameTableState) => {
@@ -98,10 +120,101 @@ export function useGameController(): UseGameControllerReturn {
     return unsub;
   }, [controller, syncToStore]);
 
+  /* -- Run AI turns for all non-human players ---------------------- */
+
+  const runAITurns = useCallback(
+    async (generation: number) => {
+      // Loop: keep executing AI turns until it's the human's turn again
+      // or the game ends.  The loop terminates via explicit breaks below.
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        // Check cancellation
+        if (aiCancelRef.current !== generation) return;
+        if (controller.isGameOver()) break;
+        if (controller.isHumanPlayer(controller.getCurrentPlayerIndex())) break;
+
+        const playerName = controller.getCurrentPlayerName();
+
+        // Signal AI thinking for this player
+        setGameState({
+          aiThinking: true,
+          aiCurrentPlayer: playerName,
+          aiCurrentAction: "thinking...",
+        });
+
+        // Start this AI player's turn (advances through phases to play)
+        const turnSnap = controller.startTurn();
+        syncToStore(turnSnap);
+
+        // Small pause so the user sees the turn start
+        await delay(AI_TURN_START_DELAY);
+        if (aiCancelRef.current !== generation) return;
+
+        // Get AI decisions
+        const actions = controller.getAIActions();
+
+        // Execute each action with visible pacing
+        for (const action of actions) {
+          if (aiCancelRef.current !== generation) return;
+          if (controller.isGameOver()) break;
+
+          if (action.type === "pass") {
+            setGameState({ aiCurrentAction: `${playerName} passes` });
+            await delay(AI_ACTION_DELAY);
+            break;
+          }
+
+          // Execute the action
+          const { description } = controller.executeAIAction(action);
+          setGameState({ aiCurrentAction: description });
+
+          // Pause between actions for visual feedback
+          await delay(AI_ACTION_DELAY);
+        }
+
+        if (aiCancelRef.current !== generation) return;
+        if (controller.isGameOver()) break;
+
+        // End this AI player's turn (advances to next player)
+        await delay(AI_TURN_END_DELAY);
+        if (aiCancelRef.current !== generation) return;
+
+        const endSnap = controller.endTurn();
+        syncToStore(endSnap);
+
+        try {
+          setValidActions(controller.getValidActions());
+        } catch {
+          setValidActions(null);
+        }
+      }
+
+      // AI turns complete — clear thinking state
+      setAiThinking(false);
+      setGameState({
+        aiThinking: false,
+        aiCurrentPlayer: null,
+        aiCurrentAction: null,
+      });
+
+      // Refresh valid actions for the (now current) human player
+      try {
+        setValidActions(controller.getValidActions());
+      } catch {
+        setValidActions(null);
+      }
+    },
+    [controller, syncToStore, setGameState],
+  );
+
   /* -- Action dispatchers ------------------------------------------ */
 
   const initGame = useCallback(
     (config: GameConfig) => {
+      // Cancel any running AI loop
+      aiCancelRef.current++;
+      setAiThinking(false);
+
       const snapshot = controller.initGame(config);
       syncToStore(snapshot);
       setIsActive(true);
@@ -163,9 +276,32 @@ export function useGameController(): UseGameControllerReturn {
   );
 
   const endTurn = useCallback(() => {
+    // End the human player's turn
     const snapshot = controller.endTurn();
     syncToStore(snapshot);
-  }, [controller, syncToStore]);
+
+    // If the next player is not human, start the AI turn loop
+    if (
+      !controller.isGameOver() &&
+      !controller.isHumanPlayer(controller.getCurrentPlayerIndex())
+    ) {
+      setAiThinking(true);
+      setGameState({
+        aiThinking: true,
+        aiCurrentPlayer: null,
+        aiCurrentAction: null,
+      });
+      const gen = ++aiCancelRef.current;
+      // Use setTimeout to avoid blocking the render cycle
+      setTimeout(() => runAITurns(gen), AI_TURN_START_DELAY);
+    } else {
+      try {
+        setValidActions(controller.getValidActions());
+      } catch {
+        setValidActions(null);
+      }
+    }
+  }, [controller, syncToStore, setGameState, runAITurns]);
 
   const getTargetsForCard = useCallback(
     (cardId: string) => {
@@ -180,6 +316,7 @@ export function useGameController(): UseGameControllerReturn {
 
   return {
     isActive,
+    aiThinking,
     initGame,
     startTurn,
     playCard,
@@ -189,4 +326,12 @@ export function useGameController(): UseGameControllerReturn {
     validActions,
     getTargetsForCard,
   };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Utility                                                            */
+/* ------------------------------------------------------------------ */
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

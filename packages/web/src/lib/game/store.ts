@@ -124,6 +124,13 @@ export interface GameTableState {
   targetSelection: TargetSelection | null;
   /** Active response prompt dialog (null = hidden). */
   responsePrompt: ResponsePrompt | null;
+
+  /** True while AI players are executing their turns. */
+  aiThinking: boolean;
+  /** Name of the AI player currently acting (for UI feedback). */
+  aiCurrentPlayer: string | null;
+  /** Description of the AI's current action (for UI feedback). */
+  aiCurrentAction: string | null;
 }
 
 export interface GameTableActions {
@@ -326,6 +333,9 @@ export const useGameStore = create<GameTableState & GameTableActions>(
     currentAction: null,
     targetSelection: null,
     responsePrompt: null,
+    aiThinking: false,
+    aiCurrentPlayer: null,
+    aiCurrentAction: null,
 
     setGameState: (partial) => set((s) => ({ ...s, ...partial })),
 
@@ -377,6 +387,9 @@ export const useGameStore = create<GameTableState & GameTableActions>(
         currentAction: null,
         targetSelection: null,
         responsePrompt: null,
+        aiThinking: false,
+        aiCurrentPlayer: null,
+        aiCurrentAction: null,
       });
     },
 

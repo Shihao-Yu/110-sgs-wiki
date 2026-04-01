@@ -21,6 +21,9 @@ import type {
   GameTableState,
 } from "./store";
 
+import { AITurnExecutor } from "./ai-adapter";
+import type { AIAction } from "./ai-adapter";
+
 /* ================================================================== */
 /*  Engine-compatible types (mirrors @sgs/data & @sgs/engine)          */
 /* ================================================================== */
@@ -496,6 +499,85 @@ export class GameController {
     }
 
     return { validTargetIds: [], minTargets: 0, maxTargets: 0 };
+  }
+
+  /* ================================================================ */
+  /*  AI Turn Execution                                                */
+  /* ================================================================ */
+
+  /** Whether a given player index is the human player. */
+  isHumanPlayer(playerIndex: number): boolean {
+    return playerIndex === this.humanIndex;
+  }
+
+  /** Get the current player index. */
+  getCurrentPlayerIndex(): number {
+    return this.requireGame().currentPlayerIndex;
+  }
+
+  /** Check if the game is over. */
+  isGameOver(): boolean {
+    return this.requireGame().gameOver;
+  }
+
+  /** Get the current player's name. */
+  getCurrentPlayerName(): string {
+    const game = this.requireGame();
+    return game.players[game.currentPlayerIndex]?.name ?? "Unknown";
+  }
+
+  /**
+   * Compute AI actions for the current (non-human) player.
+   * Returns an ordered list of actions to execute with pacing.
+   */
+  getAIActions(): AIAction[] {
+    const game = this.requireGame();
+    return AITurnExecutor.decide(game, game.currentPlayerIndex);
+  }
+
+  /**
+   * Execute a single AI action and return the updated snapshot.
+   * Returns a human-readable description of what happened.
+   */
+  executeAIAction(action: AIAction): { snapshot: GameTableState; description: string } {
+    const game = this.requireGame();
+    const player = game.players[game.currentPlayerIndex];
+    if (!player) throw new Error("No current player for AI action");
+
+    let description = "";
+
+    switch (action.type) {
+      case "equip":
+      case "play": {
+        if (!action.cardId) {
+          description = `${player.name} passes`;
+          break;
+        }
+        try {
+          this.playCard(action.cardId, action.targetIds);
+          const targetNames = action.targetIds
+            .map((id) => game.players.find((p) => p.id === id)?.name)
+            .filter(Boolean)
+            .join(", ");
+          description = targetNames
+            ? `${player.name} plays ${action.cardName ?? "a card"} targeting ${targetNames}`
+            : `${player.name} plays ${action.cardName ?? "a card"}`;
+        } catch {
+          description = `${player.name} attempted ${action.cardName ?? "a card"} (failed)`;
+        }
+        break;
+      }
+      case "skill":
+        description = `${player.name} activates a skill`;
+        break;
+      case "pass":
+        description = `${player.name} ends turn`;
+        break;
+    }
+
+    const snapshot = this.buildSnapshot();
+    this.notify(snapshot);
+    return { snapshot, description };
   }
 
   /* ================================================================ */
