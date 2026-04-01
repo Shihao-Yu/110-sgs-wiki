@@ -104,15 +104,15 @@ function makeGame(
 /* ------------------------------------------------------------------ */
 
 describe('QUN skill registration', () => {
-  it('registers all 60 generals worth of skills without duplicate IDs', () => {
+  it('registers all 87 generals worth of skills without duplicate IDs', () => {
     const registry = new SkillRegistry();
     registerQunSkills(registry);
 
     const ids = new Set(qunSkills.map(s => s.id));
     expect(ids.size).toBe(qunSkills.length);
 
-    // At minimum: 60 generals, most with 1-3 skills
-    expect(qunSkills.length).toBeGreaterThanOrEqual(60);
+    // At minimum: 87 generals, most with 1-3 skills
+    expect(qunSkills.length).toBeGreaterThanOrEqual(87);
   });
 
   it('retrieves every skill by its event triggers', () => {
@@ -124,6 +124,26 @@ describe('QUN skill registration', () => {
         const found = registry.getSkillsForEvent(trigger);
         expect(found.map(s => s.id)).toContain(skill.id);
       }
+    }
+  });
+
+  it('covers generals QUN061 through QUN087 in the registry', () => {
+    const generalIds = new Set(qunSkills.map(s => s.generalId));
+    for (let i = 61; i <= 87; i++) {
+      const id = `QUN0${i}`;
+      expect(generalIds.has(id as import('@sgs/data').GeneralId)).toBe(true);
+    }
+  });
+
+  it('every skill has required fields populated', () => {
+    for (const skill of qunSkills) {
+      expect(skill.id).toBeTruthy();
+      expect(skill.name).toBeTruthy();
+      expect(skill.generalId).toBeTruthy();
+      expect(skill.type).toBeTruthy();
+      expect(skill.triggers.length).toBeGreaterThan(0);
+      expect(typeof skill.canActivate).toBe('function');
+      expect(typeof skill.activate).toBe('function');
     }
   });
 });

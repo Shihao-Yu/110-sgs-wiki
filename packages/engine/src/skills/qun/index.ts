@@ -1,5 +1,5 @@
 /**
- * QUN faction skill registry — generals 001 through 060.
+ * QUN faction skill registry — generals 001 through 087.
  *
  * Registers all QUN skills with the central SkillRegistry.
  */
@@ -106,6 +106,33 @@ import { qun057Skills } from './qun057-beimihu.js';
 import { qun058Skills } from './qun058-mushun.js';
 import { qun059Skills } from './qun059-dongbai.js';
 import { qun060Skills } from './qun060-xushao.js';
+import { qun061Skills } from './qun061-zhangji.js';
+import { qun062Skills } from './qun062-liuyan.js';
+import { qun063Skills } from './qun063-guansuo.js';
+import { qun064Skills } from './qun064-baosanniang.js';
+import { qun065Skills } from './qun065-huaman.js';
+import { qun066Skills } from './qun066-tadun-sp.js';
+import { qun067Skills } from './qun067-zhangmancheng.js';
+import { qun068Skills } from './qun068-liubiao.js';
+import { qun069Skills } from './qun069-chengyu.js';
+import { qun070Skills } from './qun070-liuzhang.js';
+import { qun071Skills } from './qun071-zhanglu.js';
+import { qun072Skills } from './qun072-hetaihou-sp.js';
+import { qun073Skills } from './qun073-yanbaihu.js';
+import { qun074Skills } from './qun074-wangcan.js';
+import { qun075Skills } from './qun075-luzhi.js';
+import { qun076Skills } from './qun076-gongsunzan-sp.js';
+import { qun077Skills } from './qun077-caosong.js';
+import { qun078Skills } from './qun078-sufei.js';
+import { qun079Skills } from './qun079-zhangning.js';
+import { qun080Skills } from './qun080-hejin.js';
+import { qun081Skills } from './qun081-jianggan.js';
+import { qun082Skills } from './qun082-duanwei.js';
+import { qun083Skills } from './qun083-liupi.js';
+import { qun084Skills } from './qun084-gongsunyuan.js';
+import { qun085Skills } from './qun085-huangzu.js';
+import { qun086Skills } from './qun086-zhangren.js';
+import { qun087Skills } from './qun087-quyi.js';
 
 /** All QUN skill plugins in general order. */
 export const qunSkills: readonly SkillPlugin[] = [
@@ -229,6 +256,60 @@ export const qunSkills: readonly SkillPlugin[] = [
   ...qun059Skills,
   // QUN060 许劭
   ...qun060Skills,
+  // QUN061 张济
+  ...qun061Skills,
+  // QUN062 刘焉
+  ...qun062Skills,
+  // QUN063 关索
+  ...qun063Skills,
+  // QUN064 鲍三娘
+  ...qun064Skills,
+  // QUN065 花鬘
+  ...qun065Skills,
+  // QUN066 蹋顿(SP)
+  ...qun066Skills,
+  // QUN067 张曼成
+  ...qun067Skills,
+  // QUN068 刘表
+  ...qun068Skills,
+  // QUN069 程昱
+  ...qun069Skills,
+  // QUN070 刘璋
+  ...qun070Skills,
+  // QUN071 张鲁
+  ...qun071Skills,
+  // QUN072 何太后(SP)
+  ...qun072Skills,
+  // QUN073 严白虎
+  ...qun073Skills,
+  // QUN074 王粲
+  ...qun074Skills,
+  // QUN075 卢植
+  ...qun075Skills,
+  // QUN076 公孙瓒(SP)
+  ...qun076Skills,
+  // QUN077 曹嵩
+  ...qun077Skills,
+  // QUN078 苏飞
+  ...qun078Skills,
+  // QUN079 张宁
+  ...qun079Skills,
+  // QUN080 何进
+  ...qun080Skills,
+  // QUN081 蒋干
+  ...qun081Skills,
+  // QUN082 段煨
+  ...qun082Skills,
+  // QUN083 刘辟
+  ...qun083Skills,
+  // QUN084 公孙渊
+  ...qun084Skills,
+  // QUN085 黄祖
+  ...qun085Skills,
+  // QUN086 张任
+  ...qun086Skills,
+  // QUN087 麹义
+  ...qun087Skills,
 ];
 
 /** Register all QUN skills into a SkillRegistry instance. */
