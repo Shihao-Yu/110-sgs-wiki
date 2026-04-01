@@ -15,6 +15,7 @@ import type {
 import type { PlayerSlotData, EquipmentSlots, Faction } from "@/lib/game/store";
 import PlayerSlot from "@/components/game/PlayerSlot";
 import ReplayControls from "./ReplayControls";
+import Timeline from "./Timeline";
 
 /* ------------------------------------------------------------------ */
 /*  Phase labels (shared with GameTable)                               */
@@ -468,6 +469,14 @@ export default function ReplayViewer({ replay }: ReplayViewerProps) {
           </div>
         </div>
       </div>
+
+      {/* Visual timeline */}
+      <Timeline
+        replay={replay}
+        currentStep={currentStep}
+        totalSteps={timeline.length}
+        onSeek={handleSeek}
+      />
 
       {/* Playback controls */}
       <ReplayControls
