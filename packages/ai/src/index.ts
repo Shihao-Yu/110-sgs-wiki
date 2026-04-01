@@ -1,2 +1,2 @@
 // @sgs/ai — AI and simulation
-export {};
+export * from './strategy/index.js';
