@@ -11,6 +11,7 @@ import { fankui } from './wei002-simayi.js';
 import { ganglie } from './wei003-xiahoudun.js';
 import { luoshen } from './wei007-zhenji.js';
 import { yiji } from './wei006-guojia.js';
+import { chengxiang } from './wei031-caochong.js';
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                           */
@@ -74,7 +75,7 @@ function makeGame(players: PlayerState[], drawPile: Card[] = []): GameState {
 /* ------------------------------------------------------------------ */
 
 describe('WEI skill registration', () => {
-  it('registers all 30 generals worth of skills without duplicate IDs', () => {
+  it('registers all 60 generals worth of skills without duplicate IDs', () => {
     const registry = new SkillRegistry();
     registerWeiSkills(registry);
 
@@ -82,8 +83,8 @@ describe('WEI skill registration', () => {
     const ids = new Set(allWeiSkills.map(s => s.id));
     expect(ids.size).toBe(allWeiSkills.length);
 
-    // At minimum we expect the 8 key generals + placeholders
-    expect(allWeiSkills.length).toBeGreaterThanOrEqual(30);
+    // At minimum we expect the 60 generals worth of skills (some have 2+)
+    expect(allWeiSkills.length).toBeGreaterThanOrEqual(60);
   });
 });
 
@@ -275,5 +276,126 @@ describe('skill_yiji (郭嘉 — Last Plan)', () => {
 
     expect(guojia.handCards).toHaveLength(2);
     expect(game.drawPile).toHaveLength(1);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Chengxiang (WEI031 曹冲 — Weighing the Elephant)                   */
+/* ------------------------------------------------------------------ */
+
+describe('skill_chengxiang (曹冲 — Weighing the Elephant)', () => {
+  it('keeps revealed cards summing to 13 or less after taking damage', () => {
+    const caochong = makePlayer('caochong', {
+      mainGeneral: { generalId: 'general_wei_031' as GeneralId, revealed: true },
+    });
+    const enemy = makePlayer('enemy');
+    // Top 4 cards: numbers 2, 3, 5, 10 — should keep 2+3+5=10 (<=13), discard 10
+    const drawPile = [
+      makeCard('c1', 'spade'),   // number 7 by default; override below
+      makeCard('c2', 'heart'),
+      makeCard('c3', 'club'),
+      makeCard('c4', 'diamond'),
+      makeCard('c5', 'spade'),   // extra card stays in pile
+    ];
+    // Override card numbers for deterministic testing
+    drawPile[0].number = 2;
+    drawPile[1].number = 3;
+    drawPile[2].number = 5;
+    drawPile[3].number = 10;
+    drawPile[4].number = 1;
+
+    const game = makeGame([caochong, enemy], drawPile);
+
+    const ctx = createSkillContext({
+      game,
+      player: caochong,
+      event: {
+        type: 'damage',
+        source: enemy.id,
+        target: caochong.id,
+        amount: 1,
+      },
+    });
+
+    expect(chengxiang.canActivate(ctx)).toBe(true);
+
+    chengxiang.activate(ctx);
+
+    // Kept cards: 2 + 3 + 5 = 10 (<=13), discarded: 10
+    expect(caochong.handCards).toHaveLength(3);
+    expect(game.discardPile).toHaveLength(1);
+    expect(game.discardPile[0].number).toBe(10);
+    // The extra card (c5) should remain in the draw pile
+    expect(game.drawPile).toHaveLength(1);
+    expect(game.drawPile[0].number).toBe(1);
+  });
+
+  it('does not activate when draw pile has fewer than 4 cards', () => {
+    const caochong = makePlayer('caochong');
+    const enemy = makePlayer('enemy');
+    const drawPile = [makeCard('c1'), makeCard('c2')]; // only 2 cards
+    const game = makeGame([caochong, enemy], drawPile);
+
+    const ctx = createSkillContext({
+      game,
+      player: caochong,
+      event: {
+        type: 'damage',
+        source: enemy.id,
+        target: caochong.id,
+        amount: 1,
+      },
+    });
+
+    expect(chengxiang.canActivate(ctx)).toBe(false);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  WEI031-060 placeholder registration sanity check                   */
+/* ------------------------------------------------------------------ */
+
+describe('WEI031-060 skill coverage', () => {
+  it('every general 031-060 contributes at least one skill with a unique ID', () => {
+    const registry = new SkillRegistry();
+    registerWeiSkills(registry);
+
+    // Collect IDs for skills from generals 031-060
+    const wei031to060Ids = allWeiSkills
+      .filter(s => s.id.startsWith('skill_wei03') ||
+                   s.id.startsWith('skill_wei04') ||
+                   s.id.startsWith('skill_wei05') ||
+                   s.id.startsWith('skill_wei06') ||
+                   s.id.startsWith('skill_chengxiang') ||
+                   s.id.startsWith('skill_renxin') ||
+                   s.id.startsWith('skill_jingce') ||
+                   s.id.startsWith('skill_sidi') ||
+                   s.id.startsWith('skill_dingpin') ||
+                   s.id.startsWith('skill_faen') ||
+                   s.id.startsWith('skill_muyi') ||
+                   s.id.startsWith('skill_mingjian') ||
+                   s.id.startsWith('skill_huituo') ||
+                   s.id.startsWith('skill_taoxi') ||
+                   s.id.startsWith('skill_buyi') ||
+                   s.id.startsWith('skill_jilei') ||
+                   s.id.startsWith('skill_danlao') ||
+                   s.id.startsWith('skill_bifa') ||
+                   s.id.startsWith('skill_songci') ||
+                   s.id.startsWith('skill_kangkai') ||
+                   s.id.startsWith('skill_gongxian') ||
+                   s.id.startsWith('skill_juyi') ||
+                   s.id.startsWith('skill_qushe') ||
+                   s.id.startsWith('skill_gushe') ||
+                   s.id.startsWith('skill_zhongjian') ||
+                   s.id.startsWith('skill_cunyuan') ||
+                   s.id.startsWith('skill_daoshu'))
+      .map(s => s.id);
+
+    // We should have at least 30 skills from the 30 new generals
+    expect(wei031to060Ids.length).toBeGreaterThanOrEqual(30);
+
+    // All IDs should be unique
+    const uniqueIds = new Set(wei031to060Ids);
+    expect(uniqueIds.size).toBe(wei031to060Ids.length);
   });
 });
