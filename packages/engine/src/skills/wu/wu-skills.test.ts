@@ -86,8 +86,8 @@ describe('WU skill registration', () => {
       registry.register(skill);
     }
 
-    // Spot-check counts: 54 generals, but several have 2 skills
-    expect(wuSkills.length).toBeGreaterThanOrEqual(54);
+    // 79 generals (WU001-WU079), many with 2 skills
+    expect(wuSkills.length).toBeGreaterThanOrEqual(79);
 
     // Every skill should be retrievable by its event triggers
     for (const skill of wuSkills) {
@@ -96,6 +96,26 @@ describe('WU skill registration', () => {
         expect(found.map(s => s.id)).toContain(skill.id);
       }
     }
+  });
+
+  it('includes skills for WU055-WU079 generals', () => {
+    const newGeneralIds = [
+      'WU055', 'WU056', 'WU057', 'WU058', 'WU059', 'WU060',
+      'WU061', 'WU062', 'WU063', 'WU064', 'WU065', 'WU066',
+      'WU067', 'WU068', 'WU069', 'WU070', 'WU071', 'WU072',
+      'WU073', 'WU074', 'WU075', 'WU076', 'WU077', 'WU078',
+      'WU079',
+    ];
+    const registeredGeneralIds = new Set(wuSkills.map(s => s.generalId));
+    for (const id of newGeneralIds) {
+      expect(registeredGeneralIds.has(id as any)).toBe(true);
+    }
+  });
+
+  it('has unique IDs across all WU skills', () => {
+    const ids = wuSkills.map(s => s.id);
+    const uniqueIds = new Set(ids);
+    expect(uniqueIds.size).toBe(ids.length);
   });
 });
 

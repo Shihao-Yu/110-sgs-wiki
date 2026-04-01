@@ -1,5 +1,5 @@
 /**
- * WU faction skills — generals WU001 through WU054.
+ * WU faction skills — generals WU001 through WU079.
  *
  * Re-exports every individual skill and provides a convenience array
  * (`wuSkills`) for bulk registration with a SkillRegistry.
@@ -118,6 +118,56 @@ export { duanshu } from './wu052-zhu-yi.js';
 export { zhenwei } from './wu053-lu-kang.js';
 // WU054 徐夫人
 export { diwei } from './wu054-lady-xu.js';
+// WU055 朱然 (alt)
+export { danshouAlt } from './wu055-zhu-ran-alt.js';
+// WU056 孙峻
+export { duofeng, shiqin } from './wu056-sun-jun.js';
+// WU057 孙綝
+export { miewuAlt } from './wu057-sun-chen.js';
+// WU058 诸葛瑾
+export { huanshi, hongyuan } from './wu058-zhuge-jin.js';
+// WU059 徐盛 (alt)
+export { pojunAlt } from './wu059-xu-sheng-alt.js';
+// WU060 诸葛亮 (Wu ver.)
+export { huogong } from './wu060-zhu-ge-liang-wu.js';
+// WU061 凌操
+export { xuanfengAlt } from './wu061-ling-cao.js';
+// WU062 孙桓
+export { jieyi } from './wu062-sun-huan.js';
+// WU063 全怿
+export { guizao } from './wu063-quan-yi.js';
+// WU064 孙茹
+export { miji } from './wu064-sun-ru.js';
+// WU065 诸葛恪 (alt)
+export { aocaiAlt } from './wu065-zhuge-ke-alt.js';
+// WU066 吕岱
+export { zhengu } from './wu066-lu-dai.js';
+// WU067 蒋琬
+export { chengye, junyi } from './wu067-jiang-wan.js';
+// WU068 曹婴
+export { lingce } from './wu068-cao-ying.js';
+// WU069 谢景
+export { zhili } from './wu069-xie-jing.js';
+// WU070 留赞
+export { fenming as fenmingAlt } from './wu070-liu-zan.js';
+// WU071 裴秀
+export { mingtu } from './wu071-pei-xiu.js';
+// WU072 吴景
+export { fenyong } from './wu072-wu-jing.js';
+// WU073 孙翊 (alt)
+export { hanyongAlt } from './wu073-sun-yi-alt.js';
+// WU074 吴夫人
+export { ganlu, buyi } from './wu074-lady-wu.js';
+// WU075 程党
+export { zhongfu } from './wu075-cheng-dang.js';
+// WU076 孙邻
+export { fayue } from './wu076-sun-lin.js';
+// WU077 阚泽
+export { chenci } from './wu077-kan-ze.js';
+// WU078 徐质
+export { xiaoxi } from './wu078-xu-zhi.js';
+// WU079 朱桓 (alt)
+export { fenweiAlt } from './wu079-zhu-huan-alt.js';
 
 // — Imports for the aggregate array —
 import { zhiheng } from './wu001-zhiheng.js';
@@ -178,6 +228,31 @@ import { yishe } from './wu051-pan-jun.js';
 import { duanshu } from './wu052-zhu-yi.js';
 import { zhenwei } from './wu053-lu-kang.js';
 import { diwei } from './wu054-lady-xu.js';
+import { danshouAlt } from './wu055-zhu-ran-alt.js';
+import { duofeng, shiqin } from './wu056-sun-jun.js';
+import { miewuAlt } from './wu057-sun-chen.js';
+import { huanshi, hongyuan } from './wu058-zhuge-jin.js';
+import { pojunAlt } from './wu059-xu-sheng-alt.js';
+import { huogong } from './wu060-zhu-ge-liang-wu.js';
+import { xuanfengAlt } from './wu061-ling-cao.js';
+import { jieyi } from './wu062-sun-huan.js';
+import { guizao } from './wu063-quan-yi.js';
+import { miji } from './wu064-sun-ru.js';
+import { aocaiAlt } from './wu065-zhuge-ke-alt.js';
+import { zhengu } from './wu066-lu-dai.js';
+import { chengye, junyi } from './wu067-jiang-wan.js';
+import { lingce } from './wu068-cao-ying.js';
+import { zhili } from './wu069-xie-jing.js';
+import { fenming as fenmingAlt } from './wu070-liu-zan.js';
+import { mingtu } from './wu071-pei-xiu.js';
+import { fenyong } from './wu072-wu-jing.js';
+import { hanyongAlt } from './wu073-sun-yi-alt.js';
+import { ganlu, buyi } from './wu074-lady-wu.js';
+import { zhongfu } from './wu075-cheng-dang.js';
+import { fayue } from './wu076-sun-lin.js';
+import { chenci } from './wu077-kan-ze.js';
+import { xiaoxi } from './wu078-xu-zhi.js';
+import { fenweiAlt } from './wu079-zhu-huan-alt.js';
 
 /** All WU faction skills in registration order. */
 export const wuSkills: readonly SkillPlugin[] = [
@@ -309,4 +384,58 @@ export const wuSkills: readonly SkillPlugin[] = [
   zhenwei,
   // WU054 徐夫人
   diwei,
+  // WU055 朱然 (alt)
+  danshouAlt,
+  // WU056 孙峻
+  duofeng,
+  shiqin,
+  // WU057 孙綝
+  miewuAlt,
+  // WU058 诸葛瑾
+  huanshi,
+  hongyuan,
+  // WU059 徐盛 (alt)
+  pojunAlt,
+  // WU060 诸葛亮 (Wu ver.)
+  huogong,
+  // WU061 凌操
+  xuanfengAlt,
+  // WU062 孙桓
+  jieyi,
+  // WU063 全怿
+  guizao,
+  // WU064 孙茹
+  miji,
+  // WU065 诸葛恪 (alt)
+  aocaiAlt,
+  // WU066 吕岱
+  zhengu,
+  // WU067 蒋琬
+  chengye,
+  junyi,
+  // WU068 曹婴
+  lingce,
+  // WU069 谢景
+  zhili,
+  // WU070 留赞
+  fenmingAlt,
+  // WU071 裴秀
+  mingtu,
+  // WU072 吴景
+  fenyong,
+  // WU073 孙翊 (alt)
+  hanyongAlt,
+  // WU074 吴夫人
+  ganlu,
+  buyi,
+  // WU075 程党
+  zhongfu,
+  // WU076 孙邻
+  fayue,
+  // WU077 阚泽
+  chenci,
+  // WU078 徐质
+  xiaoxi,
+  // WU079 朱桓 (alt)
+  fenweiAlt,
 ];
