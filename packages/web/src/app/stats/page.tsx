@@ -19,13 +19,12 @@ const subSections = [
       "M3 10h4v11H3zm7-4h4v15h-4zm7-3h4v18h-4z",
   },
   {
-    href: "/stats/comparison",
+    href: "/stats/compare",
     title: "武将对比",
     english: "Comparison",
-    description: "选择两名武将，对比胜率、维度评分与配将推荐。",
+    description: "选择 2-4 名武将，叠加雷达图对比四维评分与属性差异。",
     iconPath:
       "M8 7h3V4H8zm0 13h3v-3H8zm5-13h3V4h-3zm0 13h3v-3h-3zM3 11h18v2H3z",
-    comingSoon: true,
   },
   {
     href: "/stats/factors",
