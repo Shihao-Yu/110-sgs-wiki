@@ -1,4 +1,11 @@
 import { create } from "zustand";
+import type { GameCard, Suit, CardCategory } from "@/components/game/CardComponent";
+
+/* ------------------------------------------------------------------ */
+/*  Re-export card types for convenience                               */
+/* ------------------------------------------------------------------ */
+
+export type { GameCard, Suit, CardCategory };
 
 /* ------------------------------------------------------------------ */
 /*  Lightweight UI types — no dependency on @sgs/engine at this stage  */
@@ -46,6 +53,11 @@ export interface GameTableState {
   currentPhase: PhaseType;
   turnCount: number;
   gameOver: boolean;
+
+  /** Human player's hand cards. */
+  hand: GameCard[];
+  /** Currently selected card ids in hand. */
+  selectedCardIds: string[];
 }
 
 export interface GameTableActions {
@@ -57,6 +69,15 @@ export interface GameTableActions {
   togglePlayerAlive: (playerId: string) => void;
   /** Change player count (4-8). Resets with fresh placeholder data. */
   setPlayerCount: (count: number) => void;
+
+  /** Toggle a card's selected state in the hand. */
+  toggleCardSelected: (cardId: string) => void;
+  /** Play (remove) a single card from hand by id (e.g. via drag-and-drop). */
+  playCard: (cardId: string) => void;
+  /** Play all currently selected cards. */
+  playSelectedCards: () => void;
+  /** Discard all currently selected cards. */
+  discardSelectedCards: () => void;
 }
 
 /* ------------------------------------------------------------------ */
@@ -72,6 +93,48 @@ const SAMPLE_GENERALS: Record<Faction, string[]> = {
   QUN: ["吕布", "貂蝉", "董卓", "袁绍", "华佗", "张角", "公孙瓒", "颜良文丑"],
   JIN: ["司马师", "司马昭", "贾充", "钟会", "邓艾", "王元姬", "张春华", "乐綝"],
 };
+
+/* ------------------------------------------------------------------ */
+/*  Sample hand cards for sandbox testing                              */
+/* ------------------------------------------------------------------ */
+
+const SUITS: Suit[] = ["spade", "heart", "club", "diamond"];
+
+const SAMPLE_CARDS: { name: string; category: CardCategory }[] = [
+  { name: "杀", category: "basic" },
+  { name: "闪", category: "basic" },
+  { name: "桃", category: "basic" },
+  { name: "过河拆桥", category: "trick" },
+  { name: "顺手牵羊", category: "trick" },
+  { name: "无中生有", category: "trick" },
+  { name: "南蛮入侵", category: "trick" },
+  { name: "万箭齐发", category: "trick" },
+  { name: "青龙偃月刀", category: "equipment" },
+  { name: "八卦阵", category: "equipment" },
+  { name: "的卢", category: "equipment" },
+  { name: "赤兔", category: "equipment" },
+];
+
+let cardIdCounter = 0;
+
+function generateSampleHand(count: number): GameCard[] {
+  return Array.from({ length: count }, (_, i) => {
+    const template = SAMPLE_CARDS[i % SAMPLE_CARDS.length]!;
+    const suit = SUITS[i % SUITS.length]!;
+    const number = (i % 13) + 1;
+    return {
+      id: `card-${++cardIdCounter}`,
+      name: template.name,
+      suit,
+      number,
+      category: template.category,
+    };
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Placeholder equipment / player generators                          */
+/* ------------------------------------------------------------------ */
 
 function makePlaceholderEquipment(): EquipmentSlots {
   return {
@@ -128,6 +191,8 @@ export const useGameStore = create<GameTableState & GameTableActions>(
     currentPhase: "play",
     turnCount: 1,
     gameOver: false,
+    hand: generateSampleHand(6),
+    selectedCardIds: [],
 
     setGameState: (partial) => set((s) => ({ ...s, ...partial })),
 
@@ -146,6 +211,9 @@ export const useGameStore = create<GameTableState & GameTableActions>(
           currentPlayerIndex: nextIndex >= 0 ? nextIndex : 0,
           currentPhase: "play" as PhaseType,
           turnCount: s.turnCount + 1,
+          // Draw 2 new cards at start of turn (sandbox simulation)
+          hand: [...s.hand, ...generateSampleHand(2)],
+          selectedCardIds: [],
         };
       }),
 
@@ -166,7 +234,45 @@ export const useGameStore = create<GameTableState & GameTableActions>(
         gameOver: false,
         drawPileCount: 160 - clamped * 8,
         discardPileCount: 0,
+        hand: generateSampleHand(6),
+        selectedCardIds: [],
       });
     },
+
+    /* -- Hand card actions ------------------------------------------- */
+
+    toggleCardSelected: (cardId) =>
+      set((s) => ({
+        selectedCardIds: s.selectedCardIds.includes(cardId)
+          ? s.selectedCardIds.filter((id) => id !== cardId)
+          : [...s.selectedCardIds, cardId],
+      })),
+
+    playCard: (cardId) =>
+      set((s) => ({
+        hand: s.hand.filter((c) => c.id !== cardId),
+        selectedCardIds: s.selectedCardIds.filter((id) => id !== cardId),
+        discardPileCount: s.discardPileCount + 1,
+      })),
+
+    playSelectedCards: () =>
+      set((s) => {
+        const ids = new Set(s.selectedCardIds);
+        return {
+          hand: s.hand.filter((c) => !ids.has(c.id)),
+          selectedCardIds: [],
+          discardPileCount: s.discardPileCount + ids.size,
+        };
+      }),
+
+    discardSelectedCards: () =>
+      set((s) => {
+        const ids = new Set(s.selectedCardIds);
+        return {
+          hand: s.hand.filter((c) => !ids.has(c.id)),
+          selectedCardIds: [],
+          discardPileCount: s.discardPileCount + ids.size,
+        };
+      }),
   }),
 );

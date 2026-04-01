@@ -2,6 +2,8 @@
 
 import { useGameStore } from "@/lib/game/store";
 import PlayerSlot from "./PlayerSlot";
+import HandCards from "./HandCards";
+import DropZone from "./DropZone";
 
 /* ------------------------------------------------------------------ */
 /*  Phase label mapping                                                */
@@ -49,6 +51,7 @@ export default function GameTable() {
   const nextTurn = useGameStore((s) => s.nextTurn);
   const togglePlayerAlive = useGameStore((s) => s.togglePlayerAlive);
   const setPlayerCount = useGameStore((s) => s.setPlayerCount);
+  const playCard = useGameStore((s) => s.playCard);
 
   const positions = seatPositions(players.length);
 
@@ -102,7 +105,7 @@ export default function GameTable() {
         ))}
 
         {/* Center info (inline on small screens) */}
-        <div className="col-span-2 flex items-center justify-center gap-6 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 dark:border-slate-700/80 dark:bg-slate-900/80 sm:col-span-3">
+        <div className="col-span-2 flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 dark:border-slate-700/80 dark:bg-slate-900/80 sm:col-span-3">
           <CenterInfo
             discardPileCount={discardPileCount}
             drawPileCount={drawPileCount}
@@ -110,6 +113,16 @@ export default function GameTable() {
             turnCount={turnCount}
             currentPlayerName={players[currentPlayerIndex]?.name ?? "—"}
           />
+          <DropZone
+            className="h-16 w-full"
+            label="拖牌到此处出牌"
+            onDrop={playCard}
+          />
+        </div>
+
+        {/* Hand cards (small screen) */}
+        <div className="col-span-2 sm:col-span-3">
+          <HandCards />
         </div>
       </div>
 
@@ -136,9 +149,9 @@ export default function GameTable() {
           );
         })}
 
-        {/* Center area: draw pile, discard pile, turn info */}
+        {/* Center area: draw pile, discard pile, turn info, drop zone */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-6 py-4 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-black/20 px-6 py-4 backdrop-blur-sm">
             <CenterInfo
               discardPileCount={discardPileCount}
               drawPileCount={drawPileCount}
@@ -146,8 +159,18 @@ export default function GameTable() {
               turnCount={turnCount}
               currentPlayerName={players[currentPlayerIndex]?.name ?? "—"}
             />
+            <DropZone
+              className="h-14 w-40"
+              label="拖牌到此处出牌"
+              onDrop={playCard}
+            />
           </div>
         </div>
+      </div>
+
+      {/* Hand cards at bottom — visible on md+ */}
+      <div className="mx-auto hidden w-full max-w-4xl md:block">
+        <HandCards />
       </div>
     </div>
   );
