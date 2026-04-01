@@ -7,6 +7,9 @@
  *
  * QUN000 十常侍 is a special multi-character general with unique seat mechanics.
  *
+ * Emperor generals (EM001–EM004) possess lord-only skills (主公技) that let
+ * the lord request assistance from same-faction players.
+ *
  * Registers all special skills with the central SkillRegistry.
  */
 
@@ -24,6 +27,10 @@ import { weiWu074Skills } from './wei-wu074-wenyang.js';
 
 // Special mechanics
 import { qun000Skills } from './qun000-shichangshi.js';
+import { shichangshiSkills } from './shichangshi-skills.js';
+
+// Emperor lord skills
+import { emperorSkills } from './emperor-skills.js';
 
 // Re-export individual skill arrays for direct access
 export { qunShu072Skills } from './qun-shu072-liuqi.js';
@@ -34,6 +41,8 @@ export { weiShu079Skills } from './wei-shu079-mengda.js';
 export { weiWu072Skills } from './wei-wu072-tangzi.js';
 export { weiWu074Skills } from './wei-wu074-wenyang.js';
 export { qun000Skills } from './qun000-shichangshi.js';
+export { shichangshiSkills } from './shichangshi-skills.js';
+export { emperorSkills } from './emperor-skills.js';
 
 // Re-export faction metadata
 export { DUAL_FACTION as LIUQI_FACTIONS } from './qun-shu072-liuqi.js';
@@ -44,8 +53,10 @@ export { DUAL_FACTION as MENGDA_FACTIONS } from './wei-shu079-mengda.js';
 export { DUAL_FACTION as TANGZI_FACTIONS } from './wei-wu072-tangzi.js';
 export { DUAL_FACTION as WENYANG_FACTIONS } from './wei-wu074-wenyang.js';
 export { IS_MULTI_CHARACTER as SHICHANGSHI_MULTI_CHARACTER } from './qun000-shichangshi.js';
+export { EMPEROR_FACTIONS } from './emperor-skills.js';
+export { SUB_CHARACTER_COUNT as SHICHANGSHI_SUB_COUNT } from './shichangshi-skills.js';
 
-/** All special general skill plugins (dual-faction + unique mechanic). */
+/** All special general skill plugins (dual-faction + unique mechanic + emperor). */
 export const specialSkills: readonly SkillPlugin[] = [
   // Dual-faction generals
   // QUN&SHU072 刘琦
@@ -63,8 +74,11 @@ export const specialSkills: readonly SkillPlugin[] = [
   // WEI&WU074 文鸯
   ...weiWu074Skills,
   // Special mechanics
-  // QUN000 十常侍
+  // QUN000 十常侍 (placeholder + unique mechanics)
   ...qun000Skills,
+  ...shichangshiSkills,
+  // Emperor lord skills (EM001–EM004)
+  ...emperorSkills,
 ];
 
 /** Register all special general skills into a SkillRegistry instance. */
