@@ -1,7 +1,7 @@
-export { ReplayParser, ReplayParseError } from './parser.js';
+export { ReplayParser, ReplayParseError } from './parser';
 export type {
   ReplayData,
   ReplayPlayer,
   ReplayTurn,
   ReplayAction,
-} from './types.js';
+} from './types';

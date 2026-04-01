@@ -6,7 +6,7 @@
  */
 
 import type { Faction } from '@sgs/data';
-import type { ReplayAction, ReplayData, ReplayPlayer, ReplayTurn } from './types.js';
+import type { ReplayAction, ReplayData, ReplayPlayer, ReplayTurn } from './types';
 
 const VALID_FACTIONS: ReadonlySet<string> = new Set<string>([
   'WEI', 'SHU', 'WU', 'QUN', 'JIN',
@@ -38,9 +38,10 @@ export class ReplayParser {
     return this.validate(raw);
   }
 
-  /** Read and parse a replay file. */
+  /** Read and parse a replay file (server-only). */
   static async fromFile(path: string): Promise<ReplayData> {
-    const fs = await import('fs/promises');
+    // webpack-ignore: this method is server-only and should not be bundled for the client
+    const fs = await import(/* webpackIgnore: true */ 'fs/promises');
     const content = await fs.readFile(path, 'utf-8');
     return new ReplayParser().parse(content);
   }
