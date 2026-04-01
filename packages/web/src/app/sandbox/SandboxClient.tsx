@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import GameTable from "@/components/game/GameTable";
 import { useGameController } from "@/lib/game/hooks/useGameController";
+import { useGameStore } from "@/lib/game/store";
 
 /* Local card type — avoids build-time dependency on @sgs/data */
 interface Card {
@@ -100,12 +101,48 @@ function makeSandboxDeck(): Card[] {
 }
 
 /* ------------------------------------------------------------------ */
+/*  AI Thinking Indicator                                              */
+/* ------------------------------------------------------------------ */
+
+function AIThinkingBanner() {
+  const aiThinking = useGameStore((s) => s.aiThinking);
+  const aiCurrentPlayer = useGameStore((s) => s.aiCurrentPlayer);
+  const aiCurrentAction = useGameStore((s) => s.aiCurrentAction);
+
+  if (!aiThinking) return null;
+
+  return (
+    <div className="flex items-center gap-3 rounded-lg border border-indigo-400/40 bg-indigo-950/60 px-4 py-2.5 shadow-md">
+      {/* Animated dots */}
+      <span className="flex items-center gap-1">
+        <span className="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style={{ animationDelay: "0ms" }} />
+        <span className="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style={{ animationDelay: "150ms" }} />
+        <span className="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style={{ animationDelay: "300ms" }} />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-indigo-200">
+          {aiCurrentPlayer
+            ? `${aiCurrentPlayer} is thinking...`
+            : "AI players taking turns..."}
+        </p>
+        {aiCurrentAction && (
+          <p className="truncate text-xs text-indigo-300/70">
+            {aiCurrentAction}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
 export default function SandboxClient() {
   const {
     isActive,
+    aiThinking,
     initGame,
     endTurn,
     validActions,
@@ -156,7 +193,8 @@ export default function SandboxClient() {
         <p className="max-w-sm text-center text-xs text-slate-500 dark:text-slate-500">
           Starts a game driven by the @sgs/engine. Cards are dealt from a
           shuffled deck, turns follow the 6-phase system, and actions
-          resolve through the engine&apos;s resolution stack.
+          resolve through the engine&apos;s resolution stack. AI players
+          auto-execute their turns after you end yours.
         </p>
       </div>
     );
@@ -168,9 +206,12 @@ export default function SandboxClient() {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* AI thinking indicator */}
+      <AIThinkingBanner />
+
       {/* Engine-specific toolbar additions */}
       <div className="flex flex-wrap items-center gap-3">
-        {validActions?.canEndPhase && (
+        {validActions?.canEndPhase && !aiThinking && (
           <button
             className="rounded-lg border border-amber-400/60 bg-amber-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-amber-500"
             onClick={endTurn}
@@ -179,14 +220,14 @@ export default function SandboxClient() {
             End Turn
           </button>
         )}
-        {validActions && validActions.mustDiscard > 0 && (
+        {validActions && validActions.mustDiscard > 0 && !aiThinking && (
           <span className="text-xs text-red-400">
             Must discard {validActions.mustDiscard} card
             {validActions.mustDiscard > 1 ? "s" : ""}
           </span>
         )}
         <span className="text-[10px] text-emerald-400">
-          Engine Mode
+          Engine Mode {aiThinking ? " (AI)" : ""}
         </span>
       </div>
 
