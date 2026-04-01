@@ -5,3 +5,7 @@ export {
   type SkillResponseHandler,
 } from './skill-context.js';
 export { SkillRegistry } from './skill-registry.js';
+export {
+  specialSkills,
+  registerSpecialSkills,
+} from './special/index.js';
