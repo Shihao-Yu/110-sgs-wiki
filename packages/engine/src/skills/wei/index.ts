@@ -1,5 +1,5 @@
 /**
- * WEI faction skill registry — generals 001 through 060.
+ * WEI faction skill registry — generals 001 through 088.
  *
  * Registers all WEI skills with the central SkillRegistry.
  */
@@ -67,6 +67,34 @@ import { wei057Skills } from './wei057-caoying.js';
 import { wei058Skills } from './wei058-tangzi.js';
 import { wei059Skills } from './wei059-wenyong.js';
 import { wei060Skills } from './wei060-jianggan.js';
+import { wei061Skills } from './wei061-simazhao.js';
+import { wei062Skills } from './wei062-simashi.js';
+import { wei063Skills } from './wei063-zhanghu.js';
+import { wei064Skills } from './wei064-lebin.js';
+import { wei065Skills } from './wei065-wangshuang.js';
+import { wei066Skills } from './wei066-bianfuren.js';
+import { wei067Skills } from './wei067-liufang.js';
+import { wei068Skills } from './wei068-sunzi.js';
+import { wei069Skills } from './wei069-xiahouhui.js';
+import { wei070Skills } from './wei070-duji.js';
+import { wei071Skills } from './wei071-zhangji.js';
+import { wei072Skills } from './wei072-xiahoushang.js';
+import { wei073Skills } from './wei073-caoshuang.js';
+import { wei074Skills } from './wei074-zhangling.js';
+import { wei075Skills } from './wei075-wenpin.js';
+import { wei076Skills } from './wei076-caoanmin.js';
+import { wei077Skills } from './wei077-dingyi.js';
+import { wei078Skills } from './wei078-dingyi2.js';
+import { wei079Skills } from './wei079-liufu.js';
+import { wei080Skills } from './wei080-liuxie.js';
+import { wei081Skills } from './wei081-zangba.js';
+import { wei082Skills } from './wei082-caojie.js';
+import { wei083Skills } from './wei083-kuailiangkuaiyue.js';
+import { wei084Skills } from './wei084-caoxi.js';
+import { wei085Skills } from './wei085-zhangqian.js';
+import { wei086Skills } from './wei086-caomao.js';
+import { wei087Skills } from './wei087-zhugexu.js';
+import { wei088Skills } from './wei088-wangling.js';
 
 /** All WEI skill plugins in general order. */
 export const allWeiSkills: SkillPlugin[] = [
@@ -130,6 +158,34 @@ export const allWeiSkills: SkillPlugin[] = [
   ...wei058Skills,
   ...wei059Skills,
   ...wei060Skills,
+  ...wei061Skills,
+  ...wei062Skills,
+  ...wei063Skills,
+  ...wei064Skills,
+  ...wei065Skills,
+  ...wei066Skills,
+  ...wei067Skills,
+  ...wei068Skills,
+  ...wei069Skills,
+  ...wei070Skills,
+  ...wei071Skills,
+  ...wei072Skills,
+  ...wei073Skills,
+  ...wei074Skills,
+  ...wei075Skills,
+  ...wei076Skills,
+  ...wei077Skills,
+  ...wei078Skills,
+  ...wei079Skills,
+  ...wei080Skills,
+  ...wei081Skills,
+  ...wei082Skills,
+  ...wei083Skills,
+  ...wei084Skills,
+  ...wei085Skills,
+  ...wei086Skills,
+  ...wei087Skills,
+  ...wei088Skills,
 ];
 
 /** Register all WEI skills into a SkillRegistry instance. */
