@@ -4,6 +4,9 @@ import { useGameStore } from "@/lib/game/store";
 import PlayerSlot from "./PlayerSlot";
 import HandCards from "./HandCards";
 import DropZone from "./DropZone";
+import SkillPanel from "./SkillPanel";
+import TargetSelector from "./TargetSelector";
+import ResponsePrompt from "./ResponsePrompt";
 
 /* ------------------------------------------------------------------ */
 /*  Phase label mapping                                                */
@@ -52,6 +55,7 @@ export default function GameTable() {
   const togglePlayerAlive = useGameStore((s) => s.togglePlayerAlive);
   const setPlayerCount = useGameStore((s) => s.setPlayerCount);
   const playCard = useGameStore((s) => s.playCard);
+  const showResponsePrompt = useGameStore((s) => s.showResponsePrompt);
 
   const positions = seatPositions(players.length);
 
@@ -80,6 +84,20 @@ export default function GameTable() {
           type="button"
         >
           Next Turn
+        </button>
+
+        <button
+          className="rounded-lg border border-slate-300 bg-white px-3 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          onClick={() =>
+            showResponsePrompt({
+              message: "是否使用闪?",
+              cardName: "闪",
+              promptId: "test-shan",
+            })
+          }
+          type="button"
+        >
+          Test Response
         </button>
 
         <span className="text-xs text-slate-500 dark:text-slate-400">
@@ -172,6 +190,15 @@ export default function GameTable() {
       <div className="mx-auto hidden w-full max-w-4xl md:block">
         <HandCards />
       </div>
+
+      {/* Skill panel — below hand cards */}
+      <div className="mx-auto w-full max-w-4xl">
+        <SkillPanel />
+      </div>
+
+      {/* Overlays — rendered outside layout flow */}
+      <TargetSelector />
+      <ResponsePrompt />
     </div>
   );
 }
