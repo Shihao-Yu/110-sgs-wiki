@@ -86,8 +86,8 @@ describe('WU skill registration', () => {
       registry.register(skill);
     }
 
-    // Spot-check counts: 27 generals, but several have 2 skills
-    expect(wuSkills.length).toBeGreaterThanOrEqual(27);
+    // Spot-check counts: 54 generals, but several have 2 skills
+    expect(wuSkills.length).toBeGreaterThanOrEqual(54);
 
     // Every skill should be retrievable by its event triggers
     for (const skill of wuSkills) {
@@ -306,6 +306,143 @@ describe('WU002 qixi', () => {
         type: 'playCard',
         player: player.id,
         card: redCard,
+      },
+    });
+
+    expect(skill.canActivate(ctx)).toBe(false);
+  });
+});
+
+// --- WU035 断发 (Duanfa) ---------------------------------------------------
+
+describe('WU035 duanfa', () => {
+  it('discards black-suited cards and draws the same number', () => {
+    const hand = [
+      makeCard('h1', { suit: 'spade' }),
+      makeCard('h2', { suit: 'club' }),
+      makeCard('h3', { suit: 'heart' }),
+    ];
+    const player = makePlayer('p1', {
+      mainGeneralId: 'WU035',
+      skills: ['duanfa'],
+      handCards: hand,
+    });
+    const game = makeGame([player]);
+    const skill = wuSkills.find(s => s.id === 'duanfa')!;
+
+    const ctx = createSkillContext({
+      game,
+      player,
+      event: {
+        type: 'playCard',
+        player: player.id,
+        card: makeCard('trigger'),
+      },
+    });
+
+    expect(skill.canActivate(ctx)).toBe(true);
+    skill.activate(ctx);
+
+    // 2 black cards discarded, 2 drawn; 1 red card remains from original hand
+    expect(game.discardPile).toHaveLength(2);
+    // Player should have 1 original red card + 2 newly drawn = 3 cards
+    expect(player.handCards).toHaveLength(3);
+  });
+
+  it('does not activate when no black-suited cards in hand', () => {
+    const hand = [
+      makeCard('h1', { suit: 'heart' }),
+      makeCard('h2', { suit: 'diamond' }),
+    ];
+    const player = makePlayer('p1', {
+      mainGeneralId: 'WU035',
+      skills: ['duanfa'],
+      handCards: hand,
+    });
+    const game = makeGame([player]);
+    const skill = wuSkills.find(s => s.id === 'duanfa')!;
+
+    const ctx = createSkillContext({
+      game,
+      player,
+      event: {
+        type: 'playCard',
+        player: player.id,
+        card: makeCard('trigger', { suit: 'heart' }),
+      },
+    });
+
+    expect(skill.canActivate(ctx)).toBe(false);
+  });
+});
+
+// --- WU047 激昂 (Jiang) ----------------------------------------------------
+
+describe('WU047 jiang', () => {
+  it('draws 1 card when using a red Slash', () => {
+    const player = makePlayer('p1', {
+      mainGeneralId: 'WU047',
+      skills: ['jiang'],
+    });
+    const game = makeGame([player]);
+    const skill = wuSkills.find(s => s.id === 'jiang')!;
+
+    const redSlash = makeCard('rs', { suit: 'heart', name: 'Slash' });
+    const ctx = createSkillContext({
+      game,
+      player,
+      event: {
+        type: 'playCard',
+        player: player.id,
+        card: redSlash,
+        targets: ['p2' as PlayerId],
+      },
+    });
+
+    expect(skill.canActivate(ctx)).toBe(true);
+    skill.activate(ctx);
+
+    expect(player.handCards).toHaveLength(1);
+  });
+
+  it('does not activate on black-suited Slash', () => {
+    const player = makePlayer('p1', {
+      mainGeneralId: 'WU047',
+      skills: ['jiang'],
+    });
+    const game = makeGame([player]);
+    const skill = wuSkills.find(s => s.id === 'jiang')!;
+
+    const blackSlash = makeCard('bs', { suit: 'spade', name: 'Slash' });
+    const ctx = createSkillContext({
+      game,
+      player,
+      event: {
+        type: 'playCard',
+        player: player.id,
+        card: blackSlash,
+      },
+    });
+
+    expect(skill.canActivate(ctx)).toBe(false);
+  });
+
+  it('does not activate on red non-Slash cards', () => {
+    const player = makePlayer('p1', {
+      mainGeneralId: 'WU047',
+      skills: ['jiang'],
+    });
+    const game = makeGame([player]);
+    const skill = wuSkills.find(s => s.id === 'jiang')!;
+
+    const redPeach = makeCard('rp', { suit: 'heart', name: 'Peach' });
+    const ctx = createSkillContext({
+      game,
+      player,
+      event: {
+        type: 'playCard',
+        player: player.id,
+        card: redPeach,
       },
     });
 
