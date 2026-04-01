@@ -1,9 +1,15 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import GameTable from "@/components/game/GameTable";
 import { useGameController } from "@/lib/game/hooks/useGameController";
 import { useGameStore } from "@/lib/game/store";
+import { ReplayRecorder } from "@/lib/game/replay-recorder";
+import type { RecordedPlayer } from "@/lib/game/replay-recorder";
+import type { Faction } from "@/lib/game/store";
+import GameSetup from "./components/GameSetup";
+import type { GameSetupResult } from "./components/GameSetup";
 
 /* Local card type — avoids build-time dependency on @sgs/data */
 interface Card {
@@ -101,6 +107,12 @@ function makeSandboxDeck(): Card[] {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Faction assignments                                                */
+/* ------------------------------------------------------------------ */
+
+const FACTIONS: Faction[] = ["WEI", "SHU", "WU", "QUN", "JIN"];
+
+/* ------------------------------------------------------------------ */
 /*  AI Thinking Indicator                                              */
 /* ------------------------------------------------------------------ */
 
@@ -136,10 +148,60 @@ function AIThinkingBanner() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Game-over overlay with replay actions                              */
+/* ------------------------------------------------------------------ */
+
+function GameOverOverlay({
+  onDownload,
+  onViewReplay,
+  onNewGame,
+}: {
+  onDownload: () => void;
+  onViewReplay: () => void;
+  onNewGame: () => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-amber-400/30 bg-amber-950/50 p-6 text-center">
+      <h3 className="text-lg font-semibold text-amber-200">
+        Game Over
+      </h3>
+      <p className="mt-1 text-sm text-amber-300/70">
+        The game has ended. You can download the replay, view it in the
+        replay viewer, or start a new game.
+      </p>
+      <div className="mt-4 flex flex-wrap justify-center gap-3">
+        <button
+          type="button"
+          onClick={onDownload}
+          className="rounded-lg border border-slate-300/60 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+        >
+          Download Replay
+        </button>
+        <button
+          type="button"
+          onClick={onViewReplay}
+          className="rounded-lg border border-blue-400/60 bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-500"
+        >
+          View Replay
+        </button>
+        <button
+          type="button"
+          onClick={onNewGame}
+          className="rounded-lg border border-emerald-400/60 bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-500"
+        >
+          New Game
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
 export default function SandboxClient() {
+  const router = useRouter();
   const {
     isActive,
     aiThinking,
@@ -147,57 +209,128 @@ export default function SandboxClient() {
     endTurn,
     validActions,
   } = useGameController();
-  const [playerCount, setPlayerCount] = useState(8);
 
-  const handleStart = useCallback(() => {
-    initGame({
-      playerCount,
-      deck: makeSandboxDeck(),
-      humanPlayerIndex: 0,
-    });
-  }, [initGame, playerCount]);
+  const [showSetup, setShowSetup] = useState(true);
+  const [setupResult, setSetupResult] = useState<GameSetupResult | null>(null);
+  const recorderRef = useRef<ReplayRecorder | null>(null);
+
+  const gameOver = useGameStore((s) => s.gameOver);
+  const turnCount = useGameStore((s) => s.turnCount);
+  const players = useGameStore((s) => s.players);
+  const currentPlayerIndex = useGameStore((s) => s.currentPlayerIndex);
+
+  /* -- Record actions on state changes ------------------------------ */
+
+  // We subscribe to store changes via a ref-based approach to avoid
+  // re-render loops. The recorder captures key game events.
+
+  const lastTurnRef = useRef(0);
+
+  // Record turn transitions
+  if (recorderRef.current && isActive && turnCount !== lastTurnRef.current) {
+    const currentPlayer = players[currentPlayerIndex];
+    if (currentPlayer) {
+      recorderRef.current.beginTurn(currentPlayer.id, turnCount);
+      recorderRef.current.recordDraw(currentPlayer.id, 2);
+    }
+    lastTurnRef.current = turnCount;
+  }
+
+  /* -- Setup handler ------------------------------------------------ */
+
+  const handleSetupStart = useCallback(
+    (result: GameSetupResult) => {
+      setSetupResult(result);
+      setShowSetup(false);
+
+      // Build the recorded players list for the replay
+      const recordedPlayers: RecordedPlayer[] = Array.from(
+        { length: result.playerCount },
+        (_, i) => {
+          const pick = result.generalPicks[i];
+          const faction = FACTIONS[i % FACTIONS.length]!;
+          return {
+            id: `p${i}`,
+            name: `Player ${i + 1}`,
+            seat: i,
+            mainGeneral: pick?.main ?? "Unknown",
+            deputyGeneral: pick?.deputy ?? "Unknown",
+            faction,
+          };
+        },
+      );
+
+      // Create the replay recorder
+      recorderRef.current = new ReplayRecorder(recordedPlayers);
+      lastTurnRef.current = 0;
+
+      // Determine human index
+      const humanIdx = result.humanPlayerIndex ?? -1;
+
+      initGame({
+        playerCount: result.playerCount,
+        deck: makeSandboxDeck(),
+        humanPlayerIndex: humanIdx >= 0 ? humanIdx : undefined,
+      });
+    },
+    [initGame],
+  );
+
+  /* -- Replay export helpers ---------------------------------------- */
+
+  const getReplayResult = useCallback((): { winner: string; reason: string } => {
+    const alivePlayers = players.filter((p) => p.alive);
+    if (alivePlayers.length === 0) {
+      return { winner: "Draw", reason: "All players eliminated" };
+    }
+    const factions = new Set(alivePlayers.map((p) => p.faction).filter(Boolean));
+    if (factions.size === 1) {
+      const winner = [...factions][0] ?? "Unknown";
+      return { winner, reason: `${winner} faction victory` };
+    }
+    if (alivePlayers.length === 1) {
+      return {
+        winner: alivePlayers[0]!.faction ?? alivePlayers[0]!.name,
+        reason: `${alivePlayers[0]!.name} is the last player standing`,
+      };
+    }
+    return { winner: "Unknown", reason: "Game ended" };
+  }, [players]);
+
+  const handleDownloadReplay = useCallback(() => {
+    if (!recorderRef.current) return;
+    const { winner, reason } = getReplayResult();
+    recorderRef.current.downloadJSON(winner, reason);
+  }, [getReplayResult]);
+
+  const handleViewReplay = useCallback(() => {
+    if (!recorderRef.current) return;
+    const { winner, reason } = getReplayResult();
+    const json = recorderRef.current.toJSON(winner, reason);
+    // Store in sessionStorage so the /replay page can pick it up
+    try {
+      sessionStorage.setItem("sandbox-replay", json);
+    } catch {
+      // sessionStorage might be unavailable; fall back to download
+      recorderRef.current.downloadJSON(winner, reason);
+      return;
+    }
+    router.push("/replay?source=sandbox");
+  }, [getReplayResult, router]);
+
+  const handleNewGame = useCallback(() => {
+    recorderRef.current = null;
+    lastTurnRef.current = 0;
+    setSetupResult(null);
+    setShowSetup(true);
+  }, []);
 
   /* ---------------------------------------------------------------- */
-  /*  Before a game starts, show setup UI                              */
+  /*  Before a game starts, show the setup screen                      */
   /* ---------------------------------------------------------------- */
 
-  if (!isActive) {
-    return (
-      <div className="flex flex-col items-center gap-6 py-12">
-        <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-          Game Setup
-        </h2>
-        <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-          <span>Players:</span>
-          <select
-            className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
-            onChange={(e) => setPlayerCount(Number(e.target.value))}
-            value={playerCount}
-          >
-            {[4, 5, 6, 7, 8].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <button
-          className="rounded-lg border border-emerald-400/60 bg-emerald-600 px-6 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-500"
-          onClick={handleStart}
-          type="button"
-        >
-          Start Game (Engine Mode)
-        </button>
-
-        <p className="max-w-sm text-center text-xs text-slate-500 dark:text-slate-500">
-          Starts a game driven by the @sgs/engine. Cards are dealt from a
-          shuffled deck, turns follow the 6-phase system, and actions
-          resolve through the engine&apos;s resolution stack. AI players
-          auto-execute their turns after you end yours.
-        </p>
-      </div>
-    );
+  if (showSetup || !isActive) {
+    return <GameSetup onStart={handleSetupStart} />;
   }
 
   /* ---------------------------------------------------------------- */
@@ -206,12 +339,21 @@ export default function SandboxClient() {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Game over overlay */}
+      {gameOver && (
+        <GameOverOverlay
+          onDownload={handleDownloadReplay}
+          onViewReplay={handleViewReplay}
+          onNewGame={handleNewGame}
+        />
+      )}
+
       {/* AI thinking indicator */}
       <AIThinkingBanner />
 
       {/* Engine-specific toolbar additions */}
       <div className="flex flex-wrap items-center gap-3">
-        {validActions?.canEndPhase && !aiThinking && (
+        {validActions?.canEndPhase && !aiThinking && !gameOver && (
           <button
             className="rounded-lg border border-amber-400/60 bg-amber-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-amber-500"
             onClick={endTurn}
@@ -228,7 +370,18 @@ export default function SandboxClient() {
         )}
         <span className="text-[10px] text-emerald-400">
           Engine Mode {aiThinking ? " (AI)" : ""}
+          {setupResult
+            ? ` | ${setupResult.mode === "human-vs-ai" ? "Human vs AI" : setupResult.mode === "full-ai" ? "AI Observation" : "Custom"}`
+            : ""}
         </span>
+
+        {/* Replay recording indicator */}
+        {recorderRef.current && !gameOver && (
+          <span className="ml-auto flex items-center gap-1.5 text-[10px] text-red-400">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-400" />
+            Recording
+          </span>
+        )}
       </div>
 
       <GameTable />
