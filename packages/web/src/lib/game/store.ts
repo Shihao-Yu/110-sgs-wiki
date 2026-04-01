@@ -45,6 +45,63 @@ export type PhaseType =
   | "discard"
   | "end";
 
+/* ------------------------------------------------------------------ */
+/*  Skill types                                                        */
+/* ------------------------------------------------------------------ */
+
+export interface SkillData {
+  id: string;
+  name: string;
+  /** Brief description shown on hover. */
+  description: string;
+  /** Whether the skill can be activated right now. */
+  enabled: boolean;
+  /** Whether this is a lord-only or wake-type skill, etc. */
+  tag?: "lord" | "wake" | "lock" | "limit";
+}
+
+/* ------------------------------------------------------------------ */
+/*  Interaction state types                                            */
+/* ------------------------------------------------------------------ */
+
+/** Tracks an in-progress card/skill action that may need targets. */
+export interface CurrentAction {
+  /** What initiated the action: a card play or a skill activation. */
+  type: "card" | "skill";
+  /** Id of the card being played, or the skill being activated. */
+  sourceId: string;
+  /** Display name (for UI feedback). */
+  sourceName: string;
+}
+
+/** Active target-selection overlay state. */
+export interface TargetSelection {
+  /** Player ids that are valid targets. */
+  validTargetIds: string[];
+  /** Player ids the user has picked so far. */
+  selectedTargetIds: string[];
+  /** Min targets required to confirm. */
+  minTargets: number;
+  /** Max targets allowed. */
+  maxTargets: number;
+  /** Prompt shown in the overlay, e.g. "选择一名角色" */
+  prompt: string;
+}
+
+/** Response-prompt state (e.g. "是否使用闪?"). */
+export interface ResponsePrompt {
+  /** Message shown to the player. */
+  message: string;
+  /** Card name that would be played if they say yes. */
+  cardName: string;
+  /** Internal id for the engine to match the response. */
+  promptId: string;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Store state & actions                                              */
+/* ------------------------------------------------------------------ */
+
 export interface GameTableState {
   players: PlayerSlotData[];
   drawPileCount: number;
@@ -58,6 +115,15 @@ export interface GameTableState {
   hand: GameCard[];
   /** Currently selected card ids in hand. */
   selectedCardIds: string[];
+
+  /** Skills of the current (human) player's general(s). */
+  skills: SkillData[];
+  /** The action the player is currently performing (null = idle). */
+  currentAction: CurrentAction | null;
+  /** Active target-selection overlay (null = hidden). */
+  targetSelection: TargetSelection | null;
+  /** Active response prompt dialog (null = hidden). */
+  responsePrompt: ResponsePrompt | null;
 }
 
 export interface GameTableActions {
@@ -78,6 +144,29 @@ export interface GameTableActions {
   playSelectedCards: () => void;
   /** Discard all currently selected cards. */
   discardSelectedCards: () => void;
+
+  /* -- Skill / action / target / response actions -------------------- */
+
+  /** Activate a skill, entering the current-action state. */
+  activateSkill: (skillId: string) => void;
+  /** Cancel the current action (skill or card) and clear targets. */
+  cancelAction: () => void;
+
+  /** Begin target selection (called after a card/skill needs a target). */
+  beginTargetSelection: (opts: Omit<TargetSelection, "selectedTargetIds">) => void;
+  /** Toggle a target player during target selection. */
+  toggleTarget: (playerId: string) => void;
+  /** Confirm target selection and clear the overlay. */
+  confirmTargets: () => void;
+  /** Cancel target selection and revert to idle. */
+  cancelTargetSelection: () => void;
+
+  /** Show a response prompt (e.g. "是否使用闪?"). */
+  showResponsePrompt: (prompt: ResponsePrompt) => void;
+  /** Player answered yes to the response prompt. */
+  respondYes: () => void;
+  /** Player answered no to the response prompt. */
+  respondNo: () => void;
 }
 
 /* ------------------------------------------------------------------ */
@@ -179,11 +268,51 @@ function generatePlayers(count: number): PlayerSlotData[] {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Sample skills for sandbox testing                                  */
+/* ------------------------------------------------------------------ */
+
+const SAMPLE_SKILLS: SkillData[] = [
+  {
+    id: "skill-jianxiong",
+    name: "奸雄",
+    description: "当你受到伤害后，你可以获得造成伤害的牌。",
+    enabled: true,
+    tag: undefined,
+  },
+  {
+    id: "skill-hujia",
+    name: "护驾",
+    description: "主公技，当你需要使用或打出【闪】时，你可以令其他魏势力角色代替你使用或打出一张【闪】。",
+    enabled: true,
+    tag: "lord",
+  },
+  {
+    id: "skill-guicai",
+    name: "鬼才",
+    description: "在一名角色的判定牌生效前，你可以打出一张手牌代替之。",
+    enabled: false,
+  },
+  {
+    id: "skill-fankui",
+    name: "反馈",
+    description: "当你受到伤害后，你可以获得伤害来源的一张牌。",
+    enabled: true,
+  },
+  {
+    id: "skill-luoshen",
+    name: "洛神",
+    description: "准备阶段，你可以进行判定：若为黑色，你获得此判定牌，且可以继续判定。",
+    enabled: false,
+    tag: "lock",
+  },
+];
+
+/* ------------------------------------------------------------------ */
 /*  Store                                                              */
 /* ------------------------------------------------------------------ */
 
 export const useGameStore = create<GameTableState & GameTableActions>(
-  (set) => ({
+  (set, get) => ({
     players: generatePlayers(8),
     drawPileCount: 98,
     discardPileCount: 12,
@@ -193,6 +322,10 @@ export const useGameStore = create<GameTableState & GameTableActions>(
     gameOver: false,
     hand: generateSampleHand(6),
     selectedCardIds: [],
+    skills: SAMPLE_SKILLS,
+    currentAction: null,
+    targetSelection: null,
+    responsePrompt: null,
 
     setGameState: (partial) => set((s) => ({ ...s, ...partial })),
 
@@ -214,6 +347,10 @@ export const useGameStore = create<GameTableState & GameTableActions>(
           // Draw 2 new cards at start of turn (sandbox simulation)
           hand: [...s.hand, ...generateSampleHand(2)],
           selectedCardIds: [],
+          // Reset interaction state on turn change
+          currentAction: null,
+          targetSelection: null,
+          responsePrompt: null,
         };
       }),
 
@@ -236,6 +373,10 @@ export const useGameStore = create<GameTableState & GameTableActions>(
         discardPileCount: 0,
         hand: generateSampleHand(6),
         selectedCardIds: [],
+        skills: SAMPLE_SKILLS,
+        currentAction: null,
+        targetSelection: null,
+        responsePrompt: null,
       });
     },
 
@@ -274,5 +415,116 @@ export const useGameStore = create<GameTableState & GameTableActions>(
           discardPileCount: s.discardPileCount + ids.size,
         };
       }),
+
+    /* -- Skill activation ------------------------------------------- */
+
+    activateSkill: (skillId) => {
+      const state = get();
+      const skill = state.skills.find((s) => s.id === skillId);
+      if (!skill || !skill.enabled) return;
+
+      set({
+        currentAction: {
+          type: "skill",
+          sourceId: skillId,
+          sourceName: skill.name,
+        },
+      });
+
+      // For sandbox demo: auto-open target selection for the activated skill
+      const otherAlive = state.players.filter(
+        (p) => p.alive && p.id !== state.players[state.currentPlayerIndex]?.id,
+      );
+      if (otherAlive.length > 0) {
+        set({
+          targetSelection: {
+            validTargetIds: otherAlive.map((p) => p.id),
+            selectedTargetIds: [],
+            minTargets: 1,
+            maxTargets: 1,
+            prompt: `【${skill.name}】— 选择一名目标角色`,
+          },
+        });
+      }
+    },
+
+    cancelAction: () =>
+      set({
+        currentAction: null,
+        targetSelection: null,
+      }),
+
+    /* -- Target selection ------------------------------------------- */
+
+    beginTargetSelection: (opts) =>
+      set({
+        targetSelection: {
+          ...opts,
+          selectedTargetIds: [],
+        },
+      }),
+
+    toggleTarget: (playerId) =>
+      set((s) => {
+        if (!s.targetSelection) return s;
+        const { selectedTargetIds, validTargetIds, maxTargets } = s.targetSelection;
+        if (!validTargetIds.includes(playerId)) return s;
+
+        const already = selectedTargetIds.includes(playerId);
+        let next: string[];
+        if (already) {
+          next = selectedTargetIds.filter((id) => id !== playerId);
+        } else if (selectedTargetIds.length < maxTargets) {
+          next = [...selectedTargetIds, playerId];
+        } else {
+          // At max — replace the oldest selection
+          next = [...selectedTargetIds.slice(1), playerId];
+        }
+        return {
+          targetSelection: { ...s.targetSelection, selectedTargetIds: next },
+        };
+      }),
+
+    confirmTargets: () => {
+      const state = get();
+      if (!state.targetSelection) return;
+      const { selectedTargetIds, minTargets } = state.targetSelection;
+      if (selectedTargetIds.length < minTargets) return;
+
+      // In sandbox mode: just clear the action after confirmation
+      set({
+        currentAction: null,
+        targetSelection: null,
+      });
+    },
+
+    cancelTargetSelection: () =>
+      set({
+        currentAction: null,
+        targetSelection: null,
+      }),
+
+    /* -- Response prompt -------------------------------------------- */
+
+    showResponsePrompt: (prompt) => set({ responsePrompt: prompt }),
+
+    respondYes: () => {
+      const state = get();
+      if (!state.responsePrompt) return;
+      // In sandbox mode: remove the matching card from hand if present
+      const cardName = state.responsePrompt.cardName;
+      const card = state.hand.find((c) => c.name === cardName);
+      set({
+        responsePrompt: null,
+        ...(card
+          ? {
+              hand: state.hand.filter((c) => c.id !== card.id),
+              discardPileCount: state.discardPileCount + 1,
+            }
+          : {}),
+      });
+    },
+
+    respondNo: () => set({ responsePrompt: null }),
   }),
 );
