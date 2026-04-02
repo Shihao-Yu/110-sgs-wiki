@@ -16,6 +16,7 @@ import type { PlayerSlotData, EquipmentSlots, Faction } from "@/lib/game/store";
 import PlayerSlot from "@/components/game/PlayerSlot";
 import ReplayControls from "./ReplayControls";
 import Timeline from "./Timeline";
+import AnalysisOverlay from "./AnalysisOverlay";
 
 /* ------------------------------------------------------------------ */
 /*  Phase labels (shared with GameTable)                               */
@@ -381,7 +382,7 @@ export default function ReplayViewer({ replay }: ReplayViewerProps) {
         </span>
       </div>
 
-      {/* Game table + Action log side by side on large screens */}
+      {/* Game table + Action log + Analysis side by side on large screens */}
       <div className="grid gap-4 lg:grid-cols-[1fr_20rem]">
         {/* Game table */}
         <div>
@@ -433,40 +434,46 @@ export default function ReplayViewer({ replay }: ReplayViewerProps) {
           </div>
         </div>
 
-        {/* Action log */}
-        <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-white/90 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/90">
-          <div className="border-b border-slate-200/80 px-4 py-2.5 dark:border-slate-700/80">
-            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Action Log
-            </h3>
+        {/* Sidebar: Action log + Analysis overlay */}
+        <div className="flex flex-col gap-4">
+          {/* Action log */}
+          <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-white/90 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/90">
+            <div className="border-b border-slate-200/80 px-4 py-2.5 dark:border-slate-700/80">
+              <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Action Log
+              </h3>
+            </div>
+            <div
+              ref={logRef}
+              className="flex-1 overflow-y-auto px-3 py-2"
+              style={{ maxHeight: "28rem" }}
+            >
+              {timeline.map((snap, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  data-active={i === currentStep}
+                  onClick={() => handleSeek(i)}
+                  className={[
+                    "w-full rounded-lg px-2 py-1.5 text-left text-xs transition-colors",
+                    i === currentStep
+                      ? "bg-brand/10 font-medium text-brand dark:bg-brand/20"
+                      : i < currentStep
+                        ? "text-slate-500 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
+                        : "text-slate-400 hover:bg-slate-50 dark:text-slate-500 dark:hover:bg-slate-800",
+                  ].join(" ")}
+                >
+                  <span className="mr-1.5 inline-block min-w-[1.5rem] tabular-nums text-slate-400 dark:text-slate-500">
+                    {i}
+                  </span>
+                  {snap.logEntry}
+                </button>
+              ))}
+            </div>
           </div>
-          <div
-            ref={logRef}
-            className="flex-1 overflow-y-auto px-3 py-2"
-            style={{ maxHeight: "28rem" }}
-          >
-            {timeline.map((snap, i) => (
-              <button
-                key={i}
-                type="button"
-                data-active={i === currentStep}
-                onClick={() => handleSeek(i)}
-                className={[
-                  "w-full rounded-lg px-2 py-1.5 text-left text-xs transition-colors",
-                  i === currentStep
-                    ? "bg-brand/10 font-medium text-brand dark:bg-brand/20"
-                    : i < currentStep
-                      ? "text-slate-500 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
-                      : "text-slate-400 hover:bg-slate-50 dark:text-slate-500 dark:hover:bg-slate-800",
-                ].join(" ")}
-              >
-                <span className="mr-1.5 inline-block min-w-[1.5rem] tabular-nums text-slate-400 dark:text-slate-500">
-                  {i}
-                </span>
-                {snap.logEntry}
-              </button>
-            ))}
-          </div>
+
+          {/* Analysis overlay */}
+          <AnalysisOverlay replay={replay} currentStep={currentStep} />
         </div>
       </div>
 
