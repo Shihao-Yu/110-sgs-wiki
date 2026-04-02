@@ -15,10 +15,12 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
-    @apply min-h-screen bg-slate-50 text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-50;
+    @apply min-h-screen bg-slate-50 text-base text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-50;
     background-image:
       radial-gradient(circle at top, rgba(220, 38, 38, 0.14), transparent 34%),
       linear-gradient(180deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 100%);
@@ -47,6 +49,11 @@
   ::selection {
     background: rgba(220, 38, 38, 0.2);
     color: #0f172a;
+  }
+
+  /* Prevent horizontal overflow on mobile */
+  body {
+    overflow-x: hidden;
   }
 }
 

@@ -20,7 +20,7 @@ export default function SortSelect({ value, onChange }: SortSelectProps) {
         排序:
       </span>
       <select
-        className="rounded-lg border border-slate-200/80 bg-white/80 px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:border-brand/40 focus:outline-none focus:ring-2 focus:ring-brand/20 dark:border-slate-700/80 dark:bg-slate-900/80 dark:text-slate-200"
+        className="rounded-lg border border-slate-200/80 bg-white/80 px-3 py-2 text-xs font-medium text-slate-700 focus:border-brand/40 focus:outline-none focus:ring-2 focus:ring-brand/20 sm:px-2.5 sm:py-1.5 dark:border-slate-700/80 dark:bg-slate-900/80 dark:text-slate-200"
         onChange={(e) => onChange(e.target.value as SortKey)}
         value={value}
       >

@@ -161,7 +161,7 @@ function GameOverOverlay({
   onNewGame: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-amber-400/30 bg-amber-950/50 p-6 text-center">
+    <div className="rounded-2xl border border-amber-400/30 bg-amber-950/50 p-4 text-center sm:p-6">
       <h3 className="text-lg font-semibold text-amber-200">
         Game Over
       </h3>
@@ -169,25 +169,25 @@ function GameOverOverlay({
         The game has ended. You can download the replay, view it in the
         replay viewer, or start a new game.
       </p>
-      <div className="mt-4 flex flex-wrap justify-center gap-3">
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-3">
         <button
           type="button"
           onClick={onDownload}
-          className="rounded-lg border border-slate-300/60 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          className="w-full rounded-lg border border-slate-300/60 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 sm:w-auto sm:py-2 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
         >
           Download Replay
         </button>
         <button
           type="button"
           onClick={onViewReplay}
-          className="rounded-lg border border-blue-400/60 bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-500"
+          className="w-full rounded-lg border border-blue-400/60 bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-500 sm:w-auto sm:py-2"
         >
           View Replay
         </button>
         <button
           type="button"
           onClick={onNewGame}
-          className="rounded-lg border border-emerald-400/60 bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-500"
+          className="w-full rounded-lg border border-emerald-400/60 bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-500 sm:w-auto sm:py-2"
         >
           New Game
         </button>

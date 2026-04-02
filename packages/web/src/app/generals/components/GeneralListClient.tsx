@@ -115,12 +115,14 @@ export default function GeneralListClient({
           <SearchBar onChange={setSearch} value={search} />
 
           {/* Filters row */}
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             <FactionFilter onToggle={toggleFaction} selected={factions} />
             <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
-            <HpFilter onChange={setHpFilter} selected={hpFilter} />
-            <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
-            <SortSelect onChange={setSortKey} value={sortKey} />
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <HpFilter onChange={setHpFilter} selected={hpFilter} />
+              <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+              <SortSelect onChange={setSortKey} value={sortKey} />
+            </div>
           </div>
 
           {/* Result count */}
@@ -135,7 +137,7 @@ export default function GeneralListClient({
 
       {/* Grid */}
       {filtered.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {filtered.map((g) => (
             <GeneralCard
               key={g.id}

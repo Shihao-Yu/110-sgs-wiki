@@ -95,7 +95,7 @@ export default function HandCards() {
       </div>
 
       {/* Card fan */}
-      <div className="relative flex h-32 w-full items-end justify-center">
+      <div className="relative flex h-24 w-full items-end justify-center sm:h-32">
         {hand.map((card, i) => {
           const { rotate, translateX, translateY } = fanTransform(i, hand.length);
           const isSelected = selectedCardIds.includes(card.id);

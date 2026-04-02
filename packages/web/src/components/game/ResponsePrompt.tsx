@@ -17,12 +17,12 @@ export default function ResponsePrompt() {
   if (!responsePrompt) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
 
       {/* Dialog */}
-      <div className="relative z-50 mx-4 flex w-full max-w-sm flex-col items-center gap-4 rounded-2xl border border-slate-700/80 bg-slate-900/95 px-8 py-6 shadow-2xl">
+      <div className="relative z-50 flex w-full flex-col items-center gap-4 rounded-t-2xl border border-slate-700/80 bg-slate-900/95 px-6 py-6 shadow-2xl sm:mx-4 sm:max-w-sm sm:rounded-2xl sm:px-8">
         {/* Card icon */}
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/15 ring-2 ring-amber-400/40">
           <span className="text-2xl font-bold text-amber-300">

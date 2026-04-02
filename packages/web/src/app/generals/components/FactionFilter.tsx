@@ -59,7 +59,7 @@ export default function FactionFilter({
         return (
           <button
             key={id}
-            className={`rounded-lg border px-3.5 py-1.5 text-sm font-semibold transition-all ${
+            className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-all sm:px-3.5 sm:py-1.5 sm:text-sm ${
               isActive ? style.active : style.inactive
             }`}
             onClick={() => onToggle(id)}

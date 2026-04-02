@@ -214,7 +214,7 @@ export default function GlobalSearch() {
           aria-autocomplete="list"
           aria-controls="global-search-results"
           aria-expanded={isOpen}
-          className="w-full rounded-full border border-slate-200/80 bg-white/85 py-2 pl-9 pr-16 text-sm text-slate-800 placeholder:text-slate-400 focus:border-brand/40 focus:outline-none focus:ring-2 focus:ring-brand/20 dark:border-slate-700/80 dark:bg-slate-900/80 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-brand/40 dark:focus:ring-brand/30"
+          className="w-full rounded-full border border-slate-200/80 bg-white/85 py-2.5 pl-9 pr-16 text-sm text-slate-800 placeholder:text-slate-400 focus:border-brand/40 focus:outline-none focus:ring-2 focus:ring-brand/20 sm:py-2 dark:border-slate-700/80 dark:bg-slate-900/80 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-brand/40 dark:focus:ring-brand/30"
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => {
             if (results.length > 0) setIsOpen(true);

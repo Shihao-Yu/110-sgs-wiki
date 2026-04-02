@@ -137,8 +137,8 @@ export default function LeaderboardTable({
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+    <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+      <table className="w-full min-w-[540px] text-sm">
         <thead>
           <tr className="border-b border-slate-200/80 dark:border-slate-700/80">
             {COLUMNS.map(({ field, label, align }) => (

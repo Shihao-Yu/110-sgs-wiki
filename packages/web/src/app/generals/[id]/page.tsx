@@ -193,11 +193,11 @@ export default async function GeneralDetailPage({ params }: PageProps) {
           </div>
 
           {/* Info panel */}
-          <div className="flex flex-1 flex-col gap-6 p-6 sm:p-8">
+          <div className="flex flex-1 flex-col gap-5 p-4 sm:gap-6 sm:p-6 md:p-8">
             {/* Name + Title + Faction */}
             <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl dark:text-white">
                   {general.name}
                 </h1>
                 <span
@@ -245,7 +245,7 @@ export default async function GeneralDetailPage({ params }: PageProps) {
               <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 维度评分
               </p>
-              <div className="h-48 w-48">
+              <div className="h-36 w-36 sm:h-48 sm:w-48">
                 <RadarChart color={faction.hex} scores={radarScores} />
               </div>
             </div>

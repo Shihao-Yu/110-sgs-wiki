@@ -362,28 +362,28 @@ export default function ReplayViewer({ replay }: ReplayViewerProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Turn counter and phase indicator */}
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 sm:text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
           Turn {snapshot.turnNumber}
         </span>
-        <span className="inline-flex items-center gap-2 rounded-full border border-jin/20 bg-jin/10 px-3 py-1.5 text-sm font-medium text-jin dark:border-jin/40 dark:bg-jin/20">
+        <span className="inline-flex items-center gap-2 rounded-full border border-jin/20 bg-jin/10 px-3 py-1.5 text-xs font-medium text-jin sm:text-sm dark:border-jin/40 dark:bg-jin/20">
           {PHASE_LABELS[snapshot.phase] ?? snapshot.phase}
         </span>
         {snapshot.activePlayerId && (
-          <span className="text-sm text-slate-500 dark:text-slate-400">
+          <span className="text-xs text-slate-500 sm:text-sm dark:text-slate-400">
             Active:{" "}
             <span className="font-medium text-slate-700 dark:text-slate-200">
               {snapshot.players.find((p) => p.id === snapshot.activePlayerId)?.name ?? snapshot.activePlayerId}
             </span>
           </span>
         )}
-        <span className="ml-auto text-xs text-slate-400 dark:text-slate-500">
+        <span className="w-full text-xs text-slate-400 sm:ml-auto sm:w-auto dark:text-slate-500">
           {replay.players.length} players &middot; {replay.turns.length} turns &middot; {timeline.length} steps
         </span>
       </div>
 
       {/* Game table + Action log + Analysis side by side on large screens */}
-      <div className="grid gap-4 lg:grid-cols-[1fr_20rem]">
+      <div className="grid gap-4 lg:grid-cols-[1fr_18rem] xl:grid-cols-[1fr_20rem]">
         {/* Game table */}
         <div>
           {/* Small screen: grid fallback */}

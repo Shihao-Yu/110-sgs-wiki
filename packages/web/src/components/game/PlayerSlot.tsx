@@ -108,7 +108,7 @@ export default function PlayerSlot({
   return (
     <div
       className={[
-        "relative flex w-36 flex-col gap-1.5 rounded-2xl border p-2.5 shadow-sm transition-all sm:w-40",
+        "relative flex w-full max-w-[10rem] flex-col gap-1.5 rounded-2xl border p-2 shadow-sm transition-all sm:w-40 sm:p-2.5",
         alive
           ? "border-slate-200/80 bg-white/90 dark:border-slate-700/80 dark:bg-slate-900/90"
           : "border-slate-200/40 bg-slate-100/60 opacity-50 grayscale dark:border-slate-700/40 dark:bg-slate-800/40",

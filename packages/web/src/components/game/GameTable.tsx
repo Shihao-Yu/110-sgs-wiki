@@ -62,11 +62,11 @@ export default function GameTable() {
   return (
     <div className="flex flex-col gap-4">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
           <span>Players:</span>
           <select
-            className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm sm:px-2 sm:py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
             onChange={(e) => setPlayerCount(Number(e.target.value))}
             value={players.length}
           >
@@ -79,7 +79,7 @@ export default function GameTable() {
         </label>
 
         <button
-          className="rounded-lg border border-slate-300 bg-white px-3 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 sm:py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
           onClick={nextTurn}
           type="button"
         >
@@ -87,7 +87,7 @@ export default function GameTable() {
         </button>
 
         <button
-          className="rounded-lg border border-slate-300 bg-white px-3 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 sm:py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
           onClick={() =>
             showResponsePrompt({
               message: "是否使用闪?",

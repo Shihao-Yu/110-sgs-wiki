@@ -57,42 +57,45 @@ export default function ReplayControls({
       </div>
 
       {/* Buttons row */}
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        {/* Step back */}
-        <button
-          type="button"
-          onClick={onStepBack}
-          disabled={atStart}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-          title="Step back"
-        >
-          <StepBackIcon />
-        </button>
+      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-2">
+        {/* Transport controls */}
+        <div className="flex items-center gap-2">
+          {/* Step back */}
+          <button
+            type="button"
+            onClick={onStepBack}
+            disabled={atStart}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:h-9 sm:w-9 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            title="Step back"
+          >
+            <StepBackIcon />
+          </button>
 
-        {/* Play / Pause */}
-        <button
-          type="button"
-          onClick={isPlaying ? onPause : onPlay}
-          disabled={atEnd && !isPlaying}
-          className="inline-flex h-9 w-16 items-center justify-center rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-          title={isPlaying ? "Pause" : "Play"}
-        >
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </button>
+          {/* Play / Pause */}
+          <button
+            type="button"
+            onClick={isPlaying ? onPause : onPlay}
+            disabled={atEnd && !isPlaying}
+            className="inline-flex h-11 w-20 items-center justify-center rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:h-9 sm:w-16 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            title={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          </button>
 
-        {/* Step forward */}
-        <button
-          type="button"
-          onClick={onStepForward}
-          disabled={atEnd}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-          title="Step forward"
-        >
-          <StepForwardIcon />
-        </button>
+          {/* Step forward */}
+          <button
+            type="button"
+            onClick={onStepForward}
+            disabled={atEnd}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:h-9 sm:w-9 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            title="Step forward"
+          >
+            <StepForwardIcon />
+          </button>
+        </div>
 
         {/* Divider */}
-        <div className="mx-1 h-6 w-px bg-slate-200 dark:bg-slate-700" />
+        <div className="hidden h-6 w-px bg-slate-200 sm:block dark:bg-slate-700" />
 
         {/* Speed selector */}
         <div className="flex items-center gap-1.5">
@@ -105,7 +108,7 @@ export default function ReplayControls({
               type="button"
               onClick={() => onSpeedChange(s)}
               className={[
-                "inline-flex h-7 min-w-[2.5rem] items-center justify-center rounded-md px-1.5 text-xs font-medium transition-colors",
+                "inline-flex h-11 min-w-[2.75rem] items-center justify-center rounded-md px-2 text-xs font-medium transition-colors sm:h-7 sm:min-w-[2.5rem] sm:px-1.5",
                 speed === s
                   ? "border border-brand/30 bg-brand/10 text-brand dark:border-brand/50 dark:bg-brand/20"
                   : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700",

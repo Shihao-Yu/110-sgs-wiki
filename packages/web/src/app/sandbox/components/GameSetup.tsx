@@ -129,11 +129,11 @@ function GeneralPicker({
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
           Main general
           <select
-            className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm sm:px-2 sm:py-1.5 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
             value={mainValue}
             onChange={(e) => onMainChange(e.target.value)}
           >
@@ -147,7 +147,7 @@ function GeneralPicker({
         <label className="flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
           Deputy general
           <select
-            className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm sm:px-2 sm:py-1.5 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
             value={deputyValue}
             onChange={(e) => onDeputyChange(e.target.value)}
           >
@@ -165,7 +165,7 @@ function GeneralPicker({
 
 function pillClass(active: boolean): string {
   return [
-    "rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
+    "rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:px-2.5 sm:py-0.5",
     active
       ? "bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900"
       : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700",
@@ -250,7 +250,7 @@ export default function GameSetup({ onStart }: GameSetupProps) {
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6 py-8">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 py-4 sm:py-8">
       {/* Title */}
       <div className="text-center">
         <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
@@ -267,7 +267,7 @@ export default function GameSetup({ onStart }: GameSetupProps) {
           Game Mode
         </legend>
         <div className="grid gap-3 sm:grid-cols-3">
-          {(Object.keys(MODE_INFO) as GameMode[]).map((m) => {
+          {(Object.keys(MODE_INFO) as GameMode[]).map((m: GameMode) => {
             const info = MODE_INFO[m];
             const selected = mode === m;
             return (
@@ -325,7 +325,7 @@ export default function GameSetup({ onStart }: GameSetupProps) {
               ? "Pick your generals"
               : "Assign generals to each player"}
           </p>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-2">
             {pickerSeats.map((seat) => {
               const isHuman = seat === humanSeat;
               const seatLabel =
@@ -355,7 +355,7 @@ export default function GameSetup({ onStart }: GameSetupProps) {
         <button
           type="button"
           onClick={handleStart}
-          className="rounded-lg border border-emerald-400/60 bg-emerald-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-500"
+          className="w-full rounded-lg border border-emerald-400/60 bg-emerald-600 px-8 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-500 sm:w-auto sm:py-2.5"
         >
           Start Game
         </button>

@@ -56,7 +56,7 @@ function SkillButton({
   return (
     <button
       className={[
-        "group relative flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-150",
+        "group relative flex items-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-medium transition-all duration-150 sm:py-1.5",
         disabled
           ? "cursor-not-allowed border-slate-700 bg-slate-800/60 text-slate-600"
           : isActive

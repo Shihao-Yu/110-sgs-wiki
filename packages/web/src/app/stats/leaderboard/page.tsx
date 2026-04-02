@@ -116,7 +116,7 @@ export default function LeaderboardPage() {
             return (
               <button
                 key={id}
-                className={`rounded-lg border px-3.5 py-1.5 text-sm font-semibold transition-all ${
+                className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-all sm:px-3.5 sm:py-1.5 sm:text-sm ${
                   isActive ? style.active : style.inactive
                 }`}
                 onClick={() => toggleFaction(id)}
@@ -128,7 +128,7 @@ export default function LeaderboardPage() {
           })}
           {factions.size > 0 && (
             <button
-              className="ml-2 rounded-lg border border-slate-200/80 bg-white/80 px-3 py-1.5 text-xs font-medium text-slate-500 transition-colors hover:text-slate-700 dark:border-slate-700/80 dark:bg-slate-900/80 dark:text-slate-400 dark:hover:text-slate-200"
+              className="ml-2 rounded-lg border border-slate-200/80 bg-white/80 px-3 py-2 text-xs font-medium text-slate-500 transition-colors hover:text-slate-700 sm:py-1.5 dark:border-slate-700/80 dark:bg-slate-900/80 dark:text-slate-400 dark:hover:text-slate-200"
               onClick={() => setFactions(new Set())}
               type="button"
             >

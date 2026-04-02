@@ -12,7 +12,9 @@ type GeneralCardProps = {
   image: string;
 };
 
-const factionBadge: Record<
+/* Faction badge styles — kept for future overlay use */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _factionBadge: Record<
   Faction,
   { bg: string; text: string; border: string; label: string }
 > = {
@@ -61,10 +63,10 @@ export default function GeneralCard({
   name,
   title,
   faction,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hp,
   image,
 }: GeneralCardProps) {
-  const badge = factionBadge[faction];
   const gradient = factionGradient[faction];
 
   return (
@@ -87,30 +89,15 @@ export default function GeneralCard({
           src={`/assets/${image}`}
         />
 
-        {/* Faction badge */}
-        <span
-          className={`absolute left-2 top-2 rounded-md border px-1.5 py-0.5 text-xs font-bold ${badge.bg} ${badge.text} ${badge.border} backdrop-blur-sm`}
-        >
-          {badge.label}
-        </span>
-
-        {/* HP indicator */}
-        <div className="absolute right-2 top-2 flex flex-col gap-0.5">
-          {Array.from({ length: hp }, (_, i) => (
-            <span
-              key={i}
-              className="block h-2.5 w-2.5 rounded-full border border-red-400/50 bg-red-500 shadow-sm shadow-red-900/30"
-            />
-          ))}
-        </div>
+        {/* Overlay badges removed — card image already shows faction/HP */}
       </div>
 
       {/* Info area */}
-      <div className="flex flex-1 flex-col gap-0.5 p-3">
-        <h3 className="text-base font-semibold leading-snug text-slate-900 dark:text-white">
+      <div className="flex flex-1 flex-col gap-0.5 p-2 sm:p-3">
+        <h3 className="text-sm font-semibold leading-snug text-slate-900 sm:text-base dark:text-white">
           {name}
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400">{title}</p>
+        <p className="truncate text-xs text-slate-500 dark:text-slate-400">{title}</p>
       </div>
     </Link>
   );
