@@ -36,13 +36,12 @@ const subSections = [
     comingSoon: true,
   },
   {
-    href: "/stats/simulation",
+    href: "/stats/simulate",
     title: "模拟引擎",
     english: "Simulation",
     description: "蒙特卡洛模拟配置与批量对局数据生成面板。",
     iconPath:
       "M22 18V2H6v16h16zm-2-2H8V4h12v12zM4 6H2v16h16v-2H4V6zm10 5l-4 4h3v2h2v-2h3l-4-4z",
-    comingSoon: true,
   },
 ] as const;
 
