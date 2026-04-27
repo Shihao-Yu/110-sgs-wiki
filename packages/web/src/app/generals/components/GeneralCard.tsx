@@ -2,6 +2,7 @@
 
 import type { Faction } from "@sgs/data";
 import Link from "next/link";
+import { assetUrl } from "@/lib/assets";
 
 type GeneralCardProps = {
   id: string;
@@ -86,7 +87,7 @@ export default function GeneralCard({
             const target = e.currentTarget;
             target.style.display = "none";
           }}
-          src={`/assets/${image}`}
+          src={assetUrl(image)}
         />
 
         {/* Overlay badges removed — card image already shows faction/HP */}

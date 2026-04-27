@@ -8,6 +8,7 @@ import faqData from "../../../../../data/src/faq.json";
 import GeneralImage from "./components/GeneralImage";
 import RadarChart from "./components/RadarChart";
 import SkillCard from "./components/SkillCard";
+import { assetUrl } from "@/lib/assets";
 
 /* ---------- Types for the raw JSON shapes ---------- */
 
@@ -135,6 +136,9 @@ export default async function GeneralDetailPage({ params }: PageProps) {
   const generalSkills = general.skills
     .map((sid) => skillMap.get(sid))
     .filter((s): s is RawSkill => s != null);
+  const hasOnlyPlaceholderSkills = general.skills.every((sid) =>
+    sid.startsWith("skill_unknown_"),
+  );
 
   /* Collect FAQ entries related to this general from faq.json */
   const generalFaqs = faqs.filter(
@@ -188,7 +192,7 @@ export default async function GeneralDetailPage({ params }: PageProps) {
           >
             <GeneralImage
               alt={`${general.name} - ${general.title}`}
-              src={`/assets/${general.image}`}
+              src={assetUrl(general.image)}
             />
           </div>
 
@@ -265,7 +269,13 @@ export default async function GeneralDetailPage({ params }: PageProps) {
       {/* Skills section */}
       <section className="mt-10">
         <h2 className="section-title mb-5">技能</h2>
-        {generalSkills.length > 0 ? (
+        {hasOnlyPlaceholderSkills ? (
+          <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 p-5 text-sm leading-relaxed text-amber-900 shadow-sm dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-100">
+            当前仅同步了这张国战武将卡的卡图与基础信息，尚未补齐和该版本一致的技能或
+            wiki 说明。为避免把其他版本的武将介绍误显示到这张卡上，页面暂不展示别版技
+            能数据。
+          </div>
+        ) : generalSkills.length > 0 ? (
           <div className="space-y-4">
             {generalSkills.map((skill) => (
               <SkillCard

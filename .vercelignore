@@ -1,0 +1,16 @@
+assets/
+output/
+replays/
+docs/
+
+.codex/
+.orchestra/
+.omx/
+.venv-ocr/
+.playwright-cli/
+
+.next-dev/
+.next/
+
+scripts/
+AGENTS.md

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node --trace-uncaught ./node_modules/next/dist/bin/next dev --turbopack",
-    "build": "node -e \"require('fs').rmSync('.next', { recursive: true, force: true }); require('fs').rmSync('out', { recursive: true, force: true });\" && node --trace-uncaught ./node_modules/next/dist/bin/next build",
+    "build": "pnpm --filter '@sgs/data' build && node -e \"require('fs').rmSync('.next', { recursive: true, force: true }); require('fs').rmSync('out', { recursive: true, force: true });\" && node --trace-uncaught ./node_modules/next/dist/bin/next build",
     "start": "node --trace-uncaught ./node_modules/next/dist/bin/next start",
     "lint": "node --trace-uncaught ./node_modules/next/dist/bin/next lint"
   },
