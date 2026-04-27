@@ -1,0 +1,6 @@
+{
+  "extends": ["../../.eslintrc.json"],
+  "rules": {
+    "no-irregular-whitespace": ["error", { "skipStrings": true, "skipJSXText": true }]
+  }
+}

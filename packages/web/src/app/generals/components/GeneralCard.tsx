@@ -13,50 +13,20 @@ type GeneralCardProps = {
   image: string;
 };
 
-/* Faction badge styles — kept for future overlay use */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _factionBadge: Record<
-  Faction,
-  { bg: string; text: string; border: string; label: string }
-> = {
-  WEI: {
-    bg: "bg-wei/15 dark:bg-wei/25",
-    text: "text-wei dark:text-blue-300",
-    border: "border-wei/25 dark:border-wei/40",
-    label: "魏",
-  },
-  SHU: {
-    bg: "bg-shu/15 dark:bg-shu/25",
-    text: "text-shu dark:text-red-300",
-    border: "border-shu/25 dark:border-shu/40",
-    label: "蜀",
-  },
-  WU: {
-    bg: "bg-wu/15 dark:bg-wu/25",
-    text: "text-wu dark:text-green-300",
-    border: "border-wu/25 dark:border-wu/40",
-    label: "吴",
-  },
-  QUN: {
-    bg: "bg-qun/15 dark:bg-qun/25",
-    text: "text-qun dark:text-yellow-200",
-    border: "border-qun/30 dark:border-qun/40",
-    label: "群",
-  },
-  JIN: {
-    bg: "bg-jin/15 dark:bg-jin/25",
-    text: "text-jin dark:text-purple-200",
-    border: "border-jin/25 dark:border-jin/40",
-    label: "晋",
-  },
+const FACTION_LABEL: Record<Faction, string> = {
+  WEI: "魏",
+  SHU: "蜀",
+  WU: "吴",
+  QUN: "群",
+  JIN: "晋",
 };
 
 const factionGradient: Record<Faction, string> = {
-  WEI: "from-wei/20 to-wei/5 dark:from-wei/30 dark:to-wei/10",
-  SHU: "from-shu/20 to-shu/5 dark:from-shu/30 dark:to-shu/10",
-  WU: "from-wu/20 to-wu/5 dark:from-wu/30 dark:to-wu/10",
-  QUN: "from-qun/20 to-qun/5 dark:from-qun/30 dark:to-qun/10",
-  JIN: "from-jin/20 to-jin/5 dark:from-jin/30 dark:to-jin/10",
+  WEI: "from-wei/20 via-paper-mist/30 to-paper-mist",
+  SHU: "from-shu/20 via-paper-mist/30 to-paper-mist",
+  WU: "from-wu/20 via-paper-mist/30 to-paper-mist",
+  QUN: "from-qun/25 via-paper-mist/30 to-paper-mist",
+  JIN: "from-jin/20 via-paper-mist/30 to-paper-mist",
 };
 
 export default function GeneralCard({
@@ -72,16 +42,20 @@ export default function GeneralCard({
 
   return (
     <Link
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white/85 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800/80 dark:bg-slate-950/80 dark:hover:border-slate-700/80"
+      className="group relative flex flex-col overflow-hidden rounded-sm border border-vermillion/20 bg-paper-mist/70 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-vermillion/45 hover:shadow-ink dark:border-vermillion/25 dark:bg-night/70 dark:hover:border-vermillion/45"
       href={`/generals/${id}`}
     >
-      {/* Image area with faction gradient fallback */}
-      <div
-        className={`relative aspect-[3/4] overflow-hidden bg-gradient-to-b ${gradient}`}
-      >
+      {/* Inner thin gold rule */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-[3px] rounded-[2px] border border-gold/20 transition-opacity duration-300 group-hover:border-gold/45"
+      />
+
+      {/* Image area with faction wash */}
+      <div className={`relative aspect-[3/4] overflow-hidden bg-gradient-to-b ${gradient}`}>
         <img
           alt={`${name} - ${title}`}
-          className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+          className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
           loading="lazy"
           onError={(e) => {
             const target = e.currentTarget;
@@ -90,15 +64,26 @@ export default function GeneralCard({
           src={assetUrl(image)}
         />
 
-        {/* Overlay badges removed — card image already shows faction/HP */}
+        {/* Faction stamp — top-left, subtle seal */}
+        <span
+          aria-hidden
+          className="font-seal absolute left-1.5 top-1.5 inline-flex h-6 w-6 items-center justify-center rounded-sm bg-vermillion/90 text-xs text-paper-mist shadow-seal sm:h-7 sm:w-7 sm:text-sm"
+        >
+          {FACTION_LABEL[faction]}
+        </span>
       </div>
 
       {/* Info area */}
-      <div className="flex flex-1 flex-col gap-0.5 p-2 sm:p-3">
-        <h3 className="text-sm font-semibold leading-snug text-slate-900 sm:text-base dark:text-white">
+      <div className="relative flex flex-1 flex-col gap-0.5 px-2.5 py-2 sm:px-3 sm:py-2.5">
+        {/* Vermillion accent line */}
+        <span
+          aria-hidden
+          className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-vermillion/40 to-transparent"
+        />
+        <h3 className="font-display text-sm font-normal leading-snug tracking-wide text-ink sm:text-base dark:text-ivory">
           {name}
         </h3>
-        <p className="truncate text-xs text-slate-500 dark:text-slate-400">{title}</p>
+        <p className="truncate text-xs text-ink-mute dark:text-ivory-soft">{title}</p>
       </div>
     </Link>
   );
