@@ -13,14 +13,6 @@ type GeneralCardProps = {
   image: string;
 };
 
-const FACTION_LABEL: Record<Faction, string> = {
-  WEI: "魏",
-  SHU: "蜀",
-  WU: "吴",
-  QUN: "群",
-  JIN: "晋",
-};
-
 const factionGradient: Record<Faction, string> = {
   WEI: "from-wei/20 via-paper-mist/30 to-paper-mist",
   SHU: "from-shu/20 via-paper-mist/30 to-paper-mist",
@@ -63,14 +55,6 @@ export default function GeneralCard({
           }}
           src={assetUrl(image)}
         />
-
-        {/* Faction stamp — top-left, subtle seal */}
-        <span
-          aria-hidden
-          className="font-seal absolute left-1.5 top-1.5 inline-flex h-6 w-6 items-center justify-center rounded-sm bg-vermillion/90 text-xs text-paper-mist shadow-seal sm:h-7 sm:w-7 sm:text-sm"
-        >
-          {FACTION_LABEL[faction]}
-        </span>
       </div>
 
       {/* Info area */}
