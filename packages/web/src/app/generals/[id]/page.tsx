@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import generalsData from "../../../../../data/src/generals.json";
 import skillsData from "../../../../../data/src/skills.json";
 import faqData from "../../../../../data/src/faq.json";
+import cardTextData from "../../../../../data/src/card-text.json";
 import GeneralImage from "./components/GeneralImage";
 import RadarChart from "./components/RadarChart";
 import SkillCard from "./components/SkillCard";
@@ -54,6 +55,10 @@ const faqs = faqData as RawFaq[];
 const generalMap = new Map(generals.map((g) => [g.id, g]));
 const skillMap = new Map(skills.map((s) => [s.id, s]));
 
+const cardTextMap = (cardTextData as {
+  items: Record<string, { skillsText: string; skillLines: string[]; ocrScore: number }>;
+}).items;
+
 /* ---------- Faction display helpers ---------- */
 
 const FACTION_META: Record<
@@ -99,6 +104,46 @@ const FACTION_GRADIENT: Record<Faction, string> = {
   QUN: "from-qun/20 to-qun/5 dark:from-qun/30 dark:to-qun/10",
   JIN: "from-jin/20 to-jin/5 dark:from-jin/30 dark:to-jin/10",
 };
+
+/* ---------- Card text helpers (OCR-extracted) ---------- */
+
+function CardTextLines({ lines }: { lines: string[] }) {
+  return (
+    <ol className="space-y-1.5 text-sm leading-relaxed text-ink-soft dark:text-ivory-soft">
+      {lines.map((line, i) => (
+        <li key={i} className="flex gap-2.5">
+          <span className="select-none pt-0.5 font-latin text-xs text-vermillion/60">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span className="flex-1">{line}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function CardTextPanel({
+  lines,
+  ocrScore,
+}: {
+  lines: string[];
+  ocrScore: number;
+}) {
+  return (
+    <div className="rounded-sm border border-vermillion/25 bg-paper-mist/70 p-5 dark:border-vermillion/30 dark:bg-night/70">
+      <div className="mb-3 flex items-center gap-2 text-xs">
+        <span className="seal-soft">卡面原文</span>
+        <span className="font-display tracking-wider text-ink-mute dark:text-ivory-soft">
+          机读 OCR · 置信度 {(ocrScore * 100).toFixed(0)}%
+        </span>
+      </div>
+      <CardTextLines lines={lines} />
+      <p className="mt-3 text-xs leading-relaxed text-ink-mute dark:text-ivory-soft">
+        以上内容由程序从卡图直接识别，可能存在断字、错字。如与卡面有出入以卡面为准。
+      </p>
+    </div>
+  );
+}
 
 /* ---------- Static params for all 341 generals ---------- */
 
@@ -156,6 +201,9 @@ export default async function GeneralDetailPage({ params }: PageProps) {
       }
     }
   }
+
+  /* OCR-extracted text from the card image (best-effort, machine-read) */
+  const cardText = cardTextMap[general.id];
 
   /* Placeholder radar scores — can be replaced with real data later */
   const radarScores: [number, number, number, number] = [5, 5, 5, 5];
@@ -270,11 +318,14 @@ export default async function GeneralDetailPage({ params }: PageProps) {
       <section className="mt-10">
         <h2 className="section-title mb-5">技能</h2>
         {hasOnlyPlaceholderSkills ? (
-          <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 p-5 text-sm leading-relaxed text-amber-900 shadow-sm dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-100">
-            当前仅同步了这张国战武将卡的卡图与基础信息，尚未补齐和该版本一致的技能或
-            wiki 说明。为避免把其他版本的武将介绍误显示到这张卡上，页面暂不展示别版技
-            能数据。
-          </div>
+          cardText && cardText.skillLines.length > 0 ? (
+            <CardTextPanel lines={cardText.skillLines} ocrScore={cardText.ocrScore} />
+          ) : (
+            <div className="rounded-sm border border-gold/40 bg-paper-mist/70 p-5 text-sm leading-relaxed text-ink-soft shadow-sm dark:border-gold/30 dark:bg-night/70 dark:text-ivory-soft">
+              当前仅同步了这张国战武将卡的卡图与基础信息，尚未补齐和该版本一致的技能或
+              wiki 说明。
+            </div>
+          )
         ) : generalSkills.length > 0 ? (
           <div className="space-y-4">
             {generalSkills.map((skill) => (
@@ -289,11 +340,34 @@ export default async function GeneralDetailPage({ params }: PageProps) {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-ink-mute dark:text-ivory-soft">
             暂无技能数据。
           </p>
         )}
       </section>
+
+      {/* 卡面原文 (machine-read OCR) — shown alongside structured skill data
+          so readers can verify against the printed card text. */}
+      {cardText && cardText.skillLines.length > 0 && !hasOnlyPlaceholderSkills && (
+        <section className="mt-10">
+          <details className="group rounded-sm border border-vermillion/20 bg-paper-mist/70 dark:border-vermillion/25 dark:bg-night/70">
+            <summary className="flex cursor-pointer select-none items-center justify-between gap-3 px-5 py-3 text-sm font-display text-ink transition-colors hover:text-vermillion dark:text-ivory dark:hover:text-vermillion">
+              <span className="flex items-center gap-2">
+                <span className="seal-soft text-xs">卡面原文</span>
+                <span className="text-xs tracking-wider text-ink-mute dark:text-ivory-soft">
+                  机读 OCR · 置信度 {(cardText.ocrScore * 100).toFixed(0)}%
+                </span>
+              </span>
+              <span aria-hidden className="text-vermillion transition-transform group-open:rotate-90">
+                ▸
+              </span>
+            </summary>
+            <div className="border-t border-vermillion/15 px-5 py-4">
+              <CardTextLines lines={cardText.skillLines} />
+            </div>
+          </details>
+        </section>
+      )}
 
       {/* General FAQ section (entries not linked to a specific skill) */}
       {generalFaqs.length > 0 && (
