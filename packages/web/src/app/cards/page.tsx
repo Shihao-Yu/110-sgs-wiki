@@ -84,7 +84,7 @@ export default function CardsPage() {
   return (
     <div className="page-shell py-8 sm:py-12">
       <header className="mb-8">
-        <span className="eyebrow">Cards</span>
+        <span className="eyebrow">卡牌</span>
         <h1 className="section-title mt-3">
           {"\u5361\u724C\u767E\u79D1"}
         </h1>

@@ -8,7 +8,7 @@ interface NavigationProps {
 
 export default function Navigation({ onNavigate }: NavigationProps) {
   return (
-    <nav aria-label="Primary" className="w-full lg:w-auto">
+    <nav aria-label="主导航" className="w-full lg:w-auto">
       <ul className="flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:justify-end">
         {navigationItems.map((item) => (
           <li key={item.href}>

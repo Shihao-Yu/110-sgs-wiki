@@ -23,7 +23,7 @@ export default function Header() {
                 {siteConfig.name}
               </span>
               <span className="hidden truncate text-sm text-slate-500 sm:block dark:text-slate-400">
-                Wiki shell for generals, cards, sandbox, replay, and stats
+                武将、卡牌与 FAQ 资料站
               </span>
             </span>
           </Link>
@@ -37,7 +37,7 @@ export default function Header() {
 
         {/* Mobile: hamburger button */}
         <button
-          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileMenuOpen ? "关闭菜单" : "打开菜单"}
           className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/80 bg-white/85 text-slate-700 transition-colors hover:bg-slate-50 lg:hidden dark:border-slate-700/80 dark:bg-slate-900/80 dark:text-slate-200"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           type="button"

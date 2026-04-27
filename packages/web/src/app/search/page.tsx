@@ -10,7 +10,7 @@ export default function SearchPage() {
   return (
     <div className="page-shell py-8 sm:py-12">
       <header className="mb-8">
-        <span className="eyebrow">Search</span>
+        <span className="eyebrow">搜索</span>
         <h1 className="section-title mt-3">搜索结果</h1>
       </header>
       <SearchResultsClient />

@@ -9,7 +9,7 @@ export default function NotFound() {
           页面不存在
         </h1>
         <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
-          当前路由还没有接入内容。可以先返回首页查看已经准备好的壳层导航。
+          这个页面还没有内容。回首页看看吧。
         </p>
         <Link
           className="mt-8 inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700"
