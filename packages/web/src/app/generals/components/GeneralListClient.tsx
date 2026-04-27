@@ -1,12 +1,14 @@
 "use client";
 
 import type { Faction } from "@sgs/data";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FactionFilter from "./FactionFilter";
 import GeneralCard from "./GeneralCard";
 import HpFilter from "./HpFilter";
 import SearchBar from "./SearchBar";
 import SortSelect, { type SortKey } from "./SortSelect";
+
+const SCROLL_STORAGE_KEY = "generals-list-scroll-y";
 
 export type GeneralEntry = {
   id: string;
@@ -44,6 +46,32 @@ export default function GeneralListClient({
   const [factions, setFactions] = useState<Set<Faction>>(new Set());
   const [hpFilter, setHpFilter] = useState(0); // 0 = all
   const [sortKey, setSortKey] = useState<SortKey>("faction");
+
+  /* Restore scroll position from a prior visit, save on scroll. Lets users
+   * return to the same card after viewing a general's detail page. */
+  useEffect(() => {
+    const saved = sessionStorage.getItem(SCROLL_STORAGE_KEY);
+    if (saved) {
+      const y = Number.parseInt(saved, 10);
+      if (Number.isFinite(y) && y > 0) {
+        // Defer to allow grid to layout first.
+        requestAnimationFrame(() => window.scrollTo(0, y));
+      }
+    }
+
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        sessionStorage.setItem(SCROLL_STORAGE_KEY, String(window.scrollY));
+      }, 150);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
 
   const toggleFaction = (faction: Faction) => {
     setFactions((prev) => {
