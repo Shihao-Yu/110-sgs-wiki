@@ -113,8 +113,11 @@ describe("validateSessionInput", () => {
   it("rejects playerCount = 1", () => {
     expect(validateSessionInput({ ...baseValid, playerCount: 1, players: [empty] }).ok).toBe(false);
   });
-  it("rejects playerCount = 9", () => {
-    expect(validateSessionInput({ ...baseValid, playerCount: 9, players: Array(9).fill(empty) }).ok).toBe(false);
+  it("rejects playerCount = 13", () => {
+    expect(validateSessionInput({ ...baseValid, playerCount: 13, players: Array(13).fill(empty) }).ok).toBe(false);
+  });
+  it("accepts playerCount = 12", () => {
+    expect(validateSessionInput({ ...baseValid, playerCount: 12, players: Array(12).fill(empty) }).ok).toBe(true);
   });
   it("rejects mismatched players length", () => {
     expect(validateSessionInput({ ...baseValid, playerCount: 5, players: [empty, empty] }).ok).toBe(false);

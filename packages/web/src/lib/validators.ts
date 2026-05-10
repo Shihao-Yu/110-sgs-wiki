@@ -91,7 +91,7 @@ export interface FaqInput {
 
 export const SESSION_PLAYER_NAME_MAX = 50;
 export const SESSION_MIN_PLAYERS = 2;
-export const SESSION_MAX_PLAYERS = 8;
+export const SESSION_MAX_PLAYERS = 12;
 
 export interface SessionPlayerInput {
   name: string;
