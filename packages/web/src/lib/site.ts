@@ -39,7 +39,7 @@ export const navigationItems = [
     slug: "session",
     href: "/session",
     label: "牌局",
-    description: "线下开局后记录每位玩家手里的双将，方便桌上互查。",
+    description: "记录场上各位玩家亮出的将，桌上人手一台手机就能查。",
     cardClassName:
       "border-jin/20 bg-gradient-to-br from-jin/10 via-white to-white dark:from-jin/20 dark:via-slate-950 dark:to-slate-900",
     pillClassName:
