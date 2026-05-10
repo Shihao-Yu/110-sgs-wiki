@@ -87,6 +87,86 @@ export interface FaqInput {
   relatedGeneralIds: string[];
 }
 
+// ===== Session Recorder (Feature ②) =====
+
+export const SESSION_PLAYER_NAME_MAX = 50;
+export const SESSION_MIN_PLAYERS = 2;
+export const SESSION_MAX_PLAYERS = 8;
+
+export interface SessionPlayerInput {
+  name: string;
+  generals: [string | null, string | null];
+}
+
+export interface SessionInput {
+  ifRevision: number;
+  playerCount: number;
+  players: SessionPlayerInput[];
+}
+
+const GENERAL_ID_RE = /^general_[a-zA-Z0-9_]+$/;
+
+export function validateSessionInput(input: unknown): ValidationResult<SessionInput> {
+  const e: ValidationError[] = [];
+  if (input == null || typeof input !== "object") {
+    return { ok: false, errors: [{ path: "(root)", message: "请求体必须是对象" }] };
+  }
+  const v = input as Record<string, unknown>;
+
+  // ifRevision
+  const ifRevision = v.ifRevision;
+  if (typeof ifRevision !== "number" || !Number.isInteger(ifRevision) || ifRevision < 0) {
+    e.push({ path: "ifRevision", message: "必须是非负整数" });
+  }
+
+  // playerCount
+  const playerCount = v.playerCount;
+  if (typeof playerCount !== "number" || !Number.isInteger(playerCount) || playerCount < SESSION_MIN_PLAYERS || playerCount > SESSION_MAX_PLAYERS) {
+    e.push({ path: "playerCount", message: `玩家数必须在 ${SESSION_MIN_PLAYERS}-${SESSION_MAX_PLAYERS}` });
+  }
+
+  // players array
+  const players = v.players;
+  if (!Array.isArray(players)) {
+    e.push({ path: "players", message: "必须是数组" });
+    return { ok: false, errors: e };
+  }
+  if (typeof playerCount === "number" && players.length !== playerCount) {
+    e.push({ path: "players", message: `players 长度必须等于 playerCount (${playerCount})` });
+  }
+
+  const seenGenerals = new Set<string>();
+  players.forEach((p, i) => {
+    if (p == null || typeof p !== "object") {
+      e.push({ path: `players[${i}]`, message: "必须是对象" });
+      return;
+    }
+    const pp = p as Record<string, unknown>;
+    if (typeof pp.name !== "string" || pp.name.length > SESSION_PLAYER_NAME_MAX) {
+      e.push({ path: `players[${i}].name`, message: `名字必须是 ≤${SESSION_PLAYER_NAME_MAX} 字字符串（可空）` });
+    }
+    if (!Array.isArray(pp.generals) || pp.generals.length !== 2) {
+      e.push({ path: `players[${i}].generals`, message: "必须是 length-2 数组" });
+      return;
+    }
+    pp.generals.forEach((g, gi) => {
+      if (g === null) return;
+      if (typeof g !== "string" || !GENERAL_ID_RE.test(g)) {
+        e.push({ path: `players[${i}].generals[${gi}]`, message: "必须是 null 或 general_* id" });
+        return;
+      }
+      if (seenGenerals.has(g)) {
+        e.push({ path: `players[${i}].generals[${gi}]`, message: `武将 ${g} 已被其他玩家选中` });
+      } else {
+        seenGenerals.add(g);
+      }
+    });
+  });
+
+  if (e.length > 0) return { ok: false, errors: e };
+  return { ok: true, value: v as unknown as SessionInput };
+}
+
 export function validateFaqInput(input: unknown): ValidationResult<FaqInput> {
   const e: ValidationError[] = [];
   if (input == null || typeof input !== "object") {

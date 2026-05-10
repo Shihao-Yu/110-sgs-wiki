@@ -35,6 +35,16 @@ export const navigationItems = [
     pillClassName:
       "border-qun/20 bg-qun/10 text-qun dark:border-qun/40 dark:bg-qun/20 dark:text-yellow-200",
   },
+  {
+    slug: "session",
+    href: "/session",
+    label: "牌局",
+    description: "线下开局后记录每位玩家手里的双将，方便桌上互查。",
+    cardClassName:
+      "border-jin/20 bg-gradient-to-br from-jin/10 via-white to-white dark:from-jin/20 dark:via-slate-950 dark:to-slate-900",
+    pillClassName:
+      "border-jin/20 bg-jin/10 text-jin dark:border-jin/40 dark:bg-jin/20 dark:text-purple-200",
+  },
 ] as const;
 
 export type SectionSlug = (typeof navigationItems)[number]["slug"];

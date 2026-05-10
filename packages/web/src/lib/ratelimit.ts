@@ -3,6 +3,8 @@ import { Redis } from "@upstash/redis";
 
 let _loginLimiter: Ratelimit | null = null;
 let _syncSearchLimiter: Ratelimit | null = null;
+let _sessionWriteLimiter: Ratelimit | null = null;
+let _sessionReadLimiter: Ratelimit | null = null;
 
 function redis(): Redis | null {
   // Accept either Upstash-standard or Vercel-Marketplace (KV_*) naming.
@@ -34,6 +36,30 @@ export function syncSearchLimiter(): Ratelimit | null {
     prefix: "ratelimit:sync-search",
   });
   return _syncSearchLimiter;
+}
+
+export function sessionWriteLimiter(): Ratelimit | null {
+  if (_sessionWriteLimiter) return _sessionWriteLimiter;
+  const r = redis();
+  if (!r) return null;
+  _sessionWriteLimiter = new Ratelimit({
+    redis: r,
+    limiter: Ratelimit.slidingWindow(60, "1 m"), // 60 PUTs / minute / IP
+    prefix: "ratelimit:session-write",
+  });
+  return _sessionWriteLimiter;
+}
+
+export function sessionReadLimiter(): Ratelimit | null {
+  if (_sessionReadLimiter) return _sessionReadLimiter;
+  const r = redis();
+  if (!r) return null;
+  _sessionReadLimiter = new Ratelimit({
+    redis: r,
+    limiter: Ratelimit.slidingWindow(180, "1 m"), // 180 GETs / minute / IP (5s poll * up to ~15 tabs)
+    prefix: "ratelimit:session-read",
+  });
+  return _sessionReadLimiter;
 }
 
 export function clientIp(req: Request): string {

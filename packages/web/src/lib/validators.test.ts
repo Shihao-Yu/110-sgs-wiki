@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateGeneralPatch, validateSkillPatch, validateFaqInput, MAX_TEXT_LEN } from "./validators.js";
+import { validateGeneralPatch, validateSkillPatch, validateFaqInput, validateSessionInput, MAX_TEXT_LEN } from "./validators.js";
 
 describe("validateGeneralPatch", () => {
   const valid = {
@@ -77,5 +77,75 @@ describe("validateFaqInput", () => {
   });
   it("rejects question over MAX_TEXT_LEN", () => {
     expect(validateFaqInput({ ...valid, question: "a".repeat(MAX_TEXT_LEN + 1) }).ok).toBe(false);
+  });
+});
+
+describe("validateSessionInput", () => {
+  const empty = { name: "", generals: [null, null] as [null, null] };
+  const baseValid = {
+    ifRevision: 0,
+    playerCount: 3,
+    players: [empty, empty, empty],
+  };
+
+  it("accepts a valid empty session", () => {
+    expect(validateSessionInput(baseValid).ok).toBe(true);
+  });
+
+  it("accepts a session with generals", () => {
+    const v = {
+      ifRevision: 5,
+      playerCount: 2,
+      players: [
+        { name: "A", generals: ["general_caocao", "general_xiahoudun"] as [string, string] },
+        { name: "B", generals: ["general_liubei", null] as [string, null] },
+      ],
+    };
+    expect(validateSessionInput(v).ok).toBe(true);
+  });
+
+  it("rejects ifRevision negative", () => {
+    expect(validateSessionInput({ ...baseValid, ifRevision: -1 }).ok).toBe(false);
+  });
+  it("rejects ifRevision missing", () => {
+    expect(validateSessionInput({ playerCount: 3, players: [empty, empty, empty] }).ok).toBe(false);
+  });
+  it("rejects playerCount = 1", () => {
+    expect(validateSessionInput({ ...baseValid, playerCount: 1, players: [empty] }).ok).toBe(false);
+  });
+  it("rejects playerCount = 9", () => {
+    expect(validateSessionInput({ ...baseValid, playerCount: 9, players: Array(9).fill(empty) }).ok).toBe(false);
+  });
+  it("rejects mismatched players length", () => {
+    expect(validateSessionInput({ ...baseValid, playerCount: 5, players: [empty, empty] }).ok).toBe(false);
+  });
+  it("rejects duplicate generals across players", () => {
+    const v = {
+      ifRevision: 0,
+      playerCount: 2,
+      players: [
+        { name: "", generals: ["general_caocao", null] as [string, null] },
+        { name: "", generals: ["general_caocao", null] as [string, null] },
+      ],
+    };
+    const r = validateSessionInput(v);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.some((e) => e.path.includes("generals") && e.message.includes("已被"))).toBe(true);
+  });
+  it("rejects bad general id pattern", () => {
+    const v = {
+      ifRevision: 0,
+      playerCount: 1,
+      players: [{ name: "", generals: ["not_a_general", null] as [string, null] }],
+    };
+    expect(validateSessionInput({ ...v, playerCount: 2, players: [v.players[0]!, empty] }).ok).toBe(false);
+  });
+  it("rejects player.name over 50 chars", () => {
+    const v = { ...baseValid, players: [{ name: "x".repeat(51), generals: [null, null] as [null, null] }, empty, empty] };
+    expect(validateSessionInput(v).ok).toBe(false);
+  });
+  it("rejects generals not length-2 array", () => {
+    const v = { ...baseValid, players: [{ name: "", generals: [null] as unknown as [null, null] }, empty, empty] };
+    expect(validateSessionInput(v).ok).toBe(false);
   });
 });
