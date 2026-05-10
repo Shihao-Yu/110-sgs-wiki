@@ -12,8 +12,12 @@
  */
 import "dotenv/config";
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Redis } from "@upstash/redis";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = resolve(__dirname, "..");
 
 const args = new Set(process.argv.slice(2));
 const YES = args.has("--yes") || args.has("-y");
@@ -37,7 +41,7 @@ if (!YES) {
 }
 
 const r = new Redis({ url, token });
-const dataDir = resolve(process.cwd(), "packages/data/src");
+const dataDir = resolve(REPO_ROOT, "packages/data/src");
 const generals = JSON.parse(readFileSync(resolve(dataDir, "generals.json"), "utf8")) as Array<{ id: string }>;
 const skills = JSON.parse(readFileSync(resolve(dataDir, "skills.json"), "utf8")) as Array<{ id: string; generalIds?: string[] }>;
 const faqs = JSON.parse(readFileSync(resolve(dataDir, "faq.json"), "utf8")) as Array<{ id: string }>;

@@ -5,8 +5,12 @@
  */
 import "dotenv/config";
 import { writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Redis } from "@upstash/redis";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = resolve(__dirname, "..");
 
 const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
 const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
@@ -35,7 +39,7 @@ async function dumpEntities<T extends Identifiable>(indexKey: string, valueKey: 
 }
 
 (async () => {
-  const dataDir = resolve(process.cwd(), "packages/data/src");
+  const dataDir = resolve(REPO_ROOT, "packages/data/src");
 
   const generals = await dumpEntities<Identifiable>("generals:index", (id) => `general:${id}`);
   const skills = await dumpEntities<Identifiable>("skills:index", (id) => `skill:${id}`);
