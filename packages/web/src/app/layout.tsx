@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 import FallbackBanner from "@/components/FallbackBanner";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import { AdminProvider } from "@/components/admin/AdminContext";
+import Toaster from "@/components/admin/Toaster";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -30,12 +32,15 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
       <body>
-        <div className="flex min-h-screen flex-col">
-          <FallbackBanner />
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <AdminProvider>
+          <div className="flex min-h-screen flex-col">
+            <FallbackBanner />
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <Toaster />
+        </AdminProvider>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 import type { General, Skill, FAQ, GeneralId, SkillId, FAQId } from "@sgs/data";
 import { Redis } from "@upstash/redis";
-import { markFallbackUsed } from "./fallback-flag.js";
+import { markFallbackUsed } from "./fallback-flag";
 
 import generalsSeed from "../../../data/src/generals.json" with { type: "json" };
 import skillsSeed from "../../../data/src/skills.json" with { type: "json" };

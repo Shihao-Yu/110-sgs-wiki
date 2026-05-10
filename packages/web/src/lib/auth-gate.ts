@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { verifySessionCookie } from "./auth.js";
+import { verifySessionCookie } from "./auth";
 
 export const ADMIN_COOKIE_NAME = "admin_session";
 export const MAX_BODY_BYTES = 50 * 1024; // 50 KB body cap

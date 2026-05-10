@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import AdminAffordances from "@/components/admin/AdminAffordances";
 import Navigation from "@/components/layout/Navigation";
 import GlobalSearch from "@/components/search/GlobalSearch";
 import { siteConfig } from "@/lib/site";
@@ -38,8 +39,9 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Desktop: search + nav inline */}
+        {/* Desktop: search + nav + admin chrome inline */}
         <div className="hidden items-center gap-4 lg:flex">
+          <AdminAffordances />
           <GlobalSearch />
           <Navigation />
         </div>

@@ -67,7 +67,10 @@ export default async function FaqPage() {
         </p>
       </header>
 
-      <FaqListClient entries={entries} />
+      <FaqListClient
+        entries={entries}
+        allGenerals={generals.map((g) => ({ id: g.id as unknown as string, name: g.name }))}
+      />
     </div>
   );
 }

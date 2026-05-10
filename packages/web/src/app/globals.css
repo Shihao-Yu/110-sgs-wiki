@@ -236,6 +236,53 @@
     background: linear-gradient(180deg, transparent, var(--vermillion), transparent);
   }
 
+  /* Admin form utilities (Phase 5.0) */
+  .input-base {
+    @apply w-full rounded border border-slate-300/60 bg-paper-mist/50 px-2 py-1.5 text-sm text-ink
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vermillion/50;
+  }
+  @media (prefers-color-scheme: dark) {
+    .input-base {
+      @apply border-slate-700/60 bg-night/50 text-ivory;
+    }
+  }
+  .input-base:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+  .input-error {
+    @apply border-red-500/70;
+  }
+  @media (prefers-color-scheme: dark) {
+    .input-error {
+      @apply border-red-400/70;
+    }
+  }
+  .btn-primary {
+    @apply rounded bg-vermillion px-3 py-1.5 text-sm font-medium text-white
+           hover:bg-vermillion/90
+           disabled:bg-vermillion/40 disabled:cursor-not-allowed
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vermillion/40;
+  }
+  .btn-secondary {
+    @apply rounded border border-slate-400/50 px-3 py-1.5 text-sm
+           hover:bg-slate-100
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vermillion/40;
+  }
+  @media (prefers-color-scheme: dark) {
+    .btn-secondary:hover {
+      background-color: rgba(34, 28, 22, 0.4);
+    }
+  }
+  .btn-danger {
+    @apply rounded border border-red-500/50 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40;
+  }
+  @media (prefers-color-scheme: dark) {
+    .btn-danger:hover {
+      background-color: rgba(127, 29, 29, 0.2);
+    }
+  }
+
   /* Ink button — text with subtle underline that grows on hover */
   .ink-link {
     position: relative;

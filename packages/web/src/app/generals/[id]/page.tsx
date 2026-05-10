@@ -4,6 +4,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import cardTextData from "../../../../../data/src/card-text.json";
 import { entityStore } from "@/lib/entity-store";
+import AdminBaseEdit from "./components/AdminBaseEdit";
+import AdminSkillEdit from "./components/AdminSkillEdit";
+import AdminFaqAdd from "./components/AdminFaqAdd";
 import GeneralImage from "./components/GeneralImage";
 import RadarChart from "./components/RadarChart";
 import SkillCard from "./components/SkillCard";
@@ -170,6 +173,14 @@ export default async function GeneralDetailPage({ params }: PageProps) {
   /* OCR-extracted text from the card image (best-effort, machine-read) */
   const cardText = cardTextMap[general.id as unknown as string];
 
+  /* Pre-load lookup lists for admin form dropdowns (server-side; cheap fetch) */
+  const [allGeneralsRaw, allSkillsRaw] = await Promise.all([
+    entityStore.getGenerals(),
+    entityStore.getSkills(),
+  ]);
+  const allGenerals = allGeneralsRaw.map((g) => ({ id: g.id as unknown as string, name: g.name }));
+  const allSkills = allSkillsRaw.map((s) => ({ id: s.id as unknown as string, name: s.name }));
+
   /* Placeholder radar scores — can be replaced with real data later */
   const radarScores: [number, number, number, number] = [5, 5, 5, 5];
 
@@ -210,7 +221,10 @@ export default async function GeneralDetailPage({ params }: PageProps) {
           </div>
 
           {/* Info panel */}
-          <div className="flex flex-1 flex-col gap-5 p-4 sm:gap-6 sm:p-6 md:p-8">
+          <div className="relative flex flex-1 flex-col gap-5 p-4 sm:gap-6 sm:p-6 md:p-8">
+            <div className="absolute right-3 top-3 z-10">
+              <AdminBaseEdit general={general as General} allGenerals={allGenerals} allSkills={allSkills} />
+            </div>
             {/* Name + Title + Faction */}
             <div>
               <div className="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -296,14 +310,18 @@ export default async function GeneralDetailPage({ params }: PageProps) {
             {generalSkills.map((skill) => {
               const sid = skill.id as unknown as string;
               return (
-                <SkillCard
-                  key={sid}
-                  description={skill.description}
-                  faq={skillFaqMap.get(sid) ?? skill.faq ?? []}
-                  name={skill.name}
-                  timing={skill.timing}
-                  type={skill.type}
-                />
+                <div key={sid} className="relative">
+                  <div className="absolute right-3 top-3 z-10">
+                    <AdminSkillEdit skill={skill as Skill} />
+                  </div>
+                  <SkillCard
+                    description={skill.description}
+                    faq={skillFaqMap.get(sid) ?? skill.faq ?? []}
+                    name={skill.name}
+                    timing={skill.timing}
+                    type={skill.type}
+                  />
+                </div>
               );
             })}
           </div>
@@ -338,13 +356,16 @@ export default async function GeneralDetailPage({ params }: PageProps) {
       )}
 
       {/* General FAQ section (entries not linked to a specific skill) */}
-      {generalFaqs.length > 0 && (
-        <section className="mt-10">
-          <h2 className="section-title mb-5">常见问题</h2>
+      <section className="mt-10">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <h2 className="section-title">常见问题</h2>
+          <AdminFaqAdd generalId={general.id as unknown as string} allGenerals={allGenerals} />
+        </div>
+        {generalFaqs.length > 0 ? (
           <div className="space-y-3">
             {generalFaqs.map((faq) => (
               <details
-                key={faq.id}
+                key={faq.id as unknown as string}
                 className="group rounded-2xl border border-slate-200/80 bg-white/85 shadow-sm dark:border-slate-800/80 dark:bg-slate-950/80"
               >
                 <summary className="cursor-pointer select-none px-5 py-3.5 text-sm font-medium text-slate-800 transition-colors hover:text-slate-950 dark:text-slate-200 dark:hover:text-white">
@@ -356,8 +377,10 @@ export default async function GeneralDetailPage({ params }: PageProps) {
               </details>
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p className="text-sm text-ink-mute dark:text-ivory-soft">暂无相关问答。</p>
+        )}
+      </section>
     </div>
   );
 }

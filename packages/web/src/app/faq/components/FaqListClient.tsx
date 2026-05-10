@@ -2,6 +2,11 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useAdmin } from "@/components/admin/AdminContext";
+import EditAffordance from "@/components/admin/EditAffordance";
+import FaqEditForm from "@/components/admin/FaqEditForm";
+import FaqNewForm from "@/components/admin/FaqNewForm";
+import type { FAQ } from "@sgs/data";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -40,11 +45,14 @@ function AccordionItem({
   entry,
   isOpen,
   onToggle,
+  allGenerals,
 }: {
   entry: FaqEntry;
   isOpen: boolean;
   onToggle: () => void;
+  allGenerals: Array<{ id: string; name: string }>;
 }) {
+  const { authed } = useAdmin();
   return (
     <div className="rounded-2xl border border-slate-200/80 bg-white/85 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800/80 dark:bg-slate-950/80">
       <button
@@ -82,6 +90,35 @@ function AccordionItem({
           {entry.category === "rule" ? "\u89C4\u5219" : "\u6B66\u5C06"}
         </span>
       </button>
+
+      {authed && (
+        <div className="border-t border-slate-200/40 px-5 py-2 dark:border-slate-700/40">
+          <EditAffordance
+            ariaLabel="\u7F16\u8F91\u8BE5 FAQ"
+            trigger={
+              <span className="inline-flex items-center gap-1 text-xs text-vermillion">
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z" />
+                </svg>
+                \u7F16\u8F91 / \u5220\u9664
+              </span>
+            }
+            renderForm={(close) => (
+              <FaqEditForm
+                faq={{
+                  id: entry.id as unknown as FAQ["id"],
+                  question: entry.question,
+                  answer: entry.answer,
+                  category: entry.category as unknown as FAQ["category"],
+                  relatedGeneralIds: entry.relatedGenerals.map((g) => g.id) as unknown as FAQ["relatedGeneralIds"],
+                } as FAQ}
+                allGenerals={allGenerals}
+                onClose={close}
+              />
+            )}
+          />
+        </div>
+      )}
 
       {isOpen && (
         <div className="border-t border-slate-200/40 px-5 pb-5 pt-4 dark:border-slate-700/40">
@@ -127,9 +164,11 @@ function AccordionItem({
 
 interface FaqListClientProps {
   entries: FaqEntry[];
+  allGenerals: Array<{ id: string; name: string }>;
 }
 
-export default function FaqListClient({ entries }: FaqListClientProps) {
+export default function FaqListClient({ entries, allGenerals }: FaqListClientProps) {
+  const { authed } = useAdmin();
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<CategoryTab>("all");
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
@@ -187,6 +226,24 @@ export default function FaqListClient({ entries }: FaqListClientProps) {
 
   return (
     <div className="space-y-6">
+      {authed && (
+        <div className="flex justify-end">
+          <EditAffordance
+            ariaLabel="新建 FAQ"
+            trigger={
+              <span className="inline-flex items-center gap-1 rounded border border-vermillion/40 px-3 py-1.5 text-xs text-vermillion">
+                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
+                </svg>
+                新建 FAQ
+              </span>
+            }
+            renderForm={(close) => (
+              <FaqNewForm allGenerals={allGenerals} onClose={close} />
+            )}
+          />
+        </div>
+      )}
       {/* Toolbar */}
       <div className="panel p-4 sm:p-5">
         <div className="flex flex-col gap-4">
@@ -293,6 +350,7 @@ export default function FaqListClient({ entries }: FaqListClientProps) {
                     entry={entry}
                     isOpen={openIds.has(entry.id)}
                     onToggle={() => toggle(entry.id)}
+                    allGenerals={allGenerals}
                   />
                 ))}
               </div>
@@ -317,6 +375,7 @@ export default function FaqListClient({ entries }: FaqListClientProps) {
                     entry={entry}
                     isOpen={openIds.has(entry.id)}
                     onToggle={() => toggle(entry.id)}
+                    allGenerals={allGenerals}
                   />
                 ))}
               </div>
