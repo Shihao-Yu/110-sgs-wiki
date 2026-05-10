@@ -5,11 +5,11 @@ let _loginLimiter: Ratelimit | null = null;
 let _syncSearchLimiter: Ratelimit | null = null;
 
 function redis(): Redis | null {
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
-  return new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
+  // Accept either Upstash-standard or Vercel-Marketplace (KV_*) naming.
+  const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  return new Redis({ url, token });
 }
 
 export function loginLimiter(): Ratelimit | null {

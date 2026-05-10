@@ -6,14 +6,23 @@ import generalsSeed from "../../../data/src/generals.json" with { type: "json" }
 import skillsSeed from "../../../data/src/skills.json" with { type: "json" };
 import faqsSeed from "../../../data/src/faq.json" with { type: "json" };
 
+// Vercel's Upstash Marketplace integration auto-injects KV_REST_API_URL /
+// KV_REST_API_TOKEN (legacy Vercel KV naming). Standard Upstash convention is
+// UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN. Accept both.
+function redisUrl(): string | undefined {
+  return process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
+}
+function redisToken(): string | undefined {
+  return process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+}
+
 let _redis: Redis | null = null;
 function redis(): Redis | null {
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
+  const url = redisUrl();
+  const token = redisToken();
+  if (!url || !token) return null;
   if (!_redis) {
-    _redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    });
+    _redis = new Redis({ url, token });
   }
   return _redis;
 }

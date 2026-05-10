@@ -19,10 +19,10 @@ const args = new Set(process.argv.slice(2));
 const YES = args.has("--yes") || args.has("-y");
 const FORCE = args.has("--force");
 
-const url = process.env.UPSTASH_REDIS_REST_URL;
-const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
+const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
 if (!url || !token) {
-  console.error("Missing UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN");
+  console.error("Missing UPSTASH_REDIS_REST_URL/TOKEN (or KV_REST_API_URL/TOKEN from Vercel Marketplace)");
   process.exit(1);
 }
 

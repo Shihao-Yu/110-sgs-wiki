@@ -16,8 +16,12 @@ jobs:
       contents: write
       issues: write
     env:
+      # Accept either standard Upstash or Vercel Marketplace KV_* naming.
+      # Set whichever pair you have in repo secrets.
       UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
       UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+      KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+      KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
