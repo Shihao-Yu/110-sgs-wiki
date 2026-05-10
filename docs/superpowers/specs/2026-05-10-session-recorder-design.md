@@ -35,11 +35,11 @@
 
 ## 3. 数据模型
 
-**Redis key 设计**（per-entity 模式延续）：
+**Redis key 设计**：
 
 | Key | Value |
 |---|---|
-| `session:current` | `{ playerCount: number, players: Player[], updatedAt: string }` |
+| `session:current` | `{ revision: number, playerCount: number, players: Player[], updatedAt: string }` |
 
 ```ts
 interface Player {
@@ -48,35 +48,41 @@ interface Player {
 }
 
 interface Session {
+  revision: number;      // monotonic, +1 on every successful PUT (CAS guard)
   playerCount: number;   // 2-8
   players: Player[];     // length === playerCount
   updatedAt: string;     // ISO timestamp
 }
 ```
 
-默认值（KV 空时）：5 个空玩家，generals=[null,null]，名字 "玩家1"…"玩家5"。
+默认值（KV 空时）：`{ revision: 0, playerCount: 5, players: [...5 empty], updatedAt: now() }`。
 
-**复用 entityStore**：在 `packages/web/src/lib/entity-store.ts` 加 `getSession()` / `putSession()`。
+**单独的 session adapter**（不复用 `entityStore` 的读 fallback 语义）：在 `packages/web/src/lib/session-store.ts` 实现 `getSession()` / `putSession()`. 关键差异：
+- **读失败抛出**，不静默返回 bundled JSON。session 没有"种子"概念，回退到空白会被随后的 PUT 覆盖真数据。
+- **写实施 CAS**：`putSession({ ifRevision, value })` 用 Upstash `eval` 原子 read-modify-write，或简化为乐观读取 → 比对 → 写入（小并发场景够用）。
+- 都加 3s 超时（沿用 entityStore 的 `withTimeout`）。
 
 ## 4. API 路由
 
 | Method | Path | 行为 |
 |---|---|---|
-| GET | `/api/session` | 返回当前 session（无 auth）；缓存 no-store |
-| PUT | `/api/session` | 全量替换；body 校验；写 Redis；返回新值。**无 auth**。 |
+| GET | `/api/session` | 返回当前 session（无 auth）；`Cache-Control: no-store`；Redis 不可用 → 503 |
+| PUT | `/api/session` | 全量替换；body 校验；CAS（必须传 `ifRevision`）；写 Redis；返回新值（含新 revision）。**无 auth**。`409` 表示 revision stale（客户端要 GET + merge + 重试） |
 
 **校验**（在 `packages/web/src/lib/validators.ts` 加 `validateSessionInput`）：
 - `playerCount` ∈ [2, 8]
 - `players` 长度 === playerCount
-- 每个 player.name 长度 ≤ 50
+- 每个 player.name 长度 ≤ 50（非空字符串；可允许空字符串，UI 显示默认"玩家N"）
 - 每个 player.generals 必须是 length-2 数组
-- generals 里非 null 的总集合无重复
-- 每个非 null generalId 必须存在（轻校验：`/^general_/` 即可，不去 Redis 验存在）
-- body 大小受现有 `MAX_BODY_BYTES=50KB` 限制（已经在 auth-gate；session 不走 auth-gate，需要在 PUT handler 自己再做一次 body 大小检查）
+- generals 里非 null 的总集合**全局无重复**（同一武将不能两人都用）
+- 每个非 null generalId 必须匹配 `/^general_/`（轻校验，不查 Redis）
+- `ifRevision` 是非负整数
 
 无 auth ≠ 无防护：
-- IP rate limit：`@upstash/ratelimit` slidingWindow(20, "1 m") 防止暴力扫
-- 50KB 体积上限
+- 专用 session 限速器（不复用 login/sync）：
+  - **写**：`sessionWriteLimiter` slidingWindow(60, "1 m") / IP — 自动保存 500ms debounce 下，最快每秒 2 个 PUT，60/分钟容易够正常使用
+  - **读**：`sessionReadLimiter` slidingWindow(120, "1 m") / IP — 5s 轮询单 tab = 12/分钟，10 个 tab = 120/分钟刚好
+- 50KB body 上限（PUT handler 自己检查）
 
 ## 5. UI 设计
 
@@ -106,27 +112,30 @@ interface Session {
 ### 5.3 武将选择器
 复用 admin 模式的 `MultiSelect` 但简化为 single-select。新建 `<GeneralPicker>` 组件：搜索输入 + filtered list（去掉已被任意 slot 选过的 generals）。
 
-### 5.4 自动保存逻辑
+### 5.4 自动保存逻辑（带 CAS）
 client-side：
-- 任何 setState 触发 debounce(500ms) → PUT `/api/session`
-- 状态机：`idle | saving | saved | error`
-- "saved" 显示 "已保存 · HH:MM:SS"
-- "error" 显示 "保存失败，重试中"，每 5s 重试
+- 任何 setState 触发 debounce(500ms) → PUT `/api/session` body `{ ...session, ifRevision: localRevision }`
+- 状态机：`idle | saving | saved | conflict | error`
+- 200 → 用响应替换本地 state（拿到新 revision）
+- 409 (conflict) → 立刻 GET 拿最新，应用到本地（覆盖未保存的本地改动），toast "另一人刚改过，已加载最新版"
+- 5xx (error) → "保存失败，3s 后重试"，3s 后单次重试
 
-**冲突处理**：last-write-wins（无 ETag）。多人同时改 = 后写者胜出。可见但极少触发；hobbyist 接受。
+**为什么 CAS 优于 LWW**：单 tab 没事，但用户描述"全局共享" + 桌上多人 = 真有可能两人同开页面同时填一个空 slot。CAS 防止"我填好了你的版本一覆盖把我刚填的清掉"。代价：偶尔 conflict 时本地改动被覆盖（但 toast 提醒，立刻看到最新）。
 
 ### 5.5 轮询
-- 页面 mount 后每 **10s** GET `/api/session`
-- 如果 server 的 `updatedAt` 比本地 newer **且本地不是 saving 状态**：用 server 数据覆盖本地（防止"我正在编辑"被别人覆盖到一半）
+- 页面 mount 后每 **5s** GET `/api/session`
+- `document.visibilityState !== 'visible'` 时跳过
 - tab 切换可见时立刻拉一次
+- 如果 server `revision` > local AND 本地不是 saving：用 server 替换
 
 ## 6. 错误处理
 
 | 场景 | 行为 |
 |---|---|
-| Redis 读失败（GET） | 返回默认空 session（5 玩家） + 设 fallback flag → 顶栏 banner 提示 |
-| Redis 写失败（PUT） | 502 + 客户端 toast "保存失败，10s 后重试" |
-| 校验失败 | 422 + 字段错误（不应在正常 UI 流程出现，因为 UI 强制约束） |
+| Redis 读失败（GET） | **503**，UI 显示 "数据暂不可用，刷新重试"。不返回伪造的默认值（避免 stale 覆盖） |
+| Redis 写失败（PUT） | 502 + 客户端 toast "保存失败，3s 后重试"，自动重试一次 |
+| 校验失败 | 422 + 字段错误（UI 应在前端先拦） |
+| revision 冲突 | 409 + 客户端拉最新覆盖本地 + toast 提示 |
 | 体积超限 | 413 |
 | 速率超限 | 429 |
 | Player count 改小：超出的玩家被丢弃 | UI 弹 InlineConfirm "缩减到 N 人，玩家 N+1 起的将会被清掉" |
@@ -141,17 +150,16 @@ client-side：
 
 ## 8. 实施步骤
 
-1. `validators.ts` 加 `validateSessionInput` + 单测
-2. `entity-store.ts` 加 `getSession` / `putSession` + 单测
-3. `lib/ratelimit.ts` 加 `sessionPutLimiter` (20/min)
-4. `app/api/session/route.ts` GET + PUT
-5. `lib/site.ts` 加 `session` 导航项 + 集成测试
-6. `app/session/page.tsx` 页面 shell（client component）
-7. `components/session/SessionEditor.tsx` 主编辑器（含 polling、auto-save、控制栏）
-8. `components/session/SessionPlayer.tsx` 单玩家卡片
-9. `components/session/GeneralPicker.tsx` typeahead 选择器（去重 props）
-10. `components/session/InlineConfirmReset.tsx` 复用 admin 的 InlineConfirm 处理"重置"和"缩减玩家数"
-11. 部署 + 烟测
+1. `validators.ts` 加 `validateSessionInput`（含 ifRevision、duplicate 检查）+ 单测
+2. `lib/session-store.ts`（新文件，不复用 entity-store 读 fallback）`getSession` / `putSession`（CAS）+ 单测
+3. `lib/ratelimit.ts` 加 `sessionWriteLimiter` (60/m) + `sessionReadLimiter` (120/m)
+4. `app/api/session/route.ts` GET + PUT (CAS、no-store、限速、503 on Redis 失败)
+5. `lib/site.ts` 加 `session` 导航项
+6. `app/session/page.tsx` 页面 shell（server component 渲染 shell + 加载初始 session 数据）
+7. `components/session/SessionEditor.tsx` 主编辑器（client component，polling + auto-save + CAS 处理）
+8. `components/session/SessionPlayer.tsx` 单玩家卡片（mobile 折叠态）
+9. `components/session/GeneralPicker.tsx` typeahead single-select（接受 excludedIds prop）
+10. 部署 + 双 tab 烟测（CAS conflict 路径）
 
 ## 9. 风险
 
