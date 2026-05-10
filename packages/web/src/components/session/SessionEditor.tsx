@@ -23,6 +23,7 @@ interface GeneralOption {
   name: string;
   faction: string;
   hp: number;
+  image: string;
 }
 
 type SaveState = "idle" | "saving" | "saved" | "conflict" | "error";
@@ -44,6 +45,11 @@ function formatTime(iso: string): string {
   }
 }
 
+function sameContent(a: Session, b: Session): boolean {
+  return JSON.stringify({ playerCount: a.playerCount, players: a.players })
+       === JSON.stringify({ playerCount: b.playerCount, players: b.players });
+}
+
 export default function SessionEditor({
   initialSession,
   initialError,
@@ -58,12 +64,19 @@ export default function SessionEditor({
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(initialSession?.updatedAt ?? null);
 
-  // Refs to keep latest values inside debounced/polling closures
+  // Refs for stable access inside async closures
   const sessionRef = useRef(session);
   useEffect(() => { sessionRef.current = session; }, [session]);
   const saveStateRef = useRef(saveState);
   useEffect(() => { saveStateRef.current = saveState; }, [saveState]);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastConflictToastAtRef = useRef(0);
+
+  // Apply server data WITHOUT triggering an auto-save (used by polling and PUT response)
+  const applyServerSession = useCallback((s: Session) => {
+    setSession(s);
+    setLastSavedAt(s.updatedAt);
+  }, []);
 
   const persist = useCallback(async () => {
     const cur = sessionRef.current;
@@ -82,59 +95,60 @@ export default function SessionEditor({
       });
       if (r.status === 409) {
         const j = (await r.json()) as { current: Session };
-        setSession(j.current);
-        setLastSavedAt(j.current.updatedAt);
+        applyServerSession(j.current);
         setSaveState("conflict");
-        toast("另一人刚刚改过此牌局，已加载最新版本", "info");
+        // Throttle conflict toast — once per 8 seconds max
+        const now = Date.now();
+        if (now - lastConflictToastAtRef.current > 8000) {
+          lastConflictToastAtRef.current = now;
+          toast("另一人刚刚改过此牌局，已加载最新版本", "info");
+        }
         return;
       }
       if (!r.ok) {
         setSaveState("error");
         toast("保存失败，3 秒后重试", "error");
-        setTimeout(persist, 3000);
+        setTimeout(() => persist(), 3000);
         return;
       }
       const j = (await r.json()) as { value: Session };
-      setSession(j.value);
-      setLastSavedAt(j.value.updatedAt);
+      applyServerSession(j.value);
       setSaveState("saved");
     } catch {
       setSaveState("error");
       toast("网络错误，3 秒后重试", "error");
-      setTimeout(persist, 3000);
+      setTimeout(() => persist(), 3000);
     }
-  }, []);
+  }, [applyServerSession]);
 
-  // Debounced save: any session change (after initial mount) triggers a save
-  const dirtyRef = useRef(false);
-  useEffect(() => {
-    if (!session) return;
-    if (!dirtyRef.current) {
-      // First render: skip auto-save
-      dirtyRef.current = true;
-      return;
-    }
+  function scheduleSave() {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => persist(), SAVE_DEBOUNCE_MS);
-    return () => {
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    };
-  }, [session, persist]);
+  }
 
-  // Poll for fresher state from other clients
+  // Poll for updates from other clients (does NOT trigger auto-save)
   useEffect(() => {
     let cancelled = false;
     async function poll() {
       if (cancelled) return;
       if (typeof document !== "undefined" && document.visibilityState !== "visible") return;
+      // Don't clobber an in-flight save or a debounced pending save
       if (saveStateRef.current === "saving") return;
+      if (saveTimerRef.current !== null) return;
       try {
         const r = await fetch("/api/session", { cache: "no-store" });
         if (!r.ok) return;
         const j = (await r.json()) as Session;
         const local = sessionRef.current;
-        if (!local || j.revision > local.revision) {
-          setSession(j);
+        if (!local) {
+          applyServerSession(j);
+          return;
+        }
+        if (j.revision > local.revision && !sameContent(j, local)) {
+          applyServerSession(j);
+        } else if (j.revision > local.revision) {
+          // Same content, just bump revision so next save uses latest
+          setSession((prev) => (prev ? { ...prev, revision: j.revision, updatedAt: j.updatedAt } : prev));
           setLastSavedAt(j.updatedAt);
         }
       } catch {
@@ -149,7 +163,7 @@ export default function SessionEditor({
       clearInterval(id);
       document.removeEventListener("visibilitychange", onVis);
     };
-  }, []);
+  }, [applyServerSession]);
 
   if (readError && !session) {
     return (
@@ -173,6 +187,7 @@ export default function SessionEditor({
       const players = s.players.map((p, idx) => (idx === i ? { ...p, name } : p));
       return { ...s, players };
     });
+    scheduleSave();
   }
 
   function updatePlayerGeneral(i: number, slot: 0 | 1, gid: string | null) {
@@ -186,6 +201,7 @@ export default function SessionEditor({
       });
       return { ...s, players };
     });
+    scheduleSave();
   }
 
   function changePlayerCount(n: number) {
@@ -194,21 +210,23 @@ export default function SessionEditor({
       const players = emptyPlayers(n, s.players).slice(0, n);
       return { ...s, playerCount: n, players };
     });
+    scheduleSave();
   }
 
-  async function reset() {
+  function reset() {
     setSession((s) => {
       if (!s) return s;
       const players = s.players.map((p) => ({ name: p.name, generals: [null, null] as [null, null] }));
       return { ...s, players };
     });
+    scheduleSave();
   }
 
   const saveLabel = (() => {
     switch (saveState) {
       case "saving": return "保存中…";
       case "saved": return `已保存 · ${formatTime(lastSavedAt ?? "")}`;
-      case "conflict": return `冲突已解决 · ${formatTime(lastSavedAt ?? "")}`;
+      case "conflict": return `已合并最新 · ${formatTime(lastSavedAt ?? "")}`;
       case "error": return "保存失败，重试中";
       default: return lastSavedAt ? `上次更新 · ${formatTime(lastSavedAt)}` : "尚未保存";
     }
@@ -250,7 +268,6 @@ export default function SessionEditor({
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {session.players.map((p, i) => {
-          // exclude all generals taken by other players
           const otherTaken = allTaken.filter((g) => !p.generals.includes(g));
           return (
             <SessionPlayer
