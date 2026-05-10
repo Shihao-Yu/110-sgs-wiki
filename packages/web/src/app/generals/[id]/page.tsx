@@ -1,59 +1,19 @@
 import type { Metadata } from "next";
-import type { Faction } from "@sgs/data";
+import type { Faction, GeneralId, General, Skill, FAQ } from "@sgs/data";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import generalsData from "../../../../../data/src/generals.json";
-import skillsData from "../../../../../data/src/skills.json";
-import faqData from "../../../../../data/src/faq.json";
 import cardTextData from "../../../../../data/src/card-text.json";
+import { entityStore } from "@/lib/entity-store";
 import GeneralImage from "./components/GeneralImage";
 import RadarChart from "./components/RadarChart";
 import SkillCard from "./components/SkillCard";
 import { assetUrl } from "@/lib/assets";
 
-/* ---------- Types for the raw JSON shapes ---------- */
+/* ---------- Types for the raw shapes ---------- */
 
-type RawGeneral = {
-  id: string;
-  name: string;
-  title: string;
-  faction: Faction;
-  subfaction?: Faction;
-  hp: number;
-  maxHp: number;
-  gender: string;
-  skills: string[];
-  image: string;
-  pack: string;
+type RawSkill = Skill & {
+  faq?: { id: string; question: string; answer: string }[];
 };
-
-type RawSkill = {
-  id: string;
-  name: string;
-  description: string;
-  type: "active" | "passive" | "lock" | "limited" | "awakening" | "mission";
-  timing: string[];
-  generalIds: string[];
-  faq: { id: string; question: string; answer: string }[];
-};
-
-type RawFaq = {
-  id: string;
-  question: string;
-  answer: string;
-  category: string;
-  relatedGeneralIds?: string[];
-  relatedSkillIds?: string[];
-};
-
-/* ---------- Lookup maps (built once at build time) ---------- */
-
-const generals = generalsData as RawGeneral[];
-const skills = skillsData as RawSkill[];
-const faqs = faqData as RawFaq[];
-
-const generalMap = new Map(generals.map((g) => [g.id, g]));
-const skillMap = new Map(skills.map((s) => [s.id, s]));
 
 const cardTextMap = (cardTextData as {
   items: Record<string, { skillsText: string; skillLines: string[]; ocrScore: number }>;
@@ -145,10 +105,11 @@ function CardTextPanel({
   );
 }
 
-/* ---------- Static params for all 341 generals ---------- */
+/* ---------- Static params for all generals ---------- */
 
-export function generateStaticParams() {
-  return generals.map((g) => ({ id: g.id }));
+export async function generateStaticParams() {
+  const all = await entityStore.getGenerals();
+  return all.map((g) => ({ id: g.id as unknown as string }));
 }
 
 /* ---------- Dynamic metadata ---------- */
@@ -159,7 +120,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const g = generalMap.get(id);
+  const g = await entityStore.getGeneral(id as GeneralId);
   if (!g) return { title: "未找到武将" };
   return {
     title: `${g.name} · ${g.title}`,
@@ -171,30 +132,34 @@ export async function generateMetadata({
 
 export default async function GeneralDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const general = generalMap.get(id);
+  const general = (await entityStore.getGeneral(id as GeneralId)) as General | null;
   if (!general) notFound();
 
   const faction = FACTION_META[general.faction];
   const gradient = FACTION_GRADIENT[general.faction];
 
-  /* Resolve skills for this general */
-  const generalSkills = general.skills
-    .map((sid) => skillMap.get(sid))
+  /* Resolve skills for this general via the reverse-lookup index */
+  const generalSkillsRaw = (await entityStore.getSkillsByGeneral(general.id)) as RawSkill[];
+  // Preserve the order from the general's `skills` array
+  const skillIndex = new Map(generalSkillsRaw.map((s) => [s.id as unknown as string, s]));
+  const generalSkills = (general.skills as unknown as string[])
+    .map((sid) => skillIndex.get(sid))
     .filter((s): s is RawSkill => s != null);
-  const hasOnlyPlaceholderSkills = general.skills.every((sid) =>
+  const hasOnlyPlaceholderSkills = (general.skills as unknown as string[]).every((sid) =>
     sid.startsWith("skill_unknown_"),
   );
 
-  /* Collect FAQ entries related to this general from faq.json */
-  const generalFaqs = faqs.filter(
-    (f) => f.relatedGeneralIds && f.relatedGeneralIds.includes(general.id),
+  /* Collect FAQ entries related to this general */
+  const allFaqs = (await entityStore.getFaqs()) as FAQ[];
+  const generalFaqs = allFaqs.filter(
+    (f) => f.relatedGeneralIds && (f.relatedGeneralIds as unknown as string[]).includes(general.id as unknown as string),
   );
 
-  /* Build per-skill FAQ lookup from faq.json */
+  /* Build per-skill FAQ lookup */
   const skillFaqMap = new Map<string, typeof generalFaqs>();
   for (const faq of generalFaqs) {
     if (faq.relatedSkillIds) {
-      for (const sid of faq.relatedSkillIds) {
+      for (const sid of faq.relatedSkillIds as unknown as string[]) {
         const arr = skillFaqMap.get(sid) ?? [];
         arr.push(faq);
         skillFaqMap.set(sid, arr);
@@ -203,7 +168,7 @@ export default async function GeneralDetailPage({ params }: PageProps) {
   }
 
   /* OCR-extracted text from the card image (best-effort, machine-read) */
-  const cardText = cardTextMap[general.id];
+  const cardText = cardTextMap[general.id as unknown as string];
 
   /* Placeholder radar scores — can be replaced with real data later */
   const radarScores: [number, number, number, number] = [5, 5, 5, 5];
@@ -328,16 +293,19 @@ export default async function GeneralDetailPage({ params }: PageProps) {
           )
         ) : generalSkills.length > 0 ? (
           <div className="space-y-4">
-            {generalSkills.map((skill) => (
-              <SkillCard
-                key={skill.id}
-                description={skill.description}
-                faq={skillFaqMap.get(skill.id) ?? skill.faq ?? []}
-                name={skill.name}
-                timing={skill.timing}
-                type={skill.type}
-              />
-            ))}
+            {generalSkills.map((skill) => {
+              const sid = skill.id as unknown as string;
+              return (
+                <SkillCard
+                  key={sid}
+                  description={skill.description}
+                  faq={skillFaqMap.get(sid) ?? skill.faq ?? []}
+                  name={skill.name}
+                  timing={skill.timing}
+                  type={skill.type}
+                />
+              );
+            })}
           </div>
         ) : (
           <p className="text-sm text-ink-mute dark:text-ivory-soft">

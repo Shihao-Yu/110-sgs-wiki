@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import FallbackBanner from "@/components/FallbackBanner";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { siteConfig } from "@/lib/site";
@@ -30,6 +31,7 @@ export default function RootLayout({
       </head>
       <body>
         <div className="flex min-h-screen flex-col">
+          <FallbackBanner />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
