@@ -61,12 +61,6 @@ export default function GeneralCard({
           <span className={`absolute right-1.5 top-1.5 rounded border px-1.5 py-0.5 text-[10px] font-bold backdrop-blur-sm ${badge}`}>
             {FACTION_LABEL[general.faction] ?? general.faction}
           </span>
-          <span className="absolute bottom-1.5 left-1.5 rounded bg-black/40 px-1.5 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
-            {general.hp} 体力
-          </span>
-        </div>
-        <div className="px-2 py-1.5 text-center">
-          <p className="truncate font-display text-sm text-ink dark:text-ivory">{general.name}</p>
         </div>
       </Link>
       {showActions && (

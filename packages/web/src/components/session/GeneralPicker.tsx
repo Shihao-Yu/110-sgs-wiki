@@ -141,10 +141,7 @@ export default function GeneralPicker({
                       onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = "hidden"; }}
                     />
                   </span>
-                  <span className="flex flex-1 flex-col">
-                    <span className="font-medium">{o.name}</span>
-                    <span className="text-xs text-ink-mute dark:text-ivory-soft">{o.hp} 体力</span>
-                  </span>
+                  <span className="flex-1 font-medium">{o.name}</span>
                   <span className={`shrink-0 rounded border px-1.5 py-0.5 text-xs ${FACTION_BADGE[o.faction] ?? "border-slate-300 text-ink-mute"}`}>
                     {FACTION_LABEL[o.faction] ?? o.faction}
                   </span>
