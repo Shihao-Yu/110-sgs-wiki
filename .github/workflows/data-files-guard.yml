@@ -1,0 +1,54 @@
+name: Guard managed data files
+
+on:
+  pull_request:
+    paths:
+      - "packages/data/src/generals.json"
+      - "packages/data/src/skills.json"
+      - "packages/data/src/faq.json"
+  push:
+    branches: [main]
+    paths:
+      - "packages/data/src/generals.json"
+      - "packages/data/src/skills.json"
+      - "packages/data/src/faq.json"
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify edit source (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          set -e
+          git fetch origin "${{ github.event.pull_request.base.ref }}" --depth=100 || true
+          changed=$(git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" -- packages/data/src/generals.json packages/data/src/skills.json packages/data/src/faq.json)
+          if [ -z "$changed" ]; then echo "No managed files changed."; exit 0; fi
+          has_label="${{ contains(github.event.pull_request.labels.*.name, 'data-edit-approved') }}"
+          if [ "$has_label" = "true" ]; then echo "PR has data-edit-approved label; allowing."; exit 0; fi
+          all_ok=true
+          for sha in $(git log --format=%H "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}" -- packages/data/src/generals.json packages/data/src/skills.json packages/data/src/faq.json); do
+            msg=$(git log -n1 --format=%B "$sha")
+            if ! echo "$msg" | grep -q '\[snapshot\]'; then
+              echo "Commit $sha modifies managed files but lacks [snapshot] tag"
+              all_ok=false
+            fi
+          done
+          if [ "$all_ok" = "false" ]; then
+            echo "::error::Managed JSON files modified outside admin/snapshot flow."
+            echo "::error::Use /admin or apply 'data-edit-approved' label."
+            exit 1
+          fi
+      - name: Verify edit source (push to main)
+        if: github.event_name == 'push'
+        run: |
+          set -e
+          msg=$(git log -1 --format=%B)
+          author=$(git log -1 --format=%ae)
+          if echo "$msg" | grep -q '\[snapshot\]'; then echo "snapshot push, OK"; exit 0; fi
+          if [ "$author" = "41898282+github-actions[bot]@users.noreply.github.com" ]; then echo "github-actions bot, OK"; exit 0; fi
+          echo "::error::Direct push to main modifies managed JSON files outside snapshot flow"
+          exit 1
