@@ -1,41 +1,56 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { assetUrl } from "@/lib/assets";
 
 interface Option {
   id: string;
   name: string;
   faction: string;
   hp: number;
+  image: string;
 }
 
 const FACTION_LABEL: Record<string, string> = {
   WEI: "魏", SHU: "蜀", WU: "吴", QUN: "群", JIN: "晋",
 };
 
+const FACTION_BADGE: Record<string, string> = {
+  WEI: "border-wei/40 bg-wei/15 text-wei dark:text-blue-300",
+  SHU: "border-shu/40 bg-shu/15 text-shu dark:text-red-300",
+  WU: "border-wu/40 bg-wu/15 text-wu dark:text-green-300",
+  QUN: "border-qun/40 bg-qun/15 text-qun dark:text-yellow-200",
+  JIN: "border-jin/40 bg-jin/15 text-jin dark:text-purple-200",
+};
+
 export default function GeneralPicker({
   options,
   excludedIds,
-  value,
   onChange,
   ariaLabel = "选择武将",
   placeholder = "搜索武将…",
+  autoFocus = false,
+  onCancel,
 }: {
   options: Option[];
-  excludedIds: string[];          // ids already taken by other slots
-  value: string | null;
-  onChange: (next: string | null) => void;
+  excludedIds: string[];
+  onChange: (id: string) => void;
   ariaLabel?: string;
   placeholder?: string;
+  autoFocus?: boolean;
+  onCancel?: () => void;
 }) {
   const [q, setQ] = useState("");
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(autoFocus);
   const [highlight, setHighlight] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId();
   const excluded = useMemo(() => new Set(excludedIds), [excludedIds]);
 
-  const selected = value ? options.find((o) => o.id === value) : null;
+  useEffect(() => {
+    if (autoFocus) inputRef.current?.focus();
+  }, [autoFocus]);
 
   const filtered = useMemo(() => {
     const candidates = options.filter((o) => !excluded.has(o.id));
@@ -44,7 +59,6 @@ export default function GeneralPicker({
     return candidates.filter((o) => o.name.includes(needle) || o.id.includes(needle)).slice(0, 30);
   }, [options, excluded, q]);
 
-  // close dropdown when click outside
   useEffect(() => {
     function onDoc(e: MouseEvent) {
       if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
@@ -56,21 +70,13 @@ export default function GeneralPicker({
   function commit(opt: Option) {
     onChange(opt.id);
     setQ("");
-    setHighlight(0);
     setOpen(false);
   }
 
-  function clear() {
-    onChange(null);
-    setQ("");
-  }
-
   function onKey(e: KeyboardEvent<HTMLInputElement>) {
-    if (!open) {
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-        setOpen(true);
-        e.preventDefault();
-      }
+    if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+      setOpen(true);
+      e.preventDefault();
       return;
     }
     if (e.key === "ArrowDown") {
@@ -87,32 +93,14 @@ export default function GeneralPicker({
     } else if (e.key === "Escape") {
       setOpen(false);
       setQ("");
+      onCancel?.();
     }
-  }
-
-  if (selected) {
-    return (
-      <div className="flex items-center gap-2 rounded border border-vermillion/30 bg-vermillion/5 px-2 py-1.5 text-sm">
-        <span className="font-medium">{selected.name}</span>
-        <span className="rounded border border-current/30 px-1.5 py-0.5 text-xs opacity-70">
-          {FACTION_LABEL[selected.faction] ?? selected.faction}
-        </span>
-        <span className="text-xs text-ink-mute dark:text-ivory-soft">{selected.hp} 体力</span>
-        <button
-          type="button"
-          onClick={clear}
-          aria-label="移除武将"
-          className="ml-auto text-ink-mute hover:text-vermillion focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vermillion/40"
-        >
-          ×
-        </button>
-      </div>
-    );
   }
 
   return (
     <div ref={containerRef} className="relative">
       <input
+        ref={inputRef}
         role="combobox"
         aria-label={ariaLabel}
         aria-autocomplete="list"
@@ -129,7 +117,7 @@ export default function GeneralPicker({
         <ul
           id={listId}
           role="listbox"
-          className="absolute left-0 right-0 z-20 mt-1 max-h-56 overflow-y-auto rounded border border-slate-300/60 bg-paper-mist/95 text-sm shadow dark:border-slate-700/60 dark:bg-paper-deep/95"
+          className="absolute left-0 right-0 z-20 mt-1 max-h-72 overflow-y-auto rounded border border-slate-300/60 bg-paper-mist/95 text-sm shadow-lg dark:border-slate-700/60 dark:bg-paper-deep/95"
         >
           {filtered.length === 0 ? (
             <li className="px-2 py-1.5 text-ink-mute dark:text-ivory-soft">无匹配项</li>
@@ -141,13 +129,25 @@ export default function GeneralPicker({
                   onClick={() => commit(o)}
                   onMouseEnter={() => setHighlight(i)}
                   className={
-                    "flex w-full items-center gap-2 px-2 py-1 text-left " +
+                    "flex w-full items-center gap-2 px-2 py-1.5 text-left " +
                     (i === highlight ? "bg-vermillion/10" : "hover:bg-vermillion/10")
                   }
                 >
-                  <span className="font-medium">{o.name}</span>
-                  <span className="rounded border border-current/30 px-1 text-xs opacity-70">{FACTION_LABEL[o.faction] ?? o.faction}</span>
-                  <span className="text-xs text-ink-mute dark:text-ivory-soft">{o.hp} 体力</span>
+                  <span className="block h-12 w-9 shrink-0 overflow-hidden rounded-sm border border-vermillion/15 bg-paper-deep/40">
+                    <img
+                      src={assetUrl(o.image)}
+                      alt=""
+                      className="h-full w-full object-cover object-top"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = "hidden"; }}
+                    />
+                  </span>
+                  <span className="flex flex-1 flex-col">
+                    <span className="font-medium">{o.name}</span>
+                    <span className="text-xs text-ink-mute dark:text-ivory-soft">{o.hp} 体力</span>
+                  </span>
+                  <span className={`shrink-0 rounded border px-1.5 py-0.5 text-xs ${FACTION_BADGE[o.faction] ?? "border-slate-300 text-ink-mute"}`}>
+                    {FACTION_LABEL[o.faction] ?? o.faction}
+                  </span>
                 </button>
               </li>
             ))

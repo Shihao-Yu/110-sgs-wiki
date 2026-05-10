@@ -1,13 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import GeneralPicker from "./GeneralPicker";
+import GeneralCard, { EmptyGeneralCard } from "./GeneralCard";
 
 interface GeneralOption {
   id: string;
   name: string;
   faction: string;
   hp: number;
+  image: string;
 }
 
 export default function SessionPlayer({
@@ -27,18 +29,21 @@ export default function SessionPlayer({
   onNameChange: (name: string) => void;
   onGeneralChange: (slot: 0 | 1, generalId: string | null) => void;
 }) {
-  const displayName = name.trim() || `玩家 ${index + 1}`;
+  const [pickingSlot, setPickingSlot] = useState<0 | 1 | null>(null);
   const own = generals.filter((g): g is string => g != null);
-  const excludedForSlot = (slot: 0 | 1) => {
-    // Exclude all other taken (other slots in this player + other players)
+
+  const generalById = (id: string | null) =>
+    id ? allGenerals.find((g) => g.id === id) ?? null : null;
+
+  function excludedFor(slot: 0 | 1): string[] {
     const other = slot === 0 ? generals[1] : generals[0];
     const set = new Set(excludedIds);
     if (other) set.add(other);
     return Array.from(set);
-  };
+  }
 
   return (
-    <div className="panel ornate-corner space-y-3 p-4 sm:p-5">
+    <div className="panel ornate-corner space-y-4 p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <input
           aria-label={`玩家 ${index + 1} 名字`}
@@ -48,36 +53,58 @@ export default function SessionPlayer({
           onChange={(e) => onNameChange(e.target.value)}
           maxLength={50}
         />
-        <span className="shrink-0 text-xs text-ink-mute dark:text-ivory-soft">{own.length}/2</span>
+        <span className="shrink-0 rounded-full border border-vermillion/30 bg-paper-mist/50 px-2 py-0.5 text-xs text-ink-mute dark:bg-paper-deep/50 dark:text-ivory-soft">
+          {own.length}/2
+        </span>
       </div>
 
-      <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-3">
         {[0, 1].map((slot) => {
-          const gid = generals[slot as 0 | 1];
-          return (
-            <div key={slot} className="space-y-1">
-              <span className="block text-xs text-ink-mute dark:text-ivory-soft">
-                武将 {slot + 1}
-                {gid && (
-                  <Link
-                    href={`/generals/${gid}`}
-                    className="ml-2 text-vermillion hover:underline"
-                    target="_blank"
-                    rel="noopener"
-                    aria-label={`在新标签打开 ${gid} 详情`}
-                  >
-                    详情 ↗
-                  </Link>
-                )}
-              </span>
-              <GeneralPicker
-                ariaLabel={`${displayName} 的武将 ${slot + 1}`}
-                options={allGenerals}
-                excludedIds={excludedForSlot(slot as 0 | 1)}
-                value={gid}
-                onChange={(next) => onGeneralChange(slot as 0 | 1, next)}
+          const slotIdx = slot as 0 | 1;
+          const gid = generals[slotIdx];
+          const general = generalById(gid);
+
+          if (pickingSlot === slotIdx) {
+            return (
+              <div key={slot} className="space-y-2">
+                <GeneralPicker
+                  ariaLabel={`选择 ${name || `玩家 ${index + 1}`} 的武将 ${slot + 1}`}
+                  options={allGenerals}
+                  excludedIds={excludedFor(slotIdx)}
+                  autoFocus
+                  onChange={(id) => {
+                    onGeneralChange(slotIdx, id);
+                    setPickingSlot(null);
+                  }}
+                  onCancel={() => setPickingSlot(null)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setPickingSlot(null)}
+                  className="w-full text-xs text-ink-mute hover:text-vermillion"
+                >
+                  取消
+                </button>
+              </div>
+            );
+          }
+
+          if (general) {
+            return (
+              <GeneralCard
+                key={slot}
+                general={general}
+                onClear={() => onGeneralChange(slotIdx, null)}
               />
-            </div>
+            );
+          }
+
+          return (
+            <EmptyGeneralCard
+              key={slot}
+              label={`选择武将 ${slot + 1}`}
+              onClick={() => setPickingSlot(slotIdx)}
+            />
           );
         })}
       </div>

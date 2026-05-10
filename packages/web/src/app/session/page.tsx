@@ -20,6 +20,7 @@ export default async function SessionPage() {
     name: g.name,
     faction: g.faction as unknown as string,
     hp: g.hp,
+    image: g.image,
   }));
 
   let initialSession: Session | null = defaultSession();
