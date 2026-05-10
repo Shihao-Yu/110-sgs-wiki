@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SessionPlayer from "./SessionPlayer";
 import InlineConfirm from "@/components/admin/InlineConfirm";
 import { toast } from "@/components/admin/Toaster";
@@ -26,10 +26,7 @@ interface GeneralOption {
   image: string;
 }
 
-type SaveState = "idle" | "saving" | "saved" | "conflict" | "error";
-
 const POLL_INTERVAL_MS = 5000;
-const SAVE_DEBOUNCE_MS = 500;
 
 function emptyPlayers(n: number, prev: SessionPlayerData[] = []): SessionPlayerData[] {
   return Array.from({ length: n }, (_, i) => prev[i] ?? { name: "", generals: [null, null] });
@@ -38,16 +35,14 @@ function emptyPlayers(n: number, prev: SessionPlayerData[] = []): SessionPlayerD
 function formatTime(iso: string): string {
   if (!iso) return "—";
   try {
-    const d = new Date(iso);
-    return d.toLocaleTimeString("zh-CN", { hour12: false });
+    return new Date(iso).toLocaleTimeString("zh-CN", { hour12: false });
   } catch {
     return iso;
   }
 }
 
-function sameContent(a: Session, b: Session): boolean {
-  return JSON.stringify({ playerCount: a.playerCount, players: a.players })
-       === JSON.stringify({ playerCount: b.playerCount, players: b.players });
+function contentKey(s: Session | { playerCount: number; players: SessionPlayerData[] }): string {
+  return JSON.stringify({ playerCount: s.playerCount, players: s.players });
 }
 
 export default function SessionEditor({
@@ -59,35 +54,47 @@ export default function SessionEditor({
   initialError: string | null;
   allGenerals: GeneralOption[];
 }) {
+  // Local working copy (what the user sees and edits)
   const [session, setSession] = useState<Session | null>(initialSession);
-  const readError = initialError;
-  const [saveState, setSaveState] = useState<SaveState>("idle");
-  const [lastSavedAt, setLastSavedAt] = useState<string | null>(initialSession?.updatedAt ?? null);
+  // Last known server-side state (for dirty comparison + ifRevision)
+  const [serverSession, setServerSession] = useState<Session | null>(initialSession);
+  // Latest revision the server has, even if newer than serverSession (for "服务器有更新" hint)
+  const [latestRemoteRevision, setLatestRemoteRevision] = useState<number>(initialSession?.revision ?? 0);
 
-  // Refs for stable access inside async closures
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const readError = initialError;
+
   const sessionRef = useRef(session);
   useEffect(() => { sessionRef.current = session; }, [session]);
-  const saveStateRef = useRef(saveState);
-  useEffect(() => { saveStateRef.current = saveState; }, [saveState]);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastConflictToastAtRef = useRef(0);
+  const serverSessionRef = useRef(serverSession);
+  useEffect(() => { serverSessionRef.current = serverSession; }, [serverSession]);
 
-  // Apply server data WITHOUT triggering an auto-save (used by polling and PUT response)
+  const isDirty = useMemo(() => {
+    if (!session || !serverSession) return false;
+    return contentKey(session) !== contentKey(serverSession);
+  }, [session, serverSession]);
+
+  const serverHasNewer = latestRemoteRevision > (serverSession?.revision ?? 0);
+
   const applyServerSession = useCallback((s: Session) => {
     setSession(s);
-    setLastSavedAt(s.updatedAt);
+    setServerSession(s);
+    setLatestRemoteRevision(s.revision);
   }, []);
 
-  const persist = useCallback(async () => {
+  const save = useCallback(async () => {
     const cur = sessionRef.current;
+    const baseRev = serverSessionRef.current?.revision ?? 0;
     if (!cur) return;
-    setSaveState("saving");
+    setSaving(true);
+    setSaveError(null);
     try {
       const r = await fetch("/api/session", {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          ifRevision: cur.revision,
+          ifRevision: baseRev,
           playerCount: cur.playerCount,
           players: cur.players,
         }),
@@ -95,64 +102,53 @@ export default function SessionEditor({
       });
       if (r.status === 409) {
         const j = (await r.json()) as { current: Session };
+        // Server has a newer version — replace local with server's; user must re-apply edits
         applyServerSession(j.current);
-        setSaveState("conflict");
-        // Throttle conflict toast — once per 8 seconds max
-        const now = Date.now();
-        if (now - lastConflictToastAtRef.current > 8000) {
-          lastConflictToastAtRef.current = now;
-          toast("另一人刚刚改过此牌局，已加载最新版本", "info");
-        }
+        toast("他人已先一步保存，已加载最新版本，请重新应用你的修改", "info");
         return;
       }
       if (!r.ok) {
-        setSaveState("error");
-        toast("保存失败，3 秒后重试", "error");
-        setTimeout(() => persist(), 3000);
+        setSaveError("保存失败");
+        toast("保存失败，请重试", "error");
         return;
       }
       const j = (await r.json()) as { value: Session };
       applyServerSession(j.value);
-      setSaveState("saved");
+      toast("已保存", "success");
     } catch {
-      setSaveState("error");
-      toast("网络错误，3 秒后重试", "error");
-      setTimeout(() => persist(), 3000);
+      setSaveError("网络错误");
+      toast("网络错误，请重试", "error");
+    } finally {
+      setSaving(false);
     }
   }, [applyServerSession]);
 
-  function scheduleSave() {
-    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => persist(), SAVE_DEBOUNCE_MS);
-  }
-
-  // Poll for updates from other clients (does NOT trigger auto-save)
+  // Poll for changes from other clients
   useEffect(() => {
     let cancelled = false;
     async function poll() {
       if (cancelled) return;
       if (typeof document !== "undefined" && document.visibilityState !== "visible") return;
-      // Don't clobber an in-flight save or a debounced pending save
-      if (saveStateRef.current === "saving") return;
-      if (saveTimerRef.current !== null) return;
       try {
         const r = await fetch("/api/session", { cache: "no-store" });
         if (!r.ok) return;
         const j = (await r.json()) as Session;
-        const local = sessionRef.current;
-        if (!local) {
+        const localServer = serverSessionRef.current;
+        const localCur = sessionRef.current;
+        setLatestRemoteRevision(j.revision);
+        if (!localServer || !localCur) {
           applyServerSession(j);
           return;
         }
-        if (j.revision > local.revision && !sameContent(j, local)) {
+        if (j.revision <= localServer.revision) return;
+        // Server has newer state. If local has unsaved edits, DON'T clobber —
+        // just let the "服务器有更新" indicator surface so the user decides.
+        const dirty = contentKey(localCur) !== contentKey(localServer);
+        if (!dirty) {
           applyServerSession(j);
-        } else if (j.revision > local.revision) {
-          // Same content, just bump revision so next save uses latest
-          setSession((prev) => (prev ? { ...prev, revision: j.revision, updatedAt: j.updatedAt } : prev));
-          setLastSavedAt(j.updatedAt);
         }
       } catch {
-        // network blip, ignore
+        // network blip
       }
     }
     const id = setInterval(poll, POLL_INTERVAL_MS);
@@ -187,7 +183,6 @@ export default function SessionEditor({
       const players = s.players.map((p, idx) => (idx === i ? { ...p, name } : p));
       return { ...s, players };
     });
-    scheduleSave();
   }
 
   function updatePlayerGeneral(i: number, slot: 0 | 1, gid: string | null) {
@@ -201,7 +196,6 @@ export default function SessionEditor({
       });
       return { ...s, players };
     });
-    scheduleSave();
   }
 
   function changePlayerCount(n: number) {
@@ -210,30 +204,47 @@ export default function SessionEditor({
       const players = emptyPlayers(n, s.players).slice(0, n);
       return { ...s, playerCount: n, players };
     });
-    scheduleSave();
   }
 
-  function reset() {
+  function resetGenerals() {
     setSession((s) => {
       if (!s) return s;
       const players = s.players.map((p) => ({ name: p.name, generals: [null, null] as [null, null] }));
       return { ...s, players };
     });
-    scheduleSave();
   }
 
-  const saveLabel = (() => {
-    switch (saveState) {
-      case "saving": return "保存中…";
-      case "saved": return `已保存 · ${formatTime(lastSavedAt ?? "")}`;
-      case "conflict": return `已合并最新 · ${formatTime(lastSavedAt ?? "")}`;
-      case "error": return "保存失败，重试中";
-      default: return lastSavedAt ? `上次更新 · ${formatTime(lastSavedAt)}` : "尚未保存";
-    }
-  })();
+  function discardChanges() {
+    if (!serverSession) return;
+    setSession(serverSession);
+  }
+
+  function pullLatest() {
+    // Force-fetch current server state
+    void (async () => {
+      try {
+        const r = await fetch("/api/session", { cache: "no-store" });
+        if (r.ok) {
+          const j = (await r.json()) as Session;
+          applyServerSession(j);
+          toast("已加载最新版本", "success");
+        }
+      } catch {
+        toast("加载失败", "error");
+      }
+    })();
+  }
 
   const counts: number[] = [];
   for (let n = SESSION_MIN_PLAYERS; n <= SESSION_MAX_PLAYERS; n++) counts.push(n);
+
+  const statusLabel = (() => {
+    if (saving) return "保存中…";
+    if (saveError) return saveError;
+    if (isDirty) return "有未保存的修改";
+    if (serverSession) return `已保存 · ${formatTime(serverSession.updatedAt)}`;
+    return "尚未保存";
+  })();
 
   return (
     <div className="space-y-6">
@@ -261,9 +272,34 @@ export default function SessionEditor({
           destructive
           message="清空所有玩家的武将（保留名字）?"
           trigger={<span className="btn-danger">清空武将</span>}
-          onConfirm={reset}
+          onConfirm={resetGenerals}
         />
-        <span className="ml-auto text-xs text-ink-mute dark:text-ivory-soft">{saveLabel}</span>
+        {isDirty && (
+          <button type="button" className="btn-secondary" onClick={discardChanges} disabled={saving}>
+            放弃修改
+          </button>
+        )}
+        <span className="ml-auto flex items-center gap-3 text-xs">
+          {serverHasNewer && (
+            <button
+              type="button"
+              onClick={pullLatest}
+              className="rounded border border-amber-500/40 bg-amber-50/60 px-2 py-0.5 text-amber-800 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-200"
+            >
+              服务器有更新 · 点击拉取
+            </button>
+          )}
+          <span className={isDirty ? "text-vermillion" : "text-ink-mute dark:text-ivory-soft"}>{statusLabel}</span>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={save}
+            disabled={!isDirty || saving}
+            aria-label="保存当前牌局"
+          >
+            {saving ? "保存中…" : "保存"}
+          </button>
+        </span>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
