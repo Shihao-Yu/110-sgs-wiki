@@ -6,11 +6,17 @@
     "dev": "node --trace-uncaught ./node_modules/next/dist/bin/next dev --turbopack",
     "build": "pnpm --filter '@sgs/data' build && node -e \"require('fs').rmSync('.next', { recursive: true, force: true }); require('fs').rmSync('out', { recursive: true, force: true });\" && node --trace-uncaught ./node_modules/next/dist/bin/next build",
     "start": "node --trace-uncaught ./node_modules/next/dist/bin/next start",
-    "lint": "node --trace-uncaught ./node_modules/next/dist/bin/next lint"
+    "lint": "node --trace-uncaught ./node_modules/next/dist/bin/next lint",
+    "test": "vitest run",
+    "seed-redis": "tsx ../../scripts/seed-redis.ts",
+    "dump-redis": "tsx ../../scripts/dump-redis.ts"
   },
   "dependencies": {
     "@sgs/data": "workspace:*",
     "@sgs/engine": "workspace:*",
+    "@upstash/redis": "^1.34.0",
+    "@upstash/ratelimit": "^2.0.0",
+    "nanoid": "^5.0.0",
     "next": "^15.3.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

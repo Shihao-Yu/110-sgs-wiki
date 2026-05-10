@@ -12,6 +12,7 @@ out/
 # env
 .env
 .env.*
+!.env.example
 
 # IDE
 .vscode/
@@ -26,3 +27,6 @@ pnpm-debug.log*
 
 # vitest
 coverage/
+.omx/
+
+.venv-ocr/
