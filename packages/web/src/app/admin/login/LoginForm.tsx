@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAdmin } from "@/components/admin/AdminContext";
 
 export default function LoginForm() {
   const router = useRouter();
+  const { refresh } = useAdmin();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -30,6 +32,9 @@ export default function LoginForm() {
         }
         return;
       }
+      // Update AdminContext (it doesn't re-mount on navigation, so it
+      // wouldn't pick up the new cookie unless we explicitly refresh).
+      await refresh();
       router.push("/");
       router.refresh();
     } finally {
