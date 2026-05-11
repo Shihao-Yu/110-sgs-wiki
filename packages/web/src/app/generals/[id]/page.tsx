@@ -173,13 +173,9 @@ export default async function GeneralDetailPage({ params }: PageProps) {
   /* OCR-extracted text from the card image (best-effort, machine-read) */
   const cardText = cardTextMap[general.id as unknown as string];
 
-  /* Pre-load lookup lists for admin form dropdowns (server-side; cheap fetch) */
-  const [allGeneralsRaw, allSkillsRaw] = await Promise.all([
-    entityStore.getGenerals(),
-    entityStore.getSkills(),
-  ]);
+  /* Pre-load lookup list for admin FAQ form (relatedGeneralIds picker) */
+  const allGeneralsRaw = await entityStore.getGenerals();
   const allGenerals = allGeneralsRaw.map((g) => ({ id: g.id as unknown as string, name: g.name }));
-  const allSkills = allSkillsRaw.map((s) => ({ id: s.id as unknown as string, name: s.name }));
 
   /* Placeholder radar scores — can be replaced with real data later */
   const radarScores: [number, number, number, number] = [5, 5, 5, 5];
@@ -223,7 +219,7 @@ export default async function GeneralDetailPage({ params }: PageProps) {
           {/* Info panel */}
           <div className="relative flex flex-1 flex-col gap-5 p-4 sm:gap-6 sm:p-6 md:p-8">
             <div className="absolute right-3 top-3 z-10">
-              <AdminBaseEdit general={general as General} allGenerals={allGenerals} allSkills={allSkills} />
+              <AdminBaseEdit general={general as General} />
             </div>
             {/* Name + Title + Faction */}
             <div>

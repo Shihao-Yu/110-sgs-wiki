@@ -19,27 +19,12 @@ const PencilSvg = (
   </svg>
 );
 
-export default function AdminBaseEdit({
-  general,
-  allGenerals,
-  allSkills,
-}: {
-  general: General;
-  allGenerals: Array<{ id: string; name: string }>;
-  allSkills: Array<{ id: string; name: string }>;
-}) {
+export default function AdminBaseEdit({ general }: { general: General }) {
   return (
     <EditAffordance
-      ariaLabel="编辑武将基础字段"
+      ariaLabel="编辑体力 / 性别"
       trigger={PencilSvg}
-      renderForm={(close) => (
-        <GeneralEditForm
-          general={general}
-          allGenerals={allGenerals}
-          allSkills={allSkills}
-          onClose={close}
-        />
-      )}
+      renderForm={(close) => <GeneralEditForm general={general} onClose={close} />}
     />
   );
 }
