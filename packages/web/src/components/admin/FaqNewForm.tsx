@@ -6,9 +6,11 @@ import { adminFetch, type AdminFetchError } from "@/lib/admin-fetch";
 import MultiSelect from "./MultiSelect";
 import { toast } from "./Toaster";
 
+// DB values are "rule" and "general"; UI labels follow the visitor /faq tabs
+// (rule → 通用 broad rule clarifications; general → 武将-specific Q&A).
 const CATEGORIES = [
-  { value: "general", label: "通用" },
-  { value: "rule", label: "规则" },
+  { value: "rule", label: "通用" },
+  { value: "general", label: "武将" },
 ];
 
 export default function FaqNewForm({

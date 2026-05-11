@@ -33,7 +33,7 @@ type CategoryTab = "all" | FaqCategory;
 
 const TABS: { key: CategoryTab; label: string; count?: number }[] = [
   { key: "all", label: "\u5168\u90E8" },
-  { key: "rule", label: "\u89C4\u5219FAQ" },
+  { key: "rule", label: "\u901A\u7528FAQ" },
   { key: "general", label: "\u6B66\u5C06FAQ" },
 ];
 
@@ -87,7 +87,7 @@ function AccordionItem({
               : "border-amber-200/60 bg-amber-50 text-amber-700 dark:border-amber-800/60 dark:bg-amber-950/60 dark:text-amber-300",
           ].join(" ")}
         >
-          {entry.category === "rule" ? "\u89C4\u5219" : "\u6B66\u5C06"}
+          {entry.category === "rule" ? "\u901A\u7528" : "\u6B66\u5C06"}
         </span>
       </button>
 
@@ -337,7 +337,7 @@ export default function FaqListClient({ entries, allGenerals }: FaqListClientPro
             <section className="space-y-3">
               <div className="flex items-center gap-3">
                 <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-                  {"\u89C4\u5219FAQ"}
+                  \u901A\u7528FAQ
                 </h2>
                 <span className="rounded-full border border-slate-200/80 bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
                   {ruleFaqs.length}

@@ -9,8 +9,8 @@ import InlineConfirm from "./InlineConfirm";
 import { toast } from "./Toaster";
 
 const CATEGORIES = [
-  { value: "general", label: "通用" },
-  { value: "rule", label: "规则" },
+  { value: "rule", label: "通用" },
+  { value: "general", label: "武将" },
 ];
 
 export default function FaqEditForm({
