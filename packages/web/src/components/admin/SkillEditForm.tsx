@@ -68,8 +68,7 @@ export default function SkillEditForm({
   }
 
   return (
-    <div className="space-y-3 rounded-md border border-vermillion/30 bg-paper-mist/80 p-4 text-sm dark:bg-paper-deep/80">
-      <h3 className="font-semibold">编辑技能</h3>
+    <div className="space-y-3 text-sm">
       <label className="block">
         <span className="mb-1 block text-xs text-ink-mute dark:text-ivory-soft">名称</span>
         <input className={fieldClass("name")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />

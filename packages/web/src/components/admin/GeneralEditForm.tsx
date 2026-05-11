@@ -72,8 +72,7 @@ export default function GeneralEditForm({
   }
 
   return (
-    <div className="space-y-3 rounded-md border border-vermillion/30 bg-paper-mist/80 p-4 text-sm dark:bg-paper-deep/80">
-      <h3 className="font-semibold">编辑武将基础字段</h3>
+    <div className="space-y-3 text-sm">
       <Field label="名称" error={fieldErrors.name}>
         <input className={fieldClass("name")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
       </Field>

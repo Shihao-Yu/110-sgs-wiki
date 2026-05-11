@@ -69,8 +69,7 @@ export default function FaqNewForm({
   }
 
   return (
-    <div className="space-y-3 rounded-md border border-vermillion/30 bg-paper-mist/80 p-4 text-sm dark:bg-paper-deep/80">
-      <h3 className="font-semibold">新建 FAQ</h3>
+    <div className="space-y-3 text-sm">
       <label className="block">
         <span className="mb-1 block text-xs">问题</span>
         <textarea rows={2} className={fieldClass("question")} value={question} onChange={(e) => setQuestion(e.target.value)} />
