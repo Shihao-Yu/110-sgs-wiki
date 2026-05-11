@@ -100,7 +100,7 @@ function AccordionItem({
                 <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z" />
                 </svg>
-                \u7F16\u8F91 / \u5220\u9664
+                {"\u7F16\u8F91 / \u5220\u9664"}
               </span>
             }
             renderForm={(close) => (
@@ -337,7 +337,7 @@ export default function FaqListClient({ entries, allGenerals }: FaqListClientPro
             <section className="space-y-3">
               <div className="flex items-center gap-3">
                 <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-                  \u901A\u7528FAQ
+                  {"\u901A\u7528FAQ"}
                 </h2>
                 <span className="rounded-full border border-slate-200/80 bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
                   {ruleFaqs.length}
