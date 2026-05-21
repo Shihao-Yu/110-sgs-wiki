@@ -3,7 +3,8 @@ import type { General, Skill, FAQ } from "@sgs/data";
 export type Mutation =
   | { type: "general"; id: string; oldValue?: General; newValue?: General }
   | { type: "skill"; id: string; oldValue?: Skill; newValue?: Skill }
-  | { type: "faq"; id: string; oldValue?: FAQ; newValue?: FAQ };
+  | { type: "faq"; id: string; oldValue?: FAQ; newValue?: FAQ }
+  | { type: "rating"; id: string };
 
 export function pathsToRevalidate(m: Mutation): string[] {
   const out = new Set<string>();
@@ -25,6 +26,11 @@ export function pathsToRevalidate(m: Mutation): string[] {
       const oldRel = m.oldValue?.relatedGeneralIds ?? [];
       const newRel = m.newValue?.relatedGeneralIds ?? [];
       for (const gid of [...oldRel, ...newRel]) out.add(`/generals/${gid}`);
+      break;
+    }
+    case "rating": {
+      out.add("/generals");
+      out.add(`/generals/${m.id}`);
       break;
     }
   }

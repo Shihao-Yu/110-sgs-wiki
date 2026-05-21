@@ -55,4 +55,9 @@ describe("pathsToRevalidate", () => {
     };
     expect(pathsToRevalidate(m)).toEqual(["/faq", "/generals/g1"]);
   });
+
+  it("rating → /generals + /generals/{id}", () => {
+    const m: Mutation = { type: "rating", id: "g1" };
+    expect(pathsToRevalidate(m).sort()).toEqual(["/generals", "/generals/g1"]);
+  });
 });
