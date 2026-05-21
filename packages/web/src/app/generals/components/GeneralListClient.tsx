@@ -2,9 +2,11 @@
 
 import type { Faction } from "@sgs/data";
 import { useEffect, useMemo, useState } from "react";
+import type { RatingTier } from "@/lib/ratings";
 import FactionFilter from "./FactionFilter";
 import GeneralCard from "./GeneralCard";
 import HpFilter from "./HpFilter";
+import RatingFilter, { type RatingFilterValue } from "./RatingFilter";
 import SearchBar from "./SearchBar";
 import SortSelect, { type SortKey } from "./SortSelect";
 
@@ -18,6 +20,7 @@ export type GeneralEntry = {
   hp: number;
   image: string;
   skillNames: string[];
+  topTier: RatingTier | null;
 };
 
 type GeneralListClientProps = {
@@ -45,6 +48,7 @@ export default function GeneralListClient({
   const [search, setSearch] = useState("");
   const [factions, setFactions] = useState<Set<Faction>>(new Set());
   const [hpFilter, setHpFilter] = useState(0); // 0 = all
+  const [ratingFilter, setRatingFilter] = useState<RatingFilterValue>("all");
   const [sortKey, setSortKey] = useState<SortKey>("faction");
 
   /* Restore scroll position from a prior visit, save on scroll. Lets users
@@ -102,6 +106,13 @@ export default function GeneralListClient({
       }
     }
 
+    // Rating filter
+    if (ratingFilter === "unrated") {
+      result = result.filter((g) => g.topTier === null);
+    } else if (ratingFilter !== "all") {
+      result = result.filter((g) => g.topTier === ratingFilter);
+    }
+
     // Search filter (fuzzy match on name, title, skill names)
     if (search.trim()) {
       const q = search.trim();
@@ -132,7 +143,7 @@ export default function GeneralListClient({
     });
 
     return sorted;
-  }, [generals, factions, hpFilter, search, sortKey]);
+  }, [generals, factions, hpFilter, ratingFilter, search, sortKey]);
 
   return (
     <div className="space-y-6">
@@ -149,6 +160,8 @@ export default function GeneralListClient({
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <HpFilter onChange={setHpFilter} selected={hpFilter} />
               <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+              <RatingFilter onChange={setRatingFilter} selected={ratingFilter} />
+              <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
               <SortSelect onChange={setSortKey} value={sortKey} />
             </div>
           </div>
@@ -156,7 +169,7 @@ export default function GeneralListClient({
           {/* Result count */}
           <p className="text-xs text-slate-500 dark:text-slate-400">
             共 {filtered.length} 名武将
-            {factions.size > 0 || hpFilter > 0 || search.trim()
+            {factions.size > 0 || hpFilter > 0 || ratingFilter !== "all" || search.trim()
               ? `（已筛选，共 ${generals.length} 名）`
               : ""}
           </p>
@@ -192,6 +205,7 @@ export default function GeneralListClient({
               setSearch("");
               setFactions(new Set());
               setHpFilter(0);
+              setRatingFilter("all");
             }}
             type="button"
           >
