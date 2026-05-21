@@ -133,7 +133,7 @@ function topTier(rating: GeneralRating): RatingTier | null {
 
 [ 夯 ] [ 顶级 ] [人上人] [ npc ] [拉完了]
                   ↑当前众数（沿用 HpFilter 选中态高亮）
-                  自己投过的档位再叠一个小勾或 ring（用 brand token）
+                  自己投过的档位再叠一圈 brand-color ring（`ring-2 ring-brand/60`）
 ```
 
 - 未评级时：右上角的众数+票数行替换成 "暂无评级，来投一票"
@@ -229,7 +229,7 @@ const rating = ratings[id] ?? null;
 |---|---|
 | 单 key 写并发覆盖 | 用量极小，read-modify-write 冲突概率近 0；不引入分布式锁 |
 | 清浏览器再投 | 接受。规模决定了不值得做账号系统 |
-| KV 不可用 | 列表页降级为"全员未评级"，详情页投票按钮 disable + 提示 |
+| KV 不可用 | 列表页 `getRatings()` 返回 `{}`，全员显示为"未评级"。投票 POST 失败时用现有 toaster 提示"投票失败，请稍后重试"，按钮保持可点 |
 | 票数极少时"众数"误导 | 接受。3–5 票级别加阈值反而让大多数武将都显示"未评级"，失去意义 |
 
 ## 10. Out of scope (future)
