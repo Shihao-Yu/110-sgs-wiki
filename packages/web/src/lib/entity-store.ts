@@ -1,6 +1,7 @@
 import type { General, Skill, FAQ, GeneralId, SkillId, FAQId } from "@sgs/data";
 import { Redis } from "@upstash/redis";
 import { markFallbackUsed } from "./fallback-flag";
+import { emptyRating, isRatingTier, type GeneralRating, type RatingsAll, type RatingTier, type VoteEvent } from "./ratings.js";
 
 import generalsSeed from "../../../data/src/generals.json" with { type: "json" };
 import skillsSeed from "../../../data/src/skills.json" with { type: "json" };
@@ -40,6 +41,8 @@ const KEY = {
   skillsByGeneral: (gid: string) => `skills:by-general:${gid}`,
   faq: (id: string) => `faq:${id}`,
   faqsIndex: "faqs:index",
+  ratings: "ratings:all",
+  ratingsLog: (yyyymmdd: string) => `ratings:log:${yyyymmdd}`,
 };
 
 async function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
@@ -182,5 +185,45 @@ export const entityStore = {
     if (!r) throw new Error("Redis not configured");
     await r.del(KEY.faq(id));
     await updateIndex(r, KEY.faqsIndex, (cur) => cur.filter((x) => x !== id));
+  },
+
+  // ---- Ratings ----
+  async getRatings(): Promise<RatingsAll> {
+    const r = redis();
+    if (!r) return {};
+    try {
+      const v = await withTimeout(r.get<RatingsAll>(KEY.ratings), 3000, "ratings:all");
+      return v ?? {};
+    } catch (err) {
+      console.warn("[entityStore] Redis read failed for ratings; returning empty map", err);
+      return {};
+    }
+  },
+
+  async updateRating(generalId: string, from: RatingTier | null, to: RatingTier, ipHash: string): Promise<GeneralRating> {
+    const r = redis();
+    if (!r) throw new Error("Redis not configured");
+    if (!isRatingTier(to)) throw new Error(`Invalid 'to' tier: ${to}`);
+    if (from !== null && !isRatingTier(from)) throw new Error(`Invalid 'from' tier: ${from}`);
+
+    const all = (await r.get<RatingsAll>(KEY.ratings)) ?? {};
+    const cur = all[generalId] ?? emptyRating();
+    if (from && cur.counts[from] > 0) cur.counts[from] -= 1;
+    cur.counts[to] += 1;
+    cur.total = Object.values(cur.counts).reduce((a, b) => a + b, 0);
+    cur.updatedAt = new Date().toISOString();
+    all[generalId] = cur;
+    await r.set(KEY.ratings, all);
+
+    // Best-effort event log; never blocks the main aggregate write.
+    try {
+      const event: VoteEvent = { generalId, from, to, ts: cur.updatedAt, ipHash };
+      const today = cur.updatedAt.slice(0, 10);
+      await r.lpush(KEY.ratingsLog(today), JSON.stringify(event));
+    } catch (err) {
+      console.warn("[entityStore] Failed to append rating log event (non-fatal)", err);
+    }
+
+    return cur;
   },
 };

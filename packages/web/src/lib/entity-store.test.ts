@@ -22,6 +22,13 @@ vi.mock("@upstash/redis", () => {
           return v ? JSON.parse(v) : null;
         });
       }
+      async lpush(key: string, value: unknown) {
+        const existing = mem.get(key);
+        const list: string[] = existing ? JSON.parse(existing) : [];
+        list.unshift(String(value));
+        mem.set(key, JSON.stringify(list));
+        return list.length;
+      }
     },
   };
 });
@@ -124,5 +131,66 @@ describe("entityStore writes never fall back", () => {
     delete process.env.UPSTASH_REDIS_REST_TOKEN;
     __resetForTests();
     await expect(entityStore.putGeneral("g1" as GeneralId, G("g1", "X"))).rejects.toThrow();
+  });
+});
+
+describe("entityStore ratings", () => {
+  it("getRatings returns {} when KV has no value", async () => {
+    const r = await entityStore.getRatings();
+    expect(r).toEqual({});
+  });
+
+  it("getRatings returns {} when Redis throws", async () => {
+    throwOnGet = true;
+    const r = await entityStore.getRatings();
+    expect(r).toEqual({});
+  });
+
+  it("updateRating creates a new rating record on first vote", async () => {
+    await entityStore.updateRating("g1", null, "人上人", "iphash-abc");
+    const all = await entityStore.getRatings();
+    expect(all["g1"].counts["人上人"]).toBe(1);
+    expect(all["g1"].counts["夯"]).toBe(0);
+    expect(all["g1"].total).toBe(1);
+  });
+
+  it("updateRating with from = old tier decrements old, increments new", async () => {
+    await entityStore.updateRating("g1", null, "npc", "h1");
+    await entityStore.updateRating("g1", "npc", "顶级", "h1");
+    const all = await entityStore.getRatings();
+    expect(all["g1"].counts["npc"]).toBe(0);
+    expect(all["g1"].counts["顶级"]).toBe(1);
+    expect(all["g1"].total).toBe(1);
+  });
+
+  it("updateRating never decrements below zero", async () => {
+    await entityStore.updateRating("g1", "夯", "顶级", "h1");
+    const all = await entityStore.getRatings();
+    expect(all["g1"].counts["夯"]).toBe(0);
+    expect(all["g1"].counts["顶级"]).toBe(1);
+    expect(all["g1"].total).toBe(1);
+  });
+
+  it("updateRating appends to ratings:log:<today>", async () => {
+    await entityStore.updateRating("g1", null, "夯", "iphash-xyz");
+    const today = new Date().toISOString().slice(0, 10);
+    const logRaw = mem.get(`ratings:log:${today}`);
+    expect(logRaw).toBeTruthy();
+    const list = JSON.parse(logRaw!) as string[];
+    expect(list).toHaveLength(1);
+    const entry = JSON.parse(list[0]) as { generalId: string; from: string | null; to: string; ipHash: string };
+    expect(entry.generalId).toBe("g1");
+    expect(entry.from).toBeNull();
+    expect(entry.to).toBe("夯");
+    expect(entry.ipHash).toBe("iphash-xyz");
+  });
+
+  it("updateRating throws when Redis is not configured", async () => {
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.KV_REST_API_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    delete process.env.KV_REST_API_TOKEN;
+    __resetForTests();
+    await expect(entityStore.updateRating("g1", null, "夯", "h")).rejects.toThrow();
   });
 });
