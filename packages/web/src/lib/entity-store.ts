@@ -1,7 +1,7 @@
 import type { General, Skill, FAQ, GeneralId, SkillId, FAQId } from "@sgs/data";
 import { Redis } from "@upstash/redis";
 import { markFallbackUsed } from "./fallback-flag";
-import { emptyRating, isRatingTier, type GeneralRating, type RatingsAll, type RatingTier, type VoteEvent } from "./ratings.js";
+import { emptyRating, isRatingTier, type GeneralRating, type RatingsAll, type RatingTier, type VoteEvent } from "./ratings";
 
 import generalsSeed from "../../../data/src/generals.json" with { type: "json" };
 import skillsSeed from "../../../data/src/skills.json" with { type: "json" };
