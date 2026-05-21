@@ -49,3 +49,41 @@ export function topTier(rating: GeneralRating | null): RatingTier | null {
   }
   return bestCount > 0 ? best : null;
 }
+
+/** Numeric score per tier, higher = better. Used for weighted-average rating. */
+const TIER_SCORES: Record<RatingTier, number> = {
+  "夯": 5,
+  "顶级": 4,
+  "人上人": 3,
+  "npc": 2,
+  "拉完了": 1,
+};
+
+/** Weighted-average score in [1, 5], or null when no votes exist. */
+export function averageScore(rating: GeneralRating | null): number | null {
+  if (!rating || rating.total === 0) return null;
+  let sum = 0;
+  for (const t of RATING_TIERS) sum += TIER_SCORES[t] * rating.counts[t];
+  return sum / rating.total;
+}
+
+/**
+ * Returns the tier whose score is closest to the weighted-average rating.
+ * On ties (e.g., avg lands exactly between two tiers), prefers the higher tier.
+ * Returns null when no votes exist.
+ */
+export function averageTier(rating: GeneralRating | null): RatingTier | null {
+  const avg = averageScore(rating);
+  if (avg === null) return null;
+  let best: RatingTier = RATING_TIERS[0];
+  let bestDiff = Math.abs(TIER_SCORES[best] - avg);
+  for (let i = 1; i < RATING_TIERS.length; i++) {
+    const t = RATING_TIERS[i] as RatingTier;
+    const d = Math.abs(TIER_SCORES[t] - avg);
+    if (d < bestDiff) {
+      best = t;
+      bestDiff = d;
+    }
+  }
+  return best;
+}

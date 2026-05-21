@@ -1,8 +1,9 @@
 "use client";
 
 import type { Faction } from "@sgs/data";
-import { useEffect, useMemo, useState } from "react";
-import type { RatingTier } from "@/lib/ratings";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { RATING_TIERS, type RatingTier } from "@/lib/ratings";
 import FactionFilter from "./FactionFilter";
 import GeneralCard from "./GeneralCard";
 import HpFilter from "./HpFilter";
@@ -20,7 +21,7 @@ export type GeneralEntry = {
   hp: number;
   image: string;
   skillNames: string[];
-  topTier: RatingTier | null;
+  averageTier: RatingTier | null;
 };
 
 type GeneralListClientProps = {
@@ -35,6 +36,37 @@ const FACTION_ORDER: Record<Faction, number> = {
   JIN: 4,
 };
 
+const VALID_FACTIONS: ReadonlyArray<Faction> = ["WEI", "SHU", "WU", "QUN", "JIN"];
+const VALID_HPS = new Set([3, 4, 5]);
+const VALID_SORTS: ReadonlyArray<SortKey> = ["name", "id", "faction"];
+
+function parseFactions(raw: string | null): Set<Faction> {
+  if (!raw) return new Set();
+  const out = new Set<Faction>();
+  for (const part of raw.split(",")) {
+    if ((VALID_FACTIONS as ReadonlyArray<string>).includes(part)) {
+      out.add(part as Faction);
+    }
+  }
+  return out;
+}
+
+function parseRating(raw: string | null): RatingFilterValue {
+  if (raw === "unrated") return "unrated";
+  if (raw && (RATING_TIERS as ReadonlyArray<string>).includes(raw)) return raw as RatingTier;
+  return "all";
+}
+
+function parseHp(raw: string | null): number {
+  const n = raw == null ? 0 : Number.parseInt(raw, 10);
+  return VALID_HPS.has(n) ? n : 0;
+}
+
+function parseSort(raw: string | null): SortKey {
+  if (raw && (VALID_SORTS as ReadonlyArray<string>).includes(raw)) return raw as SortKey;
+  return "faction";
+}
+
 function fuzzyMatch(text: string, query: string): boolean {
   const lower = text.toLowerCase();
   const q = query.toLowerCase();
@@ -45,11 +77,32 @@ function fuzzyMatch(text: string, query: string): boolean {
 export default function GeneralListClient({
   generals,
 }: GeneralListClientProps) {
-  const [search, setSearch] = useState("");
-  const [factions, setFactions] = useState<Set<Faction>>(new Set());
-  const [hpFilter, setHpFilter] = useState(0); // 0 = all
-  const [ratingFilter, setRatingFilter] = useState<RatingFilterValue>("all");
-  const [sortKey, setSortKey] = useState<SortKey>("faction");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Lazy-init state from URL on first render so back-nav restores filters.
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
+  const [factions, setFactions] = useState<Set<Faction>>(() => parseFactions(searchParams.get("faction")));
+  const [hpFilter, setHpFilter] = useState(() => parseHp(searchParams.get("hp"))); // 0 = all
+  const [ratingFilter, setRatingFilter] = useState<RatingFilterValue>(() => parseRating(searchParams.get("rating")));
+  const [sortKey, setSortKey] = useState<SortKey>(() => parseSort(searchParams.get("sort")));
+
+  /* Sync state → URL (skip first render — URL already reflects state). */
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const params = new URLSearchParams();
+    if (search.trim()) params.set("q", search.trim());
+    if (factions.size > 0) params.set("faction", [...factions].join(","));
+    if (hpFilter > 0) params.set("hp", String(hpFilter));
+    if (ratingFilter !== "all") params.set("rating", ratingFilter);
+    if (sortKey !== "faction") params.set("sort", sortKey);
+    const qs = params.toString();
+    router.replace(qs ? `/generals?${qs}` : "/generals", { scroll: false });
+  }, [search, factions, hpFilter, ratingFilter, sortKey, router]);
 
   /* Restore scroll position from a prior visit, save on scroll. Lets users
    * return to the same card after viewing a general's detail page. */
@@ -106,21 +159,22 @@ export default function GeneralListClient({
       }
     }
 
-    // Rating filter
+    // Rating filter (by weighted-average tier)
     if (ratingFilter === "unrated") {
-      result = result.filter((g) => g.topTier === null);
+      result = result.filter((g) => g.averageTier === null);
     } else if (ratingFilter !== "all") {
-      result = result.filter((g) => g.topTier === ratingFilter);
+      result = result.filter((g) => g.averageTier === ratingFilter);
     }
 
-    // Search filter (fuzzy match on name, title, skill names)
+    // Search filter (fuzzy match on name, title, skill names, average tier)
     if (search.trim()) {
       const q = search.trim();
       result = result.filter(
         (g) =>
           fuzzyMatch(g.name, q) ||
           fuzzyMatch(g.title, q) ||
-          g.skillNames.some((s) => fuzzyMatch(s, q))
+          g.skillNames.some((s) => fuzzyMatch(s, q)) ||
+          (g.averageTier != null && fuzzyMatch(g.averageTier, q))
       );
     }
 

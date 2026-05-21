@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getNavigationItemBySlug } from "@/lib/site";
 import { entityStore } from "@/lib/entity-store";
-import { topTier } from "@/lib/ratings";
+import { averageTier } from "@/lib/ratings";
 import GeneralListClient, {
   type GeneralEntry,
 } from "./components/GeneralListClient";
@@ -32,7 +32,7 @@ export default async function GeneralsPage() {
     skillNames: (g.skills as unknown as string[])
       .map((sid) => skillNameMap.get(sid as unknown as typeof skills[number]["id"]))
       .filter((n): n is string => n != null),
-    topTier: topTier(ratings[g.id as unknown as string] ?? null),
+    averageTier: averageTier(ratings[g.id as unknown as string] ?? null),
   }));
 
   return (
