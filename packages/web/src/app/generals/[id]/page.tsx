@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import cardTextData from "../../../../../data/src/card-text.json";
 import { entityStore } from "@/lib/entity-store";
+import RatingPanel from "@/components/RatingPanel";
 import AdminBaseEdit from "./components/AdminBaseEdit";
 import AdminSkillEdit from "./components/AdminSkillEdit";
 import AdminFaqAdd from "./components/AdminFaqAdd";
@@ -176,6 +177,10 @@ export default async function GeneralDetailPage({ params }: PageProps) {
   /* Pre-load lookup list for admin FAQ form (relatedGeneralIds picker) */
   const allGeneralsRaw = await entityStore.getGenerals();
   const allGenerals = allGeneralsRaw.map((g) => ({ id: g.id as unknown as string, name: g.name }));
+
+  /* Visitor ratings (5-tier voting); empty map if KV unavailable */
+  const ratings = await entityStore.getRatings();
+  const rating = ratings[general.id as unknown as string] ?? null;
 
   /* Placeholder radar scores — can be replaced with real data later */
   const radarScores: [number, number, number, number] = [5, 5, 5, 5];
@@ -350,6 +355,14 @@ export default async function GeneralDetailPage({ params }: PageProps) {
           </details>
         </section>
       )}
+
+      {/* Visitor rating */}
+      <section className="mt-10">
+        <RatingPanel
+          generalId={general.id as unknown as string}
+          initialRating={rating}
+        />
+      </section>
 
       {/* General FAQ section (entries not linked to a specific skill) */}
       <section className="mt-10">
