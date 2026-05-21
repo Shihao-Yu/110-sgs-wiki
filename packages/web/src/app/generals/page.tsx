@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getNavigationItemBySlug } from "@/lib/site";
 import { entityStore } from "@/lib/entity-store";
+import { topTier } from "@/lib/ratings";
 import GeneralListClient, {
   type GeneralEntry,
 } from "./components/GeneralListClient";
@@ -13,9 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default async function GeneralsPage() {
-  const [generals, skills] = await Promise.all([
+  const [generals, skills, ratings] = await Promise.all([
     entityStore.getGenerals(),
     entityStore.getSkills(),
+    entityStore.getRatings(),
   ]);
 
   const skillNameMap = new Map(skills.map((s) => [s.id, s.name]));
@@ -30,6 +32,7 @@ export default async function GeneralsPage() {
     skillNames: (g.skills as unknown as string[])
       .map((sid) => skillNameMap.get(sid as unknown as typeof skills[number]["id"]))
       .filter((n): n is string => n != null),
+    topTier: topTier(ratings[g.id as unknown as string] ?? null),
   }));
 
   return (
