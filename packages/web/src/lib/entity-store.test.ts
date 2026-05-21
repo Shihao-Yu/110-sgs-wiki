@@ -149,26 +149,26 @@ describe("entityStore ratings", () => {
   it("updateRating creates a new rating record on first vote", async () => {
     await entityStore.updateRating("g1", null, "人上人", "iphash-abc");
     const all = await entityStore.getRatings();
-    expect(all["g1"].counts["人上人"]).toBe(1);
-    expect(all["g1"].counts["夯"]).toBe(0);
-    expect(all["g1"].total).toBe(1);
+    expect(all["g1"]!.counts["人上人"]).toBe(1);
+    expect(all["g1"]!.counts["夯"]).toBe(0);
+    expect(all["g1"]!.total).toBe(1);
   });
 
   it("updateRating with from = old tier decrements old, increments new", async () => {
     await entityStore.updateRating("g1", null, "npc", "h1");
     await entityStore.updateRating("g1", "npc", "顶级", "h1");
     const all = await entityStore.getRatings();
-    expect(all["g1"].counts["npc"]).toBe(0);
-    expect(all["g1"].counts["顶级"]).toBe(1);
-    expect(all["g1"].total).toBe(1);
+    expect(all["g1"]!.counts["npc"]).toBe(0);
+    expect(all["g1"]!.counts["顶级"]).toBe(1);
+    expect(all["g1"]!.total).toBe(1);
   });
 
   it("updateRating never decrements below zero", async () => {
     await entityStore.updateRating("g1", "夯", "顶级", "h1");
     const all = await entityStore.getRatings();
-    expect(all["g1"].counts["夯"]).toBe(0);
-    expect(all["g1"].counts["顶级"]).toBe(1);
-    expect(all["g1"].total).toBe(1);
+    expect(all["g1"]!.counts["夯"]).toBe(0);
+    expect(all["g1"]!.counts["顶级"]).toBe(1);
+    expect(all["g1"]!.total).toBe(1);
   });
 
   it("updateRating appends to ratings:log:<today>", async () => {
@@ -178,7 +178,7 @@ describe("entityStore ratings", () => {
     expect(logRaw).toBeTruthy();
     const list = JSON.parse(logRaw!) as string[];
     expect(list).toHaveLength(1);
-    const entry = JSON.parse(list[0]) as { generalId: string; from: string | null; to: string; ipHash: string };
+    const entry = JSON.parse(list[0]!) as { generalId: string; from: string | null; to: string; ipHash: string };
     expect(entry.generalId).toBe("g1");
     expect(entry.from).toBeNull();
     expect(entry.to).toBe("夯");

@@ -62,6 +62,20 @@ export function sessionReadLimiter(): Ratelimit | null {
   return _sessionReadLimiter;
 }
 
+let _ratingsLimiter: Ratelimit | null = null;
+
+export function ratingsLimiter(): Ratelimit | null {
+  if (_ratingsLimiter) return _ratingsLimiter;
+  const r = redis();
+  if (!r) return null;
+  _ratingsLimiter = new Ratelimit({
+    redis: r,
+    limiter: Ratelimit.slidingWindow(10, "1 m"),  // 10 votes / minute / IP
+    prefix: "ratelimit:ratings",
+  });
+  return _ratingsLimiter;
+}
+
 export function clientIp(req: Request): string {
   return (
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??

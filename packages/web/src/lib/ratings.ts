@@ -41,7 +41,7 @@ export function topTier(rating: GeneralRating | null): RatingTier | null {
   let best: RatingTier = RATING_TIERS[0];
   let bestCount = rating.counts[best];
   for (let i = 1; i < RATING_TIERS.length; i++) {
-    const t = RATING_TIERS[i];
+    const t = RATING_TIERS[i] as RatingTier;
     if (rating.counts[t] > bestCount) {
       best = t;
       bestCount = rating.counts[t];
