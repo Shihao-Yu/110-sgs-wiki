@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getNavigationItemBySlug } from "@/lib/site";
 import { entityStore } from "@/lib/entity-store";
 import { averageTier } from "@/lib/ratings";
@@ -45,7 +46,9 @@ export default async function GeneralsPage() {
         </p>
       </header>
 
-      <GeneralListClient generals={entries} />
+      <Suspense fallback={null}>
+        <GeneralListClient generals={entries} />
+      </Suspense>
     </div>
   );
 }
