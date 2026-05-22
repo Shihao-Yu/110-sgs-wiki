@@ -2,9 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { General } from "@sgs/data";
+import type { Faction, General } from "@sgs/data";
 import { adminFetch, type AdminFetchError } from "@/lib/admin-fetch";
 import { toast } from "./Toaster";
+
+const FACTION_OPTIONS: { value: Faction; label: string }[] = [
+  { value: "WEI", label: "魏" },
+  { value: "SHU", label: "蜀" },
+  { value: "WU", label: "吴" },
+  { value: "QUN", label: "群" },
+  { value: "JIN", label: "晋" },
+];
 
 export default function GeneralEditForm({
   general,
@@ -16,7 +24,8 @@ export default function GeneralEditForm({
   const router = useRouter();
   const initial = general;
   // Form state mirrors full General so we can PUT the whole object with
-  // unchanged fields preserved. UI only exposes hp / maxHp / gender.
+  // unchanged fields preserved. UI exposes faction / subfaction / hp /
+  // maxHp / gender.
   const [form, setForm] = useState<General>(general);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -61,6 +70,37 @@ export default function GeneralEditForm({
 
   return (
     <div className="space-y-4 text-sm">
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="国籍" error={fieldErrors.faction}>
+          <select
+            className={fieldClass("faction")}
+            value={form.faction}
+            onChange={(e) => setForm({ ...form, faction: e.target.value as Faction })}
+          >
+            {FACTION_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </Field>
+        <Field label="副势力" error={fieldErrors.subfaction}>
+          <select
+            className={fieldClass("subfaction")}
+            value={form.subfaction ?? ""}
+            onChange={(e) => {
+              const v = e.target.value;
+              const next: General = { ...form };
+              if (v === "") delete next.subfaction;
+              else next.subfaction = v as Faction;
+              setForm(next);
+            }}
+          >
+            <option value="">无</option>
+            {FACTION_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </Field>
+      </div>
       <div className="grid grid-cols-2 gap-3">
         <Field label="体力" error={fieldErrors.hp}>
           <input

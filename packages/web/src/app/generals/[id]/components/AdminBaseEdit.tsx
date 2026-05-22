@@ -22,7 +22,7 @@ const PencilSvg = (
 export default function AdminBaseEdit({ general }: { general: General }) {
   return (
     <EditAffordance
-      ariaLabel="编辑体力 / 性别"
+      ariaLabel="编辑国籍 / 体力 / 性别"
       trigger={PencilSvg}
       renderForm={(close) => <GeneralEditForm general={general} onClose={close} />}
     />
