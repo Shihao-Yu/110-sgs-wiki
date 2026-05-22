@@ -73,22 +73,21 @@
     "pack": "国战"
   },
   {
-    "id": "general_huatuo",
+    "id": "general_qun_001",
     "name": "华佗",
     "title": "长夜启明",
     "faction": "QUN",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_qingnang",
-      "skill_jijiu"
+      "skill_unknown_qun_001"
     ],
     "image": "generals/国战UI.QUN001.长夜启明.华佗.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_lvbu",
+    "id": "general_qun_002",
     "name": "吕布",
     "title": "虎牢霸主",
     "faction": "QUN",
@@ -96,28 +95,27 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_wushuang"
+      "skill_unknown_qun_002"
     ],
     "image": "generals/国战UI.QUN002.虎牢霸主.吕布.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_diaochan",
+    "id": "general_qun_003",
     "name": "貂蝉",
     "title": "舞惑群心",
     "faction": "QUN",
-    "hp": 3,
-    "maxHp": 3,
-    "gender": "female",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
     "skills": [
-      "skill_lijian",
-      "skill_biyue"
+      "skill_unknown_qun_003"
     ],
     "image": "generals/国战UI.QUN003.舞惑群心.貂蝉.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_yuanshao",
+    "id": "general_qun_004",
     "name": "袁绍",
     "title": "声震寰宇",
     "faction": "QUN",
@@ -125,13 +123,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_luanji"
+      "skill_unknown_qun_004"
     ],
     "image": "generals/国战UI.QUN004.声震寰宇.袁绍.png",
-    "pack": "火"
+    "pack": "国战"
   },
   {
-    "id": "general_yanliangwenchou",
+    "id": "general_qun_005",
     "name": "颜良&文丑",
     "title": "虎狼兄弟",
     "faction": "QUN",
@@ -139,7 +137,7 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_shuangxiong"
+      "skill_unknown_qun_005"
     ],
     "image": "generals/国战UI.QUN005.虎狼兄弟.颜良&文丑.png",
     "paired": true,
@@ -147,43 +145,38 @@
       "颜良",
       "文丑"
     ],
-    "pack": "火"
+    "pack": "国战"
   },
   {
-    "id": "general_dongzhuo",
+    "id": "general_qun_006",
     "name": "董卓",
     "title": "天魔乱舞",
     "faction": "QUN",
-    "hp": 8,
-    "maxHp": 8,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_jiuchi",
-      "skill_roulin",
-      "skill_benghuai",
-      "skill_baonue"
+      "skill_unknown_qun_006"
     ],
     "image": "generals/国战UI.QUN006.天魔乱舞.董卓.png",
-    "pack": "林"
+    "pack": "国战"
   },
   {
-    "id": "general_jiaxu",
+    "id": "general_qun_007",
     "name": "贾诩",
     "title": "倒悬云衢",
     "faction": "QUN",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_wansha",
-      "skill_luanwu",
-      "skill_weimu"
+      "skill_unknown_qun_007"
     ],
     "image": "generals/国战UI.QUN007.倒悬云衢.贾诩.png",
-    "pack": "林"
+    "pack": "国战"
   },
   {
-    "id": "general_pangde",
+    "id": "general_qun_008",
     "name": "庞德",
     "title": "长驱直入",
     "faction": "QUN",
@@ -191,11 +184,10 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_mashu_pangde",
-      "skill_mengjin"
+      "skill_unknown_qun_008"
     ],
     "image": "generals/国战UI.QUN008.长驱直入.庞德.png",
-    "pack": "火"
+    "pack": "国战"
   },
   {
     "id": "general_zuoci",
@@ -213,20 +205,18 @@
     "pack": "山"
   },
   {
-    "id": "general_zhangjiao",
+    "id": "general_qun_010",
     "name": "张角",
     "title": "清淼没川",
     "faction": "QUN",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_leiji",
-      "skill_guidao",
-      "skill_huangtian"
+      "skill_unknown_qun_010"
     ],
     "image": "generals/国战UI.QUN010.清淼没川.张角.png",
-    "pack": "风"
+    "pack": "国战"
   },
   {
     "id": "general_qun_011",
@@ -243,19 +233,18 @@
     "pack": "国战"
   },
   {
-    "id": "general_caiwenjii",
+    "id": "general_qun_012",
     "name": "蔡文姬",
     "title": "胡笳十八拍",
     "faction": "QUN",
-    "hp": 3,
-    "maxHp": 3,
-    "gender": "female",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
     "skills": [
-      "skill_beige",
-      "skill_duanchang"
+      "skill_unknown_qun_012"
     ],
     "image": "generals/国战UI.QUN012.胡笳十八拍.蔡文姬.png",
-    "pack": "山"
+    "pack": "国战"
   },
   {
     "id": "general_qun_013",
@@ -286,7 +275,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_jiling",
+    "id": "general_qun_015",
     "name": "纪灵",
     "title": "气吞山河",
     "faction": "QUN",
@@ -294,10 +283,10 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_shuangren"
+      "skill_unknown_qun_015"
     ],
     "image": "generals/国战UI.QUN015.气吞山河.纪灵.png",
-    "pack": "一将成名"
+    "pack": "国战"
   },
   {
     "id": "general_qun_016",
@@ -370,7 +359,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_yuanshu",
+    "id": "general_qun_021",
     "name": "袁术",
     "title": "狂貔猖貅",
     "faction": "QUN",
@@ -378,11 +367,10 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_wangzun",
-      "skill_tongji"
+      "skill_unknown_qun_021"
     ],
     "image": "generals/国战UI.QUN021.狂貔猖貅.袁术.png",
-    "pack": "林"
+    "pack": "国战"
   },
   {
     "id": "general_qun_022",
@@ -404,7 +392,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_zhangxiu",
+    "id": "general_qun_023",
     "name": "张绣",
     "title": "夜袭曹贼",
     "faction": "QUN",
@@ -412,10 +400,10 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_congjian"
+      "skill_unknown_qun_023"
     ],
     "image": "generals/国战UI.QUN023.夜袭曹贼.张绣.png",
-    "pack": "一将成名"
+    "pack": "国战"
   },
   {
     "id": "general_qun_024",
@@ -460,19 +448,18 @@
     "pack": "国战"
   },
   {
-    "id": "general_chengong",
+    "id": "general_qun_028",
     "name": "陈宫",
     "title": "远谋深虑",
     "faction": "QUN",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_mingce",
-      "skill_zhichi"
+      "skill_unknown_qun_028"
     ],
     "image": "generals/国战UI.QUN028.远谋深虑.陈宫.png",
-    "pack": "一将成名"
+    "pack": "国战"
   },
   {
     "id": "general_qun_029",
@@ -489,19 +476,18 @@
     "pack": "国战"
   },
   {
-    "id": "general_liubiao",
+    "id": "general_qun_030",
     "name": "刘表",
     "title": "儁才秀拔",
     "faction": "QUN",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_zishou",
-      "skill_zongshi"
+      "skill_unknown_qun_030"
     ],
     "image": "generals/国战UI.QUN030.儁才秀拔.刘表.png",
-    "pack": "山"
+    "pack": "国战"
   },
   {
     "id": "general_qun_031",
@@ -518,20 +504,18 @@
     "pack": "国战"
   },
   {
-    "id": "general_liru",
+    "id": "general_qun_032",
     "name": "李儒",
     "title": "酆都鬼使",
     "faction": "QUN",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_juece",
-      "skill_mieji",
-      "skill_fencheng"
+      "skill_unknown_qun_032"
     ],
     "image": "generals/国战UI.QUN032.酆都鬼使.李儒.png",
-    "pack": "一将成名"
+    "pack": "国战"
   },
   {
     "id": "general_qun_033",
@@ -1298,7 +1282,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_liubei",
+    "id": "general_shu_001",
     "name": "刘备",
     "title": "怒火复仇",
     "faction": "SHU",
@@ -1306,15 +1290,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_rende",
-      "skill_jijiang"
+      "skill_unknown_shu_001"
     ],
     "image": "generals/国战UI.SHU001.怒火复仇.刘备.png",
-    "isEmperor": true,
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_guanyu",
+    "id": "general_shu_002",
     "name": "关羽",
     "title": "圣垂千古",
     "faction": "SHU",
@@ -1322,13 +1304,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_wusheng"
+      "skill_unknown_shu_002"
     ],
     "image": "generals/国战UI.SHU002.圣垂千古.关羽.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_zhangfei",
+    "id": "general_shu_003",
     "name": "张飞",
     "title": "傲睨山河",
     "faction": "SHU",
@@ -1336,28 +1318,27 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_paoxiao"
+      "skill_unknown_shu_003"
     ],
     "image": "generals/国战UI.SHU003.傲睨山河.张飞.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_zhugeliang_shu004",
+    "id": "general_shu_004",
     "name": "诸葛亮",
     "title": "千古一相",
     "faction": "SHU",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_guanxing",
-      "skill_kongcheng"
+      "skill_unknown_shu_004"
     ],
     "image": "generals/国战UI.SHU004.千古一相.诸葛亮.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_zhaoyun",
+    "id": "general_shu_005",
     "name": "赵云",
     "title": "龙腾虎跃",
     "faction": "SHU",
@@ -1365,13 +1346,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_longdan"
+      "skill_unknown_shu_005"
     ],
     "image": "generals/国战UI.SHU005.龙腾虎跃.赵云.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_machao",
+    "id": "general_shu_006",
     "name": "马超",
     "title": "炽炎流焰",
     "faction": "SHU",
@@ -1379,29 +1360,27 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_mashu",
-      "skill_tieqi"
+      "skill_unknown_shu_006"
     ],
     "image": "generals/国战UI.SHU006.炽炎流焰.马超.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_huangyueying",
+    "id": "general_shu_007",
     "name": "黄月英",
     "title": "足智多谋",
     "faction": "SHU",
-    "hp": 3,
-    "maxHp": 3,
-    "gender": "female",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
     "skills": [
-      "skill_jizhi",
-      "skill_qicai"
+      "skill_unknown_shu_007"
     ],
     "image": "generals/国战UI.SHU007.足智多谋.黄月英.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_huangzhong",
+    "id": "general_shu_008",
     "name": "黄忠",
     "title": "金乌落日",
     "faction": "SHU",
@@ -1409,13 +1388,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_liegong"
+      "skill_unknown_shu_008"
     ],
     "image": "generals/国战UI.SHU008.金乌落日.黄忠.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_weiyan",
+    "id": "general_shu_009",
     "name": "魏延",
     "title": "矜忠跨万山",
     "faction": "SHU",
@@ -1423,43 +1402,41 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_kuanggu"
+      "skill_unknown_shu_009"
     ],
     "image": "generals/国战UI.SHU009.矜忠跨万山.魏延.png",
-    "pack": "风"
+    "pack": "国战"
   },
   {
-    "id": "general_pangtong",
+    "id": "general_shu_010",
     "name": "庞统",
     "title": "臻华福天",
     "faction": "SHU",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_lianhuan",
-      "skill_niepan"
+      "skill_unknown_shu_010"
     ],
     "image": "generals/国战UI.SHU010.臻华福天.庞统.png",
-    "pack": "火"
+    "pack": "国战"
   },
   {
-    "id": "general_zhugeliang_shu011",
+    "id": "general_shu_011",
     "name": "诸葛亮",
     "title": "山河无恙",
     "faction": "SHU",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_guanxing",
-      "skill_kongcheng"
+      "skill_unknown_shu_011"
     ],
     "image": "generals/国战UI.SHU011.山河无恙.诸葛亮.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_jiangwei",
+    "id": "general_shu_012",
     "name": "姜维",
     "title": "敕剑伏波",
     "faction": "SHU",
@@ -1467,11 +1444,10 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_tiaoxin",
-      "skill_zhiji"
+      "skill_unknown_shu_012"
     ],
     "image": "generals/国战UI.SHU012.敕剑伏波.姜维.png",
-    "pack": "山"
+    "pack": "国战"
   },
   {
     "id": "general_shu_013",
@@ -1503,19 +1479,18 @@
     "pack": "林"
   },
   {
-    "id": "general_zhurong",
+    "id": "general_shu_015",
     "name": "祝融",
     "title": "巾帼花武",
     "faction": "SHU",
     "hp": 4,
     "maxHp": 4,
-    "gender": "female",
+    "gender": "male",
     "skills": [
-      "skill_juxiang",
-      "skill_lieren"
+      "skill_unknown_shu_015"
     ],
     "image": "generals/国战UI.SHU015.巾帼花武.祝融.png",
-    "pack": "林"
+    "pack": "国战"
   },
   {
     "id": "general_shu_016",
@@ -1635,19 +1610,18 @@
     "pack": "国战"
   },
   {
-    "id": "general_fazheng",
+    "id": "general_shu_024",
     "name": "法正",
     "title": "冠绝天下",
     "faction": "SHU",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_enyuan",
-      "skill_xuanhuo"
+      "skill_unknown_shu_024"
     ],
     "image": "generals/国战UI.SHU024.冠绝天下.法正.png",
-    "pack": "山"
+    "pack": "国战"
   },
   {
     "id": "general_shu_026",
@@ -2550,7 +2524,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_caocao",
+    "id": "general_wei_001",
     "name": "曹操",
     "title": "一目窥九州",
     "faction": "WEI",
@@ -2558,30 +2532,27 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_jianxiong",
-      "skill_hujia"
+      "skill_unknown_wei_001"
     ],
     "image": "generals/国战UI.WEI001.一目窥九州.曹操.png",
-    "isEmperor": true,
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_simayi",
+    "id": "general_wei_002",
     "name": "司马懿",
     "title": "隐龙如晦",
     "faction": "WEI",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_fankui",
-      "skill_guicai"
+      "skill_unknown_wei_002"
     ],
     "image": "generals/国战UI.WEI002.隐龙如晦.司马懿.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_xiahoudun",
+    "id": "general_wei_003",
     "name": "夏侯惇",
     "title": "开疆烈血",
     "faction": "WEI",
@@ -2589,13 +2560,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_ganglie"
+      "skill_unknown_wei_003"
     ],
     "image": "generals/国战UI.WEI003.开疆烈血.夏侯惇.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_zhangliao",
+    "id": "general_wei_004",
     "name": "张辽",
     "title": "登锋陷阵",
     "faction": "WEI",
@@ -2603,10 +2574,10 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_tuxi"
+      "skill_unknown_wei_004"
     ],
     "image": "generals/国战UI.WEI004.登锋陷阵.张辽.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
     "id": "general_wei_005_1",
@@ -2623,7 +2594,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_xuchu",
+    "id": "general_wei_005_2",
     "name": "许褚",
     "title": "摧城拔山",
     "faction": "WEI",
@@ -2631,25 +2602,24 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_luoyi"
+      "skill_unknown_wei_005_2"
     ],
     "image": "generals/国战UI.WEI005.摧城拔山.许褚.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_guojia",
+    "id": "general_wei_006",
     "name": "郭嘉",
     "title": "倚星折月",
     "faction": "WEI",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_tiandu",
-      "skill_yiji"
+      "skill_unknown_wei_006"
     ],
     "image": "generals/国战UI.WEI006.倚星折月.郭嘉.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
     "id": "general_zhenji",
@@ -2681,7 +2651,7 @@
     "pack": "标准版"
   },
   {
-    "id": "general_zhanghe",
+    "id": "general_wei_009",
     "name": "张郃",
     "title": "龙骧赫天",
     "faction": "WEI",
@@ -2689,13 +2659,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_qiaobian"
+      "skill_unknown_wei_009"
     ],
     "image": "generals/国战UI.WEI009.龙骧赫天.张郃.png",
-    "pack": "风"
+    "pack": "国战"
   },
   {
-    "id": "general_xuzhu_sp",
+    "id": "general_wei_010",
     "name": "徐晃",
     "title": "径行截辎",
     "faction": "WEI",
@@ -2703,13 +2673,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_duanliang"
+      "skill_unknown_wei_010"
     ],
     "image": "generals/国战UI.WEI010.径行截辎.徐晃.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_caoren",
+    "id": "general_wei_011",
     "name": "曹仁",
     "title": "据守樊城",
     "faction": "WEI",
@@ -2717,13 +2687,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_jushou"
+      "skill_unknown_wei_011"
     ],
     "image": "generals/国战UI.WEI011.据守樊城.曹仁.png",
-    "pack": "火"
+    "pack": "国战"
   },
   {
-    "id": "general_dianwei",
+    "id": "general_wei_012",
     "name": "典韦",
     "title": "襢裼暴虎",
     "faction": "WEI",
@@ -2731,25 +2701,24 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_qiangxi"
+      "skill_unknown_wei_012"
     ],
     "image": "generals/国战UI.WEI012.襢裼暴虎.典韦.png",
-    "pack": "风"
+    "pack": "国战"
   },
   {
-    "id": "general_xunyu",
+    "id": "general_wei_013",
     "name": "荀彧",
     "title": "虎年清明",
     "faction": "WEI",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_quhu",
-      "skill_jieming"
+      "skill_unknown_wei_013"
     ],
     "image": "generals/国战UI.WEI013.虎年清明.荀彧.png",
-    "pack": "火"
+    "pack": "国战"
   },
   {
     "id": "general_wei_014",
@@ -2836,19 +2805,18 @@
     "pack": "国战"
   },
   {
-    "id": "general_xunyou",
+    "id": "general_wei_020",
     "name": "荀攸",
     "title": "十二奇策",
     "faction": "WEI",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_qice",
-      "skill_zhiyu"
+      "skill_unknown_wei_020"
     ],
     "image": "generals/国战UI.WEI020.十二奇策.荀攸.png",
-    "pack": "一将成名"
+    "pack": "国战"
   },
   {
     "id": "general_wei_021",
@@ -2898,7 +2866,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_yujin",
+    "id": "general_wei_024",
     "name": "于禁",
     "title": "驰援襄樊",
     "faction": "WEI",
@@ -2906,10 +2874,10 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_zhenjun"
+      "skill_unknown_wei_024"
     ],
     "image": "generals/国战UI.WEI024.驰援襄樊.于禁.png",
-    "pack": "一将成名"
+    "pack": "国战"
   },
   {
     "id": "general_wei_025",
@@ -2940,19 +2908,18 @@
     "pack": "国战"
   },
   {
-    "id": "general_zhangchunhua",
+    "id": "general_wei_027",
     "name": "张春华",
     "title": "绰约多姿",
     "faction": "WEI",
-    "hp": 3,
-    "maxHp": 3,
-    "gender": "female",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
     "skills": [
-      "skill_jueqing",
-      "skill_shangshi"
+      "skill_unknown_wei_027"
     ],
     "image": "generals/国战UI.WEI027.绰约多姿.张春华.png",
-    "pack": "一将成名"
+    "pack": "国战"
   },
   {
     "id": "general_wei_028",
@@ -3011,19 +2978,18 @@
     "pack": "国战"
   },
   {
-    "id": "general_manchong",
+    "id": "general_wei_033",
     "name": "满宠",
     "title": "勇不可当",
     "faction": "WEI",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_junxing",
-      "skill_yuce"
+      "skill_unknown_wei_033"
     ],
     "image": "generals/国战UI.WEI033.勇不可当.满宠.png",
-    "pack": "一将成名"
+    "pack": "国战"
   },
   {
     "id": "general_wei_034",
@@ -3783,7 +3749,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_sunquan",
+    "id": "general_wu_001",
     "name": "孙权",
     "title": "同辉日月",
     "faction": "WU",
@@ -3791,15 +3757,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_zhiheng",
-      "skill_jiuyuan"
+      "skill_unknown_wu_001"
     ],
     "image": "generals/国战UI.WU001.同辉日月.孙权.png",
-    "isEmperor": true,
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_ganning",
+    "id": "general_wu_002",
     "name": "甘宁",
     "title": "龙争虎斗",
     "faction": "WU",
@@ -3807,13 +3771,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_qixi"
+      "skill_unknown_wu_002"
     ],
     "image": "generals/国战UI.WU002.龙争虎斗.甘宁.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_lvmeng",
+    "id": "general_wu_003",
     "name": "吕蒙",
     "title": "心生万象",
     "faction": "WU",
@@ -3821,13 +3785,13 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_keji"
+      "skill_unknown_wu_003"
     ],
     "image": "generals/国战UI.WU003.心生万象.吕蒙.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_huanggai",
+    "id": "general_wu_004",
     "name": "黄盖",
     "title": "以身证道",
     "faction": "WU",
@@ -3835,70 +3799,66 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_kurou"
+      "skill_unknown_wu_004"
     ],
     "image": "generals/国战UI.WU004.以身证道.黄盖.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_zhouyu",
+    "id": "general_wu_005",
     "name": "周瑜",
     "title": "琴音袅袅",
     "faction": "WU",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_yingzi",
-      "skill_fanjian"
+      "skill_unknown_wu_005"
     ],
     "image": "generals/国战UI.WU005.琴音袅袅.周瑜.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_daqiao",
+    "id": "general_wu_006",
     "name": "大乔",
     "title": "清萧清丽",
     "faction": "WU",
-    "hp": 3,
-    "maxHp": 3,
-    "gender": "female",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
     "skills": [
-      "skill_guose",
-      "skill_liuli"
+      "skill_unknown_wu_006"
     ],
     "image": "generals/国战UI.WU006.清萧清丽.大乔.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_luxun",
+    "id": "general_wu_007",
     "name": "陆逊",
     "title": "绽火烽威",
     "faction": "WU",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_qianxun",
-      "skill_lianying"
+      "skill_unknown_wu_007"
     ],
     "image": "generals/国战UI.WU007.绽火烽威.陆逊.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
-    "id": "general_sunshangxiang",
+    "id": "general_wu_008",
     "name": "孙尚香",
     "title": "前后两难",
     "faction": "WU",
-    "hp": 3,
-    "maxHp": 3,
-    "gender": "female",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
     "skills": [
-      "skill_jieyin",
-      "skill_xiaoji"
+      "skill_unknown_wu_008"
     ],
     "image": "generals/国战UI.WU008.前后两难.孙尚香.png",
-    "pack": "标准版"
+    "pack": "国战"
   },
   {
     "id": "general_wu_009",
@@ -3915,7 +3875,7 @@
     "pack": "国战"
   },
   {
-    "id": "general_sunce",
+    "id": "general_wu_010",
     "name": "孙策",
     "title": "霸王再世",
     "faction": "WU",
@@ -3923,27 +3883,24 @@
     "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_jiang",
-      "skill_hunzi",
-      "skill_zhiba"
+      "skill_unknown_wu_010"
     ],
     "image": "generals/国战UI.WU010.霸王再世.孙策.png",
-    "pack": "林"
+    "pack": "国战"
   },
   {
-    "id": "general_xiaoqiao",
+    "id": "general_wu_011",
     "name": "小乔",
     "title": "梦蝶飞花",
     "faction": "WU",
-    "hp": 3,
-    "maxHp": 3,
-    "gender": "female",
+    "hp": 4,
+    "maxHp": 4,
+    "gender": "male",
     "skills": [
-      "skill_tianxiang",
-      "skill_hongyan"
+      "skill_unknown_wu_011"
     ],
     "image": "generals/国战UI.WU011.梦蝶飞花.小乔.png",
-    "pack": "风"
+    "pack": "国战"
   },
   {
     "id": "general_taishici",
@@ -3974,16 +3931,15 @@
     "pack": "风"
   },
   {
-    "id": "general_zhangzhao_zhanghong",
+    "id": "general_wu_015",
     "name": "张昭&张纮",
     "title": "辅国安邦",
     "faction": "WU",
-    "hp": 3,
-    "maxHp": 3,
+    "hp": 4,
+    "maxHp": 4,
     "gender": "male",
     "skills": [
-      "skill_zhijian",
-      "skill_guzheng"
+      "skill_unknown_wu_015"
     ],
     "image": "generals/国战UI.WU015.辅国安邦.张昭&张纮.png",
     "paired": true,
@@ -3991,7 +3947,7 @@
       "张昭",
       "张纮"
     ],
-    "pack": "山"
+    "pack": "国战"
   },
   {
     "id": "general_wu_016",

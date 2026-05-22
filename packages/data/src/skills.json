@@ -1451,6 +1451,105 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_qun_001",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_001"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_002",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_002"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_003",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_003"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_004",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_004"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_005",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_005"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_006",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_006"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_007",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_007"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_008",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_008"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_010",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_010"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_qun_011",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -1458,6 +1557,17 @@
     "timing": [],
     "generalIds": [
       "general_qun_011"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_012",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_012"
     ],
     "faq": []
   },
@@ -1480,6 +1590,17 @@
     "timing": [],
     "generalIds": [
       "general_qun_014"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_015",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_015"
     ],
     "faq": []
   },
@@ -1539,6 +1660,17 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_qun_021",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_021"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_qun_022",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -1546,6 +1678,17 @@
     "timing": [],
     "generalIds": [
       "general_qun_022"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_023",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_023"
     ],
     "faq": []
   },
@@ -1583,6 +1726,17 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_qun_028",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_028"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_qun_029",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -1594,6 +1748,17 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_qun_030",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_030"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_qun_031",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -1601,6 +1766,17 @@
     "timing": [],
     "generalIds": [
       "general_qun_031"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_qun_032",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_qun_032"
     ],
     "faq": []
   },
@@ -2188,6 +2364,138 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_shu_001",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_001"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_002",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_002"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_003",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_003"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_004",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_004"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_005",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_005"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_006",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_006"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_007",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_007"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_008",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_008"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_009",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_009"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_010",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_010"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_011",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_011"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_012",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_012"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_shu_013",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -2195,6 +2503,17 @@
     "timing": [],
     "generalIds": [
       "general_shu_013"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_015",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_015"
     ],
     "faq": []
   },
@@ -2283,6 +2602,17 @@
     "timing": [],
     "generalIds": [
       "general_shu_023"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_shu_024",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_shu_024"
     ],
     "faq": []
   },
@@ -2980,6 +3310,50 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_wei_001",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_001"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_002",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_002"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_003",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_003"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_004",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_004"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_wei_005_1",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -2987,6 +3361,83 @@
     "timing": [],
     "generalIds": [
       "general_wei_005_1"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_005_2",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_005_2"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_006",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_006"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_009",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_009"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_010",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_010"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_011",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_011"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_012",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_012"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_013",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_013"
     ],
     "faq": []
   },
@@ -3057,6 +3508,17 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_wei_020",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_020"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_wei_021",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -3090,6 +3552,17 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_wei_024",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_024"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_wei_025",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -3108,6 +3581,17 @@
     "timing": [],
     "generalIds": [
       "general_wei_026"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_027",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_027"
     ],
     "faq": []
   },
@@ -3152,6 +3636,17 @@
     "timing": [],
     "generalIds": [
       "general_wei_032"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wei_033",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wei_033"
     ],
     "faq": []
   },
@@ -3739,6 +4234,94 @@
     "faq": []
   },
   {
+    "id": "skill_unknown_wu_001",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_001"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_002",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_002"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_003",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_003"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_004",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_004"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_005",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_005"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_006",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_006"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_007",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_007"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_008",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_008"
+    ],
+    "faq": []
+  },
+  {
     "id": "skill_unknown_wu_009",
     "name": "未知",
     "description": "技能数据待补充。",
@@ -3746,6 +4329,39 @@
     "timing": [],
     "generalIds": [
       "general_wu_009"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_010",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_010"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_011",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_011"
+    ],
+    "faq": []
+  },
+  {
+    "id": "skill_unknown_wu_015",
+    "name": "未知",
+    "description": "技能数据待补充。",
+    "type": "passive",
+    "timing": [],
+    "generalIds": [
+      "general_wu_015"
     ],
     "faq": []
   },

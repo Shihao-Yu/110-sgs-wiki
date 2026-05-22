@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import generalsData from '../generals.json';
 import skillsData from '../skills.json';
+import qsgsGeneralsData from '../qsgs-generals.json';
 
 interface General {
   id: string;
@@ -18,6 +19,19 @@ interface Skill {
 
 const generals = generalsData as General[];
 const skills = skillsData as Skill[];
+const qsgsGenerals = qsgsGeneralsData as Array<{
+  id: string;
+  name: string;
+  title: string;
+}>;
+
+function normalizeName(name: string) {
+  return name.replace(/&/g, '');
+}
+
+const qsgsKeySet = new Set(
+  qsgsGenerals.map((g) => `${normalizeName(g.name)}::${g.title}`),
+);
 
 describe('generals.json', () => {
   it('has 341 entries', () => {
@@ -68,5 +82,17 @@ describe('referential integrity', () => {
       }
     }
     expect(missing, `orphan skill references:\n${missing.join('\n')}`).toHaveLength(0);
+  });
+
+  it('only merges skill data when the card title matches the QSanguosha source', () => {
+    const offenders = generals
+      .filter((g) => !g.skills.every((sid) => sid.startsWith('skill_unknown_')))
+      .filter((g) => !qsgsKeySet.has(`${normalizeName(g.name)}::${String(g.title)}`))
+      .map((g) => `${g.id} (${g.name} / ${String(g.title)})`);
+
+    expect(
+      offenders,
+      `generals merged with non-placeholder skills despite title mismatch:\n${offenders.join('\n')}`,
+    ).toHaveLength(0);
   });
 });

@@ -70,7 +70,7 @@ const qsgsSkills: QsgsSkill[] = JSON.parse(
   readFileSync(resolve(dataDir, 'qsgs-skills.json'), 'utf-8'),
 );
 
-// --- Build lookup: name → QsgsGeneral ---
+// --- Build lookup: name/title → QsgsGeneral ---
 // QSGS paired names have no separator (e.g. "张昭张纮")
 // Parsed paired names use "&" (e.g. "张昭&张纮")
 // Normalize by stripping "&" for matching.
@@ -78,9 +78,13 @@ function normalizeName(name: string): string {
   return name.replace(/&/g, '');
 }
 
+function buildQsgsKey(name: string, title: string): string {
+  return `${normalizeName(name)}::${title}`;
+}
+
 const qsgsMap = new Map<string, QsgsGeneral>();
 for (const g of qsgsGenerals) {
-  qsgsMap.set(normalizeName(g.name), g);
+  qsgsMap.set(buildQsgsKey(g.name, g.title), g);
 }
 
 // --- Pre-scan for duplicate names/numbers to generate unique IDs ---
@@ -89,9 +93,9 @@ const qsgsMatchCount = new Map<string, number>();
 // Count how many parsed entries share faction+number
 const factionNumCount = new Map<string, number>();
 for (const p of parsed) {
-  const normalizedName = normalizeName(p.name);
-  if (qsgsMap.has(normalizedName)) {
-    qsgsMatchCount.set(normalizedName, (qsgsMatchCount.get(normalizedName) ?? 0) + 1);
+  const qsgsKey = buildQsgsKey(p.name, p.title);
+  if (qsgsMap.has(qsgsKey)) {
+    qsgsMatchCount.set(qsgsKey, (qsgsMatchCount.get(qsgsKey) ?? 0) + 1);
   }
   const fnKey = `${p.faction}_${p.number}`;
   factionNumCount.set(fnKey, (factionNumCount.get(fnKey) ?? 0) + 1);
@@ -121,8 +125,8 @@ const referencedSkillIds = new Set<string>();
 const usedIds = new Set<string>();
 
 for (const p of parsed) {
-  const normalizedName = normalizeName(p.name);
-  const qsgs = qsgsMap.get(normalizedName);
+  const qsgsKey = buildQsgsKey(p.name, p.title);
+  const qsgs = qsgsMap.get(qsgsKey);
   const fnKey = `${p.faction}_${p.number}`;
 
   let general: MergedGeneral;
@@ -131,7 +135,7 @@ for (const p of parsed) {
     // Matched — merge QSanguosha data with parsed asset metadata
     // Disambiguate ID if multiple parsed entries match the same QSGS general
     let id = qsgs.id;
-    if ((qsgsMatchCount.get(normalizedName) ?? 0) > 1) {
+    if ((qsgsMatchCount.get(qsgsKey) ?? 0) > 1) {
       id = `${qsgs.id}_${p.faction.toLowerCase()}${p.number}`;
     }
 
@@ -239,7 +243,7 @@ writeFileSync(
 
 // --- Report ---
 const matchedCount = parsed.filter(
-  (p) => qsgsMap.has(normalizeName(p.name)),
+  (p) => qsgsMap.has(buildQsgsKey(p.name, p.title)),
 ).length;
 console.log(`Merged ${mergedGenerals.length} generals:`);
 console.log(`  ${matchedCount} matched with QSanguosha data`);
