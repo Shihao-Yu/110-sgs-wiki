@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import type { Faction, GeneralId, General, Skill, FAQ } from "@sgs/data";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import cardTextData from "../../../../../data/src/card-text.json";
 import { entityStore } from "@/lib/entity-store";
 import RatingPanel from "@/components/RatingPanel";
 import AdminBaseEdit from "./components/AdminBaseEdit";
@@ -10,7 +9,6 @@ import AdminSkillEdit from "./components/AdminSkillEdit";
 import AdminFaqAdd from "./components/AdminFaqAdd";
 import AdminFaqEdit from "./components/AdminFaqEdit";
 import GeneralImage from "./components/GeneralImage";
-import RadarChart from "./components/RadarChart";
 import SkillCard from "./components/SkillCard";
 import { assetUrl } from "@/lib/assets";
 
@@ -20,45 +18,36 @@ type RawSkill = Skill & {
   faq?: { id: string; question: string; answer: string }[];
 };
 
-const cardTextMap = (cardTextData as {
-  items: Record<string, { skillsText: string; skillLines: string[]; ocrScore: number }>;
-}).items;
-
 /* ---------- Faction display helpers ---------- */
 
 const FACTION_META: Record<
   Faction,
-  { label: string; badge: string; hex: string }
+  { label: string; badge: string }
 > = {
   WEI: {
     label: "魏",
     badge:
       "border-wei/25 bg-wei/15 text-wei dark:border-wei/40 dark:bg-wei/25 dark:text-blue-300",
-    hex: "#2563EB",
   },
   SHU: {
     label: "蜀",
     badge:
       "border-shu/25 bg-shu/15 text-shu dark:border-shu/40 dark:bg-shu/25 dark:text-red-300",
-    hex: "#DC2626",
   },
   WU: {
     label: "吴",
     badge:
       "border-wu/25 bg-wu/15 text-wu dark:border-wu/40 dark:bg-wu/25 dark:text-green-300",
-    hex: "#16A34A",
   },
   QUN: {
     label: "群",
     badge:
       "border-qun/30 bg-qun/15 text-qun dark:border-qun/40 dark:bg-qun/25 dark:text-yellow-200",
-    hex: "#CA8A04",
   },
   JIN: {
     label: "晋",
     badge:
       "border-jin/25 bg-jin/15 text-jin dark:border-jin/40 dark:bg-jin/25 dark:text-purple-200",
-    hex: "#9333EA",
   },
 };
 
@@ -69,46 +58,6 @@ const FACTION_GRADIENT: Record<Faction, string> = {
   QUN: "from-qun/20 to-qun/5 dark:from-qun/30 dark:to-qun/10",
   JIN: "from-jin/20 to-jin/5 dark:from-jin/30 dark:to-jin/10",
 };
-
-/* ---------- Card text helpers (OCR-extracted) ---------- */
-
-function CardTextLines({ lines }: { lines: string[] }) {
-  return (
-    <ol className="space-y-1.5 text-sm leading-relaxed text-ink-soft dark:text-ivory-soft">
-      {lines.map((line, i) => (
-        <li key={i} className="flex gap-2.5">
-          <span className="select-none pt-0.5 font-latin text-xs text-vermillion/60">
-            {String(i + 1).padStart(2, "0")}
-          </span>
-          <span className="flex-1">{line}</span>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function CardTextPanel({
-  lines,
-  ocrScore,
-}: {
-  lines: string[];
-  ocrScore: number;
-}) {
-  return (
-    <div className="rounded-sm border border-vermillion/25 bg-paper-mist/70 p-5 dark:border-vermillion/30 dark:bg-night/70">
-      <div className="mb-3 flex items-center gap-2 text-xs">
-        <span className="seal-soft">卡面原文</span>
-        <span className="font-display tracking-wider text-ink-mute dark:text-ivory-soft">
-          机读 OCR · 置信度 {(ocrScore * 100).toFixed(0)}%
-        </span>
-      </div>
-      <CardTextLines lines={lines} />
-      <p className="mt-3 text-xs leading-relaxed text-ink-mute dark:text-ivory-soft">
-        以上内容由程序从卡图直接识别，可能存在断字、错字。如与卡面有出入以卡面为准。
-      </p>
-    </div>
-  );
-}
 
 /* ---------- Static params for all generals ---------- */
 
@@ -172,9 +121,6 @@ export default async function GeneralDetailPage({ params }: PageProps) {
     }
   }
 
-  /* OCR-extracted text from the card image (best-effort, machine-read) */
-  const cardText = cardTextMap[general.id as unknown as string];
-
   /* Pre-load lookup list for admin FAQ form (relatedGeneralIds picker) */
   const allGeneralsRaw = await entityStore.getGenerals();
   const allGenerals = allGeneralsRaw.map((g) => ({ id: g.id as unknown as string, name: g.name }));
@@ -182,9 +128,6 @@ export default async function GeneralDetailPage({ params }: PageProps) {
   /* Visitor ratings (5-tier voting); empty map if KV unavailable */
   const ratings = await entityStore.getRatings();
   const rating = ratings[general.id as unknown as string] ?? null;
-
-  /* Placeholder radar scores — can be replaced with real data later */
-  const radarScores: [number, number, number, number] = [5, 5, 5, 5];
 
   return (
     <div className="page-shell py-8 sm:py-12">
@@ -273,16 +216,6 @@ export default async function GeneralDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Radar chart */}
-            <div>
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                维度评分
-              </p>
-              <div className="h-36 w-36 sm:h-48 sm:w-48">
-                <RadarChart color={faction.hex} scores={radarScores} />
-              </div>
-            </div>
-
             {/* Meta info */}
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-500 dark:text-slate-400">
               <span>
@@ -295,19 +228,12 @@ export default async function GeneralDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Skills section */}
-      <section className="mt-10">
-        <h2 className="section-title mb-5">技能</h2>
-        {hasOnlyPlaceholderSkills ? (
-          cardText && cardText.skillLines.length > 0 ? (
-            <CardTextPanel lines={cardText.skillLines} ocrScore={cardText.ocrScore} />
-          ) : (
-            <div className="rounded-sm border border-gold/40 bg-paper-mist/70 p-5 text-sm leading-relaxed text-ink-soft shadow-sm dark:border-gold/30 dark:bg-night/70 dark:text-ivory-soft">
-              当前仅同步了这张国战武将卡的卡图与基础信息，尚未补齐和该版本一致的技能或
-              wiki 说明。
-            </div>
-          )
-        ) : generalSkills.length > 0 ? (
+      {/* Skills section — only render when we have real (non-placeholder)
+          skill data. For generals where we only have the card image,
+          the image itself is the source of truth. */}
+      {!hasOnlyPlaceholderSkills && generalSkills.length > 0 && (
+        <section className="mt-10">
+          <h2 className="section-title mb-5">技能</h2>
           <div className="space-y-4">
             {generalSkills.map((skill) => {
               const sid = skill.id as unknown as string;
@@ -327,33 +253,6 @@ export default async function GeneralDetailPage({ params }: PageProps) {
               );
             })}
           </div>
-        ) : (
-          <p className="text-sm text-ink-mute dark:text-ivory-soft">
-            暂无技能数据。
-          </p>
-        )}
-      </section>
-
-      {/* 卡面原文 (machine-read OCR) — shown alongside structured skill data
-          so readers can verify against the printed card text. */}
-      {cardText && cardText.skillLines.length > 0 && !hasOnlyPlaceholderSkills && (
-        <section className="mt-10">
-          <details className="group rounded-sm border border-vermillion/20 bg-paper-mist/70 dark:border-vermillion/25 dark:bg-night/70">
-            <summary className="flex cursor-pointer select-none items-center justify-between gap-3 px-5 py-3 text-sm font-display text-ink transition-colors hover:text-vermillion dark:text-ivory dark:hover:text-vermillion">
-              <span className="flex items-center gap-2">
-                <span className="seal-soft text-xs">卡面原文</span>
-                <span className="text-xs tracking-wider text-ink-mute dark:text-ivory-soft">
-                  机读 OCR · 置信度 {(cardText.ocrScore * 100).toFixed(0)}%
-                </span>
-              </span>
-              <span aria-hidden className="text-vermillion transition-transform group-open:rotate-90">
-                ▸
-              </span>
-            </summary>
-            <div className="border-t border-vermillion/15 px-5 py-4">
-              <CardTextLines lines={cardText.skillLines} />
-            </div>
-          </details>
         </section>
       )}
 
@@ -372,22 +271,22 @@ export default async function GeneralDetailPage({ params }: PageProps) {
           <AdminFaqAdd generalId={general.id as unknown as string} allGenerals={allGenerals} />
         </div>
         {generalFaqs.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {generalFaqs.map((faq) => (
-              <div
+              <article
                 key={faq.id as unknown as string}
-                className="rounded-2xl border border-slate-200/80 bg-white/85 shadow-sm dark:border-slate-800/80 dark:bg-slate-950/80"
+                className="relative rounded-2xl border border-slate-200/80 bg-white/85 px-5 py-4 shadow-sm dark:border-slate-800/80 dark:bg-slate-950/80"
               >
-                <details className="group">
-                  <summary className="cursor-pointer select-none px-5 py-3.5 text-sm font-medium text-slate-800 transition-colors hover:text-slate-950 dark:text-slate-200 dark:hover:text-white">
-                    {faq.question}
-                  </summary>
-                  <p className="border-t border-slate-200/40 px-5 py-4 text-sm leading-relaxed text-slate-600 dark:border-slate-700/40 dark:text-slate-400">
-                    {faq.answer}
-                  </p>
-                </details>
-                <AdminFaqEdit faq={faq as FAQ} allGenerals={allGenerals} />
-              </div>
+                <h3 className="pr-24 text-base font-semibold leading-snug text-slate-900 dark:text-slate-100">
+                  {faq.question}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  {faq.answer}
+                </p>
+                <div className="absolute right-4 top-3">
+                  <AdminFaqEdit faq={faq as FAQ} allGenerals={allGenerals} />
+                </div>
+              </article>
             ))}
           </div>
         ) : (
