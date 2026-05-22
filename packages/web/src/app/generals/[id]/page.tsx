@@ -8,6 +8,7 @@ import RatingPanel from "@/components/RatingPanel";
 import AdminBaseEdit from "./components/AdminBaseEdit";
 import AdminSkillEdit from "./components/AdminSkillEdit";
 import AdminFaqAdd from "./components/AdminFaqAdd";
+import AdminFaqEdit from "./components/AdminFaqEdit";
 import GeneralImage from "./components/GeneralImage";
 import RadarChart from "./components/RadarChart";
 import SkillCard from "./components/SkillCard";
@@ -373,17 +374,20 @@ export default async function GeneralDetailPage({ params }: PageProps) {
         {generalFaqs.length > 0 ? (
           <div className="space-y-3">
             {generalFaqs.map((faq) => (
-              <details
+              <div
                 key={faq.id as unknown as string}
-                className="group rounded-2xl border border-slate-200/80 bg-white/85 shadow-sm dark:border-slate-800/80 dark:bg-slate-950/80"
+                className="rounded-2xl border border-slate-200/80 bg-white/85 shadow-sm dark:border-slate-800/80 dark:bg-slate-950/80"
               >
-                <summary className="cursor-pointer select-none px-5 py-3.5 text-sm font-medium text-slate-800 transition-colors hover:text-slate-950 dark:text-slate-200 dark:hover:text-white">
-                  {faq.question}
-                </summary>
-                <p className="border-t border-slate-200/40 px-5 py-4 text-sm leading-relaxed text-slate-600 dark:border-slate-700/40 dark:text-slate-400">
-                  {faq.answer}
-                </p>
-              </details>
+                <details className="group">
+                  <summary className="cursor-pointer select-none px-5 py-3.5 text-sm font-medium text-slate-800 transition-colors hover:text-slate-950 dark:text-slate-200 dark:hover:text-white">
+                    {faq.question}
+                  </summary>
+                  <p className="border-t border-slate-200/40 px-5 py-4 text-sm leading-relaxed text-slate-600 dark:border-slate-700/40 dark:text-slate-400">
+                    {faq.answer}
+                  </p>
+                </details>
+                <AdminFaqEdit faq={faq as FAQ} allGenerals={allGenerals} />
+              </div>
             ))}
           </div>
         ) : (
