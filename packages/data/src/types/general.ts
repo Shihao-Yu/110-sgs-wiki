@@ -20,5 +20,9 @@ export interface General {
   isEmperor?: boolean;
   designer?: string;
   pack: string;
+  /** 野心家卡（AM001 司马昭 / AM003 孙綝 / AM004 公孙渊）。 */
+  isAmbitionist?: boolean;
+  /** 十常侍 10 名子卡指向父卡 general_qun_000。 */
+  parentGeneralId?: GeneralId;
   perfectMatchPartners?: GeneralId[];
 }
