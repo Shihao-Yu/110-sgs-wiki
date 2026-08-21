@@ -37,6 +37,24 @@ const DIR_TO_FACTION: Record<string, string> = {
   魏: 'WEI', 蜀: 'SHU', 吴: 'WU', 群: 'QUN',
 };
 
+/**
+ * AM 卡的势力只能来自 DIR_TO_FACTION，**不设兜底默认值**。
+ *
+ * `collect()` 还会遍历 双势力/ 与 十常侍/ 两个目录，它们不在 DIR_TO_FACTION 里。
+ * 若哪天有 AM 卡出现在那里，静默退回 'QUN' 正是本任务要防的「一律记 QUN」失败模式，
+ * 而且不会有任何断言发现。宁可让脚本炸掉，也不要写出一条势力错误的数据。
+ */
+function amFaction(dir: string): string {
+  const f = DIR_TO_FACTION[dir];
+  if (!f) {
+    throw new Error(
+      `AM 野心家卡出现在未映射的素材目录「${dir}」，无法判定势力。` +
+      `请把该目录加入 DIR_TO_FACTION，或确认这张卡是否放错了位置。`,
+    );
+  }
+  return f;
+}
+
 function collect(): { parsed: ParsedCard; file: string; dir: string }[] {
   const out: { parsed: ParsedCard; file: string; dir: string }[] = [];
   for (const dir of ['魏', '蜀', '吴', '群', '双势力', '十常侍']) {
@@ -95,7 +113,7 @@ function main() {
       id,
       name: parsed.name,
       title: parsed.title,
-      faction: parsed.faction === 'AM' ? (DIR_TO_FACTION[dir] ?? 'QUN') : parsed.faction,
+      faction: parsed.faction === 'AM' ? amFaction(dir) : parsed.faction,
       hp: 4,
       maxHp: 4,
       gender: 'male',
