@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """把群狼环鼎素材批量转成 WebP 写入 assets/。
 
-原图 1098x1542 PNG 均 2.7MB；q85 不降分辨率后均约 220KB（约 12x）。
+多数卡图为 1098x1542 PNG，约 2.7MB；脚本不改变任何源文件的分辨率。
+q85 编码后典型约 220KB（约 12x）。
 用法：
     python3 scripts/qlhd/convert-images.py [--src DIR] [--dry-run]
 """
 import argparse
 import os
 import sys
+from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
@@ -55,6 +57,17 @@ def main():
         for p in files:
             jobs.append((p, out_root / target / (p.stem + ".webp")))
 
+    dsts = [d for _, d in jobs]
+    if len(dsts) != len(set(dsts)):
+        dup = {path: [s for s, dd in jobs if dd == path]
+               for path, n in Counter(dsts).items() if n > 1}
+        print(f"⚠ 检测到 {len(dup)} 个目标路径被多个源文件写入（后写覆盖先写）：")
+        for path, srcs in sorted(dup.items()):
+            print(f"    {path}")
+            for s in srcs:
+                print(f"      <- {s.relative_to(src_root)}")
+        print(f"  最终落盘唯一文件数将是 {len(set(dsts))}，而非 {len(jobs)}。")
+
     print(f"待转换 {len(jobs)} 个文件:")
     for k, v in per_dir.items():
         print(f"  {k:6s} {v:3d} -> assets/{ROUTING[k]}")
@@ -70,7 +83,8 @@ def main():
                 print(f"  ...{i}/{len(jobs)}")
 
     mb = 1024 * 1024
-    print(f"完成 {len(jobs)} 个文件: {total_in/mb:.0f} MB -> {total_out/mb:.0f} MB "
+    print(f"完成 {len(jobs)} 个转换任务 -> {len(set(dsts))} 个唯一文件: "
+          f"{total_in/mb:.0f} MB -> {total_out/mb:.0f} MB "
           f"（{total_in/max(total_out,1):.1f}x）")
 
 
