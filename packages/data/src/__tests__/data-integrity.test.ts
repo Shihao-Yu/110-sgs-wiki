@@ -65,10 +65,13 @@ describe('generals.json', () => {
   it('every faction and subfaction is a known code', () => {
     for (const g of generals) {
       expect(VALID_FACTIONS.has(g.faction), `${g.id} bad faction ${g.faction}`).toBe(true);
+      // 两条 subfaction 断言都要放进守卫里：全部 395 条中只有 16 条带 subfaction，
+      // 无条件跑 `expect(undefined).not.toBe(<非空字符串>)` 对其余 379 条恒真，
+      // 写着「每个武将副势力≠主势力」却只验证了 4%，是误导。
       if (g.subfaction) {
         expect(VALID_FACTIONS.has(g.subfaction), `${g.id} bad subfaction ${g.subfaction}`).toBe(true);
+        expect(g.subfaction, `${g.id} subfaction equals faction`).not.toBe(g.faction);
       }
-      expect(g.subfaction, `${g.id} subfaction equals faction`).not.toBe(g.faction);
     }
   });
 
@@ -85,9 +88,12 @@ describe('generals.json', () => {
     }
   });
 
-  it('has exactly 3 ambitionist cards and 10 eunuch members', () => {
+  it('has exactly 3 ambitionist, 10 eunuch members and 16 dual-faction generals', () => {
     expect(generals.filter((g) => g.isAmbitionist)).toHaveLength(3);
     expect(generals.filter((g) => g.parentGeneralId)).toHaveLength(10);
+    // 这条计数是上面那个 `if (g.subfaction)` 守卫的配套保险：没有它，
+    // 万一哪天 subfaction 数据整体丢失，被守卫包住的两条断言会全部跳过而测试照样绿。
+    expect(generals.filter((g) => g.subfaction)).toHaveLength(16);
   });
 
   it('every parentGeneralId resolves to an existing general', () => {
