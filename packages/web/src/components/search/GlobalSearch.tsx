@@ -220,7 +220,7 @@ export default function GlobalSearch() {
             if (results.length > 0) setIsOpen(true);
           }}
           onKeyDown={onKeyDown}
-          placeholder="搜索武将、技能、卡牌..."
+          placeholder="搜索武将、标记牌、卡牌..."
           role="combobox"
           type="text"
           value={query}
