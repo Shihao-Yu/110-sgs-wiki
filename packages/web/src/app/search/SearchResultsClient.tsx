@@ -22,8 +22,8 @@ const TYPE_META: Record<
     badgeClass:
       "border-shu/20 bg-shu/10 text-shu dark:border-shu/40 dark:bg-shu/20 dark:text-red-300",
   },
-  skill: {
-    label: "技能",
+  token: {
+    label: "标记牌",
     badgeClass:
       "border-wei/20 bg-wei/10 text-wei dark:border-wei/40 dark:bg-wei/20 dark:text-blue-300",
   },
@@ -46,7 +46,7 @@ const TYPE_META: Record<
 function groupResults(
   results: SearchResult[],
 ): { type: SearchResultType; items: SearchResult[] }[] {
-  const order: SearchResultType[] = ["general", "skill", "card", "faq"];
+  const order: SearchResultType[] = ["general", "token", "card", "faq"];
   const map = new Map<SearchResultType, SearchResult[]>();
 
   for (const r of results) {

@@ -7,15 +7,16 @@
  */
 
 import generalsData from "../../../../data/src/generals.json";
-import skillsData from "../../../../data/src/skills.json";
+import tokensData from "../../../../data/src/tokens.json";
 import cardsData from "../../../../data/src/cards.json";
+import packCardsData from "../../../../data/src/pack-cards.json";
 import faqData from "../../../../data/src/faq.json";
 
 /* ------------------------------------------------------------------ */
 /*  Shared result type                                                 */
 /* ------------------------------------------------------------------ */
 
-export type SearchResultType = "general" | "skill" | "card" | "faq";
+export type SearchResultType = "general" | "token" | "card" | "faq";
 
 export interface SearchResult {
   id: string;
@@ -37,15 +38,21 @@ type RawGeneral = {
   name: string;
   title: string;
   faction: string;
-  hp: number;
-  skills: string[];
+  parentGeneralId?: string;
 };
 
-type RawSkill = {
+type RawToken = {
   id: string;
   name: string;
-  description: string;
-  generalIds: string[];
+  category: string;
+  ownerGeneralId?: string;
+};
+
+type RawPackCard = {
+  id: string;
+  name: string;
+  suit: string;
+  number: number;
 };
 
 type RawCard = {
@@ -68,11 +75,11 @@ type RawFaq = {
 /* ------------------------------------------------------------------ */
 
 const generals = generalsData as RawGeneral[];
-const skills = skillsData as RawSkill[];
+const tokens = tokensData as RawToken[];
+const packCards = packCardsData as RawPackCard[];
 const cards = cardsData as RawCard[];
 const faqs = faqData as RawFaq[];
 
-/** Lookup: generalId -> general name (for skill subtitles). */
 const generalNameMap = new Map<string, string>(
   generals.map((g) => [g.id, g.name]),
 );
@@ -80,31 +87,41 @@ const generalNameMap = new Map<string, string>(
 function buildSearchEntries(): SearchResult[] {
   const entries: SearchResult[] = [];
 
-  // Generals — searchable by name + title
+  // Generals — searchable by name + title.
+  // 十常侍子卡没有独立详情页，链接指向父卡。
   for (const g of generals) {
     entries.push({
       id: g.id,
       type: "general",
       title: g.name,
       subtitle: g.title,
-      href: `/generals/${g.id}`,
+      href: `/generals/${g.parentGeneralId ?? g.id}`,
     });
   }
 
-  // Skills — searchable by name; subtitle shows owning general(s)
-  for (const s of skills) {
-    const owners = s.generalIds
-      .map((gid) => generalNameMap.get(gid))
-      .filter((n): n is string => n != null);
+  // Tokens — searchable by name; subtitle shows the owning general when known.
+  for (const t of tokens) {
+    const owner = t.ownerGeneralId ? generalNameMap.get(t.ownerGeneralId) : undefined;
     entries.push({
-      id: s.id,
-      type: "skill",
-      title: s.name,
-      subtitle: owners.length > 0 ? owners.join("、") : s.description.slice(0, 60),
-      href:
-        s.generalIds.length > 0
-          ? `/generals/${s.generalIds[0]}`
-          : "/generals",
+      id: t.id,
+      type: "token",
+      title: t.name,
+      subtitle: owner ?? (t.category === "module" ? "大攻车" : "标记牌"),
+      href: t.ownerGeneralId ? `/generals/${t.ownerGeneralId}` : "/cards",
+    });
+  }
+
+  // 群狼环鼎新增牌 —— 按名字可搜，副标题给花色点数
+  const SUIT_SIGN: Record<string, string> = {
+    spade: "♠", heart: "♥", club: "♣", diamond: "♦",
+  };
+  for (const c of packCards) {
+    entries.push({
+      id: c.id,
+      type: "card",
+      title: c.name,
+      subtitle: `群狼环鼎 ${SUIT_SIGN[c.suit] ?? ""}${c.number}`,
+      href: "/cards",
     });
   }
 

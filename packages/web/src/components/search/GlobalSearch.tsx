@@ -21,13 +21,13 @@ const TYPE_META: Record<
     label: "武将",
     color: "text-shu",
   },
-  skill: {
+  token: {
     icon: (
       <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
-    label: "技能",
+    label: "标记牌",
     color: "text-wei",
   },
   card: {
@@ -57,7 +57,7 @@ const TYPE_META: Record<
 function groupResults(
   results: SearchResult[],
 ): { type: SearchResultType; items: SearchResult[] }[] {
-  const order: SearchResultType[] = ["general", "skill", "card", "faq"];
+  const order: SearchResultType[] = ["general", "token", "card", "faq"];
   const map = new Map<SearchResultType, SearchResult[]>();
 
   for (const r of results) {
