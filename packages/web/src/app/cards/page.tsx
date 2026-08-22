@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import type { Suit } from "./components/CardEntry";
 import { getNavigationItemBySlug } from "@/lib/site";
 import cardsData from "../../../../data/src/cards.json";
+import tokensData from "../../../../data/src/tokens.json";
+import packCardsData from "../../../../data/src/pack-cards.json";
+import generalsData from "../../../../data/src/generals.json";
 import CardListClient from "./components/CardListClient";
+import PackGallery, { type GalleryItem } from "./components/PackGallery";
 
 const section = getNavigationItemBySlug("cards");
 
@@ -81,6 +85,41 @@ export default function CardsPage() {
   const cards = buildCardSummaries();
   const totalCopies = (cardsData as RawCard[]).length;
 
+  type RawToken = {
+    id: string; name: string; image: string;
+    category: string; ownerGeneralId?: string;
+  };
+  const tokens = tokensData as RawToken[];
+  const generalNames = new Map(
+    (generalsData as { id: string; name: string }[]).map((g) => [g.id, g.name]),
+  );
+
+  type RawPackCard = {
+    id: string; name: string; suit: string; number: number; image: string;
+  };
+  const SUIT_SIGN: Record<string, string> = {
+    spade: "♠", heart: "♥", club: "♣", diamond: "♦",
+  };
+  const packCards: GalleryItem[] = (packCardsData as RawPackCard[]).map((c) => ({
+    id: c.id,
+    name: c.name,
+    image: c.image,
+    note: `${SUIT_SIGN[c.suit] ?? ""}${c.number}`,
+  }));
+
+  const tokenItems: GalleryItem[] = tokens
+    .filter((t) => t.category === "skill")
+    .map((t) => ({
+      id: t.id,
+      name: t.name,
+      image: t.image,
+      note: t.ownerGeneralId ? generalNames.get(t.ownerGeneralId) : undefined,
+    }));
+
+  const moduleItems: GalleryItem[] = tokens
+    .filter((t) => t.category === "module")
+    .map((t) => ({ id: t.id, name: t.name, image: t.image }));
+
   return (
     <div className="page-shell py-8 sm:py-12">
       <header className="mb-8">
@@ -96,6 +135,10 @@ export default function CardsPage() {
       </header>
 
       <CardListClient cards={cards} totalCopies={totalCopies} />
+
+      <PackGallery title="群狼环鼎新增牌" items={packCards} />
+      <PackGallery title="标记牌" items={tokenItems} />
+      <PackGallery title="大攻车" items={moduleItems} />
     </div>
   );
 }
