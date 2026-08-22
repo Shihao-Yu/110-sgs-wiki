@@ -1,1415 +1,197 @@
 [
-  {
-    "id": "sha_01",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 5,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_02",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 7,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_03",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 8,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_04",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 8,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_05",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 9,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_06",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 10,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_07",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 11,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_08",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 2,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_09",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 3,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_10",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 4,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_11",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 5,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_12",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 8,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_13",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 9,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_14",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 10,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_15",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 11,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_16",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 11,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_17",
-    "name": "杀",
-    "type": "basic",
-    "suit": "heart",
-    "number": 10,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_18",
-    "name": "杀",
-    "type": "basic",
-    "suit": "heart",
-    "number": 12,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_19",
-    "name": "杀",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 10,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_20",
-    "name": "杀",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 11,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_21",
-    "name": "杀",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 12,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_22",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 4,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_23",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 7,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_24",
-    "name": "杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 8,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_25",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 4,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_26",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 6,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_27",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 7,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_28",
-    "name": "杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 8,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_29",
-    "name": "杀",
-    "type": "basic",
-    "suit": "heart",
-    "number": 10,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "sha_30",
-    "name": "杀",
-    "type": "basic",
-    "suit": "heart",
-    "number": 11,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害"
-  },
-  {
-    "id": "huosha_01",
-    "name": "火杀",
-    "type": "basic",
-    "suit": "heart",
-    "number": 4,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害"
-  },
-  {
-    "id": "huosha_02",
-    "name": "火杀",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 4,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害"
-  },
-  {
-    "id": "huosha_03",
-    "name": "火杀",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 5,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害"
-  },
-  {
-    "id": "huosha_04",
-    "name": "火杀",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 8,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害"
-  },
-  {
-    "id": "huosha_05",
-    "name": "火杀",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 9,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害"
-  },
-  {
-    "id": "leisha_01",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 6,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "leisha_02",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 7,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "leisha_03",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 6,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "leisha_04",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 7,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "leisha_05",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 8,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "leisha_06",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 9,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "leisha_07",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 10,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "leisha_08",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "spade",
-    "number": 11,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "leisha_09",
-    "name": "雷杀",
-    "type": "basic",
-    "suit": "club",
-    "number": 5,
-    "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害"
-  },
-  {
-    "id": "shan_01",
-    "name": "闪",
-    "type": "basic",
-    "suit": "heart",
-    "number": 2,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_02",
-    "name": "闪",
-    "type": "basic",
-    "suit": "heart",
-    "number": 11,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_03",
-    "name": "闪",
-    "type": "basic",
-    "suit": "heart",
-    "number": 13,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_04",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 2,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_05",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 3,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_06",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 6,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_07",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 7,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_08",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 7,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_09",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 8,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_10",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 8,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_11",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 9,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_12",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 10,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_13",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 11,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_14",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 13,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_15",
-    "name": "闪",
-    "type": "basic",
-    "suit": "heart",
-    "number": 4,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_16",
-    "name": "闪",
-    "type": "basic",
-    "suit": "heart",
-    "number": 5,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_17",
-    "name": "闪",
-    "type": "basic",
-    "suit": "heart",
-    "number": 6,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_18",
-    "name": "闪",
-    "type": "basic",
-    "suit": "heart",
-    "number": 7,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_19",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 6,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_20",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 7,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "shan_21",
-    "name": "闪",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 13,
-    "description": "当你成为【杀】的目标时使用，抵消该【杀】"
-  },
-  {
-    "id": "tao_01",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 4,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_02",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 6,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_03",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 7,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_04",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 8,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_05",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 9,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_06",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 10,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_07",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 12,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_08",
-    "name": "桃",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 2,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_09",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 8,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_10",
-    "name": "桃",
-    "type": "basic",
-    "suit": "heart",
-    "number": 9,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_11",
-    "name": "桃",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 2,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "tao_12",
-    "name": "桃",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 3,
-    "description": "对自己或濒死角色使用，回复1点体力"
-  },
-  {
-    "id": "jiu_01",
-    "name": "酒",
-    "type": "basic",
-    "suit": "spade",
-    "number": 9,
-    "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力"
-  },
-  {
-    "id": "jiu_02",
-    "name": "酒",
-    "type": "basic",
-    "suit": "club",
-    "number": 9,
-    "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力"
-  },
-  {
-    "id": "jiu_03",
-    "name": "酒",
-    "type": "basic",
-    "suit": "diamond",
-    "number": 9,
-    "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力"
-  },
-  {
-    "id": "jiu_04",
-    "name": "酒",
-    "type": "basic",
-    "suit": "spade",
-    "number": 6,
-    "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力"
-  },
-  {
-    "id": "jiu_05",
-    "name": "酒",
-    "type": "basic",
-    "suit": "club",
-    "number": 9,
-    "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力"
-  },
-  {
-    "id": "wuzhongshengyou_01",
-    "name": "无中生有",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 7,
-    "description": "出牌阶段对自己使用，摸两张牌"
-  },
-  {
-    "id": "wuzhongshengyou_02",
-    "name": "无中生有",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 8,
-    "description": "出牌阶段对自己使用，摸两张牌"
-  },
-  {
-    "id": "guohechaiqiao_01",
-    "name": "过河拆桥",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 3,
-    "description": "出牌阶段对一名其他角色使用，弃置其区域内的一张牌"
-  },
-  {
-    "id": "guohechaiqiao_02",
-    "name": "过河拆桥",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 4,
-    "description": "出牌阶段对一名其他角色使用，弃置其区域内的一张牌"
-  },
-  {
-    "id": "guohechaiqiao_03",
-    "name": "过河拆桥",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 12,
-    "description": "出牌阶段对一名其他角色使用，弃置其区域内的一张牌"
-  },
-  {
-    "id": "shunshiqianyang_01",
-    "name": "顺手牵羊",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 3,
-    "description": "出牌阶段对距离为1的一名角色使用，获得其区域内的一张牌"
-  },
-  {
-    "id": "shunshiqianyang_02",
-    "name": "顺手牵羊",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 4,
-    "description": "出牌阶段对距离为1的一名角色使用，获得其区域内的一张牌"
-  },
-  {
-    "id": "shunshiqianyang_03",
-    "name": "顺手牵羊",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "diamond",
-    "number": 3,
-    "description": "出牌阶段对距离为1的一名角色使用，获得其区域内的一张牌"
-  },
-  {
-    "id": "juedou_01",
-    "name": "决斗",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 1,
-    "description": "出牌阶段对一名其他角色使用，双方轮流打出【杀】，先不出者受到1点伤害"
-  },
-  {
-    "id": "juedou_02",
-    "name": "决斗",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 1,
-    "description": "出牌阶段对一名其他角色使用，双方轮流打出【杀】，先不出者受到1点伤害"
-  },
-  {
-    "id": "jiedaosharen_01",
-    "name": "借刀杀人",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 12,
-    "description": "出牌阶段对一名装备武器的其他角色使用，令其对你指定的角色使用【杀】，否则将武器交给你"
-  },
-  {
-    "id": "huogong_01",
-    "name": "火攻",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 2,
-    "description": "出牌阶段对一名有手牌的角色使用，其展示一张手牌，你可弃置同花色手牌令其受到1点火焰伤害"
-  },
-  {
-    "id": "huogong_02",
-    "name": "火攻",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 3,
-    "description": "出牌阶段对一名有手牌的角色使用，其展示一张手牌，你可弃置同花色手牌令其受到1点火焰伤害"
-  },
-  {
-    "id": "tiesuolianhuan_01",
-    "name": "铁索连环",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 12,
-    "description": "出牌阶段对1至2名角色使用，横置或重置目标武将牌；可重铸"
-  },
-  {
-    "id": "tiesuolianhuan_02",
-    "name": "铁索连环",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 12,
-    "description": "出牌阶段对1至2名角色使用，横置或重置目标武将牌；可重铸"
-  },
-  {
-    "id": "tiesuolianhuan_03",
-    "name": "铁索连环",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 13,
-    "description": "出牌阶段对1至2名角色使用，横置或重置目标武将牌；可重铸"
-  },
-  {
-    "id": "zhijizhibi_01",
-    "name": "知己知彼",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 3,
-    "description": "出牌阶段对一名其他角色使用，观看其手牌或暗置的一张武将牌"
-  },
-  {
-    "id": "zhijizhibi_02",
-    "name": "知己知彼",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 4,
-    "description": "出牌阶段对一名其他角色使用，观看其手牌或暗置的一张武将牌"
-  },
-  {
-    "id": "yiyidailao_01",
-    "name": "以逸待劳",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 11,
-    "description": "出牌阶段对至多两名角色使用，目标角色各摸两张牌然后各弃置两张牌"
-  },
-  {
-    "id": "yiyidailao_02",
-    "name": "以逸待劳",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "diamond",
-    "number": 4,
-    "description": "出牌阶段对至多两名角色使用，目标角色各摸两张牌然后各弃置两张牌"
-  },
-  {
-    "id": "yuanjiaojingong_01",
-    "name": "远交近攻",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 9,
-    "description": "出牌阶段对一名其他角色使用，你摸一张牌，然后弃置该角色的一张牌"
-  },
-  {
-    "id": "diaohulishan_01",
-    "name": "调虎离山",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 2,
-    "description": "出牌阶段对一名角色使用，该角色于本回合内不计入距离计算且不能被选择为目标"
-  },
-  {
-    "id": "diaohulishan_02",
-    "name": "调虎离山",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "diamond",
-    "number": 10,
-    "description": "出牌阶段对一名角色使用，该角色于本回合内不计入距离计算且不能被选择为目标"
-  },
-  {
-    "id": "chiling_01",
-    "name": "敕令",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 3,
-    "description": "出牌阶段对所有角色使用，未明置武将牌的角色须明置一张或受到1点伤害"
-  },
-  {
-    "id": "nanmanruqin_01",
-    "name": "南蛮入侵",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 13,
-    "description": "出牌阶段使用，其他角色须各打出一张【杀】或受到1点伤害"
-  },
-  {
-    "id": "nanmanruqin_02",
-    "name": "南蛮入侵",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 7,
-    "description": "出牌阶段使用，其他角色须各打出一张【杀】或受到1点伤害"
-  },
-  {
-    "id": "wanjianqifa_01",
-    "name": "万箭齐发",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 1,
-    "description": "出牌阶段使用，其他角色须各使用一张【闪】或受到1点伤害"
-  },
-  {
-    "id": "taoyuanjieyi_01",
-    "name": "桃园结义",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 1,
-    "description": "出牌阶段使用，所有角色各回复1点体力"
-  },
-  {
-    "id": "wugufengdeng_01",
-    "name": "五谷丰登",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "heart",
-    "number": 3,
-    "description": "出牌阶段使用，亮出等同于角色数的牌，每名角色获得其中一张"
-  },
-  {
-    "id": "wuxiekeji_01",
-    "name": "无懈可击",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 11,
-    "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果"
-  },
-  {
-    "id": "wuxiekeji_02",
-    "name": "无懈可击",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 13,
-    "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果"
-  },
-  {
-    "id": "wuxiekeji_03",
-    "name": "无懈可击",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "diamond",
-    "number": 12,
-    "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果"
-  },
-  {
-    "id": "wuxiekeji_04",
-    "name": "无懈可击",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "spade",
-    "number": 13,
-    "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果"
-  },
-  {
-    "id": "wuxiekeji_05",
-    "name": "无懈可击",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "club",
-    "number": 13,
-    "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果"
-  },
-  {
-    "id": "wuxiekeji_06",
-    "name": "无懈可击",
-    "type": "trick",
-    "subtype": "instantTrick",
-    "suit": "diamond",
-    "number": 11,
-    "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果"
-  },
-  {
-    "id": "lebusishu_01",
-    "name": "乐不思蜀",
-    "type": "trick",
-    "subtype": "delayedTrick",
-    "suit": "club",
-    "number": 6,
-    "description": "出牌阶段对一名其他角色使用，判定阶段进行判定——若非红桃，跳过出牌阶段"
-  },
-  {
-    "id": "lebusishu_02",
-    "name": "乐不思蜀",
-    "type": "trick",
-    "subtype": "delayedTrick",
-    "suit": "heart",
-    "number": 6,
-    "description": "出牌阶段对一名其他角色使用，判定阶段进行判定——若非红桃，跳过出牌阶段"
-  },
-  {
-    "id": "bingliangcunduan_01",
-    "name": "兵粮寸断",
-    "type": "trick",
-    "subtype": "delayedTrick",
-    "suit": "spade",
-    "number": 10,
-    "description": "出牌阶段对距离为1的一名角色使用，判定阶段进行判定——若非梅花，跳过摸牌阶段"
-  },
-  {
-    "id": "bingliangcunduan_02",
-    "name": "兵粮寸断",
-    "type": "trick",
-    "subtype": "delayedTrick",
-    "suit": "club",
-    "number": 10,
-    "description": "出牌阶段对距离为1的一名角色使用，判定阶段进行判定——若非梅花，跳过摸牌阶段"
-  },
-  {
-    "id": "shandian_01",
-    "name": "闪电",
-    "type": "trick",
-    "subtype": "delayedTrick",
-    "suit": "spade",
-    "number": 1,
-    "description": "出牌阶段使用并置于自己判定区，在角色间传递——判定为黑桃2-9时受到3点雷电伤害"
-  },
-  {
-    "id": "zhugeliannu_01",
-    "name": "诸葛连弩",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "diamond",
-    "number": 1,
-    "range": 1,
-    "description": "你于出牌阶段使用【杀】无次数限制"
-  },
-  {
-    "id": "qinggangjian_01",
-    "name": "青釭剑",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "spade",
-    "number": 6,
-    "range": 2,
-    "description": "你的【杀】无视目标角色的防具"
-  },
-  {
-    "id": "zhangbashemao_01",
-    "name": "丈八蛇矛",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "spade",
-    "number": 12,
-    "range": 3,
-    "description": "你可以将两张手牌当【杀】使用或打出"
-  },
-  {
-    "id": "guanshifu_01",
-    "name": "贯石斧",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "diamond",
-    "number": 5,
-    "range": 3,
-    "description": "你的【杀】被【闪】抵消时，你可弃置两张牌使此【杀】继续生效"
-  },
-  {
-    "id": "fangtianhuaji_01",
-    "name": "方天画戟",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "diamond",
-    "number": 12,
-    "range": 4,
-    "description": "你使用的最后一张手牌为【杀】时，可额外选择至多两名目标"
-  },
-  {
-    "id": "qilingong_01",
-    "name": "麒麟弓",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "heart",
-    "number": 5,
-    "range": 5,
-    "description": "你的【杀】对目标角色造成伤害时，你可弃置其装备区里的一匹马"
-  },
-  {
-    "id": "gudingdao_01",
-    "name": "古锭刀",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "spade",
-    "number": 5,
-    "range": 2,
-    "description": "你的【杀】对目标角色造成伤害时，若该角色没有手牌，此伤害+1"
-  },
-  {
-    "id": "zhuqueyushan_01",
-    "name": "朱雀羽扇",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "diamond",
-    "number": 1,
-    "range": 4,
-    "description": "你可以将普通【杀】当【火杀】使用"
-  },
-  {
-    "id": "yinyueqiang_01",
-    "name": "银月枪",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "diamond",
-    "number": 12,
-    "range": 3,
-    "description": "当你使用或打出的最后一张手牌为【杀】或【闪】时，你可以立即对一名角色使用一张【杀】"
-  },
-  {
-    "id": "cixiongshuanggujian_01",
-    "name": "雌雄双股剑",
-    "type": "equipment",
-    "subtype": "weapon",
-    "suit": "spade",
-    "number": 2,
-    "range": 2,
-    "description": "你对与你性别不同的角色使用【杀】时，其须弃一张手牌或令你摸一张牌"
-  },
-  {
-    "id": "baguazhen_01",
-    "name": "八卦阵",
-    "type": "equipment",
-    "subtype": "armor",
-    "suit": "spade",
-    "number": 2,
-    "description": "当你需要使用或打出【闪】时，你可以进行判定——若为红色，视为使用了【闪】"
-  },
-  {
-    "id": "renwangdun_01",
-    "name": "仁王盾",
-    "type": "equipment",
-    "subtype": "armor",
-    "suit": "club",
-    "number": 2,
-    "description": "锁定技，黑色的【杀】对你无效"
-  },
-  {
-    "id": "tengjia_01",
-    "name": "藤甲",
-    "type": "equipment",
-    "subtype": "armor",
-    "suit": "club",
-    "number": 2,
-    "description": "锁定技，【南蛮入侵】、【万箭齐发】和普通【杀】对你无效；你受到的火焰伤害+1"
-  },
-  {
-    "id": "baiyinshizi_01",
-    "name": "白银狮子",
-    "type": "equipment",
-    "subtype": "armor",
-    "suit": "club",
-    "number": 1,
-    "description": "锁定技，你受到的伤害不会超过1点；当此牌离开你的装备区时，你回复1点体力"
-  },
-  {
-    "id": "dilu_01",
-    "name": "的卢",
-    "type": "equipment",
-    "subtype": "defensiveHorse",
-    "suit": "club",
-    "number": 5,
-    "description": "其他角色计算与你的距离+1"
-  },
-  {
-    "id": "zhuahuangfeidian_01",
-    "name": "爪黄飞电",
-    "type": "equipment",
-    "subtype": "defensiveHorse",
-    "suit": "heart",
-    "number": 13,
-    "description": "其他角色计算与你的距离+1"
-  },
-  {
-    "id": "jueying_01",
-    "name": "绝影",
-    "type": "equipment",
-    "subtype": "defensiveHorse",
-    "suit": "spade",
-    "number": 5,
-    "description": "其他角色计算与你的距离+1"
-  },
-  {
-    "id": "dayuan_01",
-    "name": "大宛",
-    "type": "equipment",
-    "subtype": "defensiveHorse",
-    "suit": "club",
-    "number": 13,
-    "description": "其他角色计算与你的距离+1"
-  },
-  {
-    "id": "chitu_01",
-    "name": "赤兔",
-    "type": "equipment",
-    "subtype": "offensiveHorse",
-    "suit": "heart",
-    "number": 5,
-    "description": "你计算与其他角色的距离-1"
-  },
-  {
-    "id": "zixing_01",
-    "name": "紫骍",
-    "type": "equipment",
-    "subtype": "offensiveHorse",
-    "suit": "diamond",
-    "number": 13,
-    "description": "你计算与其他角色的距离-1"
-  },
-  {
-    "id": "hualiu_01",
-    "name": "骅骝",
-    "type": "equipment",
-    "subtype": "offensiveHorse",
-    "suit": "diamond",
-    "number": 13,
-    "description": "你计算与其他角色的距离-1"
-  },
-  {
-    "id": "dayuan_02",
-    "name": "大宛",
-    "type": "equipment",
-    "subtype": "offensiveHorse",
-    "suit": "spade",
-    "number": 13,
-    "description": "你计算与其他角色的距离-1"
-  },
-  {
-    "id": "muniuliuma_01",
-    "name": "木牛流马",
-    "type": "equipment",
-    "subtype": "treasure",
-    "suit": "diamond",
-    "number": 5,
-    "description": "出牌阶段限一次，你可以将一张手牌扣置于此牌上或取回此牌上的一张牌"
-  },
-  {
-    "id": "yuxi_01",
-    "name": "玉玺",
-    "type": "equipment",
-    "subtype": "treasure",
-    "suit": "club",
-    "number": 1,
-    "description": "锁定技，当你于出牌阶段前获得明置的武将牌上的技能时，你摸一张牌"
-  },
-  {
-    "id": "qlhd_card_001",
-    "name": "七星宝刀",
-    "type": "trick",
-    "suit": "spade",
-    "number": 13,
-    "description": "",
-    "image": "cards/七星宝刀.♠.K.webp"
-  },
-  {
-    "id": "qlhd_card_002",
-    "name": "冲应神符",
-    "type": "trick",
-    "suit": "heart",
-    "number": 1,
-    "description": "",
-    "image": "cards/冲应神符.♥.A.webp"
-  },
-  {
-    "id": "qlhd_card_003",
-    "name": "大明日光铠",
-    "type": "trick",
-    "suit": "club",
-    "number": 2,
-    "description": "",
-    "image": "cards/大明日光铠.♣.2.webp"
-  },
-  {
-    "id": "qlhd_card_004",
-    "name": "天雷刃",
-    "type": "trick",
-    "suit": "spade",
-    "number": 1,
-    "description": "",
-    "image": "cards/天雷刃.♠.A.webp"
-  },
-  {
-    "id": "qlhd_card_005",
-    "name": "太极拂尘",
-    "type": "trick",
-    "suit": "heart",
-    "number": 1,
-    "description": "",
-    "image": "cards/太极拂尘.♥.A.webp"
-  },
-  {
-    "id": "qlhd_card_006",
-    "name": "孔明灯",
-    "type": "trick",
-    "suit": "diamond",
-    "number": 2,
-    "description": "",
-    "image": "cards/孔明灯.♦.2.webp"
-  },
-  {
-    "id": "qlhd_card_007",
-    "name": "敕令",
-    "type": "trick",
-    "suit": "club",
-    "number": 3,
-    "description": "",
-    "image": "cards/敕令.♣.3.webp"
-  },
-  {
-    "id": "qlhd_card_008",
-    "name": "水波剑",
-    "type": "trick",
-    "suit": "club",
-    "number": 1,
-    "description": "",
-    "image": "cards/水波剑.♣.A.webp"
-  },
-  {
-    "id": "qlhd_card_009",
-    "name": "混毒弯匕",
-    "type": "trick",
-    "suit": "spade",
-    "number": 1,
-    "description": "",
-    "image": "cards/混毒弯匕.♠.A.webp"
-  },
-  {
-    "id": "qlhd_card_010",
-    "name": "灵宝仙葫",
-    "type": "trick",
-    "suit": "heart",
-    "number": 1,
-    "description": "",
-    "image": "cards/灵宝仙葫.♥.A.webp"
-  },
-  {
-    "id": "qlhd_card_011",
-    "name": "烈淬刃",
-    "type": "trick",
-    "suit": "diamond",
-    "number": 1,
-    "description": "",
-    "image": "cards/烈淬刃.♦.A.webp"
-  },
-  {
-    "id": "qlhd_card_012",
-    "name": "红缎枪",
-    "type": "trick",
-    "suit": "heart",
-    "number": 1,
-    "description": "",
-    "image": "cards/红缎枪.♥.A.webp"
-  },
-  {
-    "id": "qlhd_card_013",
-    "name": "袖箭",
-    "type": "trick",
-    "suit": "club",
-    "number": 12,
-    "description": "",
-    "image": "cards/袖箭.♣.Q.webp"
-  },
-  {
-    "id": "qlhd_card_014",
-    "name": "调虎离山",
-    "type": "trick",
-    "suit": "heart",
-    "number": 2,
-    "description": "",
-    "image": "cards/调虎离山.♥.2.webp"
-  },
-  {
-    "id": "qlhd_card_015",
-    "name": "调虎离山",
-    "type": "trick",
-    "suit": "diamond",
-    "number": 10,
-    "description": "",
-    "image": "cards/调虎离山.♦.10.webp"
-  },
-  {
-    "id": "qlhd_card_016",
-    "name": "遁甲天书",
-    "type": "trick",
-    "suit": "spade",
-    "number": 3,
-    "description": "",
-    "image": "cards/遁甲天书.♠.3.webp"
-  },
-  {
-    "id": "qlhd_card_017",
-    "name": "锦囊袋",
-    "type": "trick",
-    "suit": "heart",
-    "number": 1,
-    "description": "",
-    "image": "cards/锦囊袋.♥.A.webp"
-  },
-  {
-    "id": "qlhd_card_018",
-    "name": "镗甲护心镜",
-    "type": "trick",
-    "suit": "club",
-    "number": 2,
-    "description": "",
-    "image": "cards/镗甲护心镜.♣.2.webp"
-  },
-  {
-    "id": "qlhd_card_019",
-    "name": "霹雳车",
-    "type": "trick",
-    "suit": "diamond",
-    "number": 9,
-    "description": "",
-    "image": "cards/霹雳车.♦.9.webp"
-  }
+  { "id": "sha_01", "name": "杀", "type": "basic", "suit": "spade", "number": 5, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_02", "name": "杀", "type": "basic", "suit": "spade", "number": 7, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_03", "name": "杀", "type": "basic", "suit": "spade", "number": 8, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_04", "name": "杀", "type": "basic", "suit": "spade", "number": 8, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_05", "name": "杀", "type": "basic", "suit": "spade", "number": 9, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_06", "name": "杀", "type": "basic", "suit": "spade", "number": 10, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_07", "name": "杀", "type": "basic", "suit": "spade", "number": 11, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_08", "name": "杀", "type": "basic", "suit": "club", "number": 2, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_09", "name": "杀", "type": "basic", "suit": "club", "number": 3, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_10", "name": "杀", "type": "basic", "suit": "club", "number": 4, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_11", "name": "杀", "type": "basic", "suit": "club", "number": 5, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_12", "name": "杀", "type": "basic", "suit": "club", "number": 8, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_13", "name": "杀", "type": "basic", "suit": "club", "number": 9, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_14", "name": "杀", "type": "basic", "suit": "club", "number": 10, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_15", "name": "杀", "type": "basic", "suit": "club", "number": 11, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_16", "name": "杀", "type": "basic", "suit": "club", "number": 11, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_17", "name": "杀", "type": "basic", "suit": "heart", "number": 10, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_18", "name": "杀", "type": "basic", "suit": "heart", "number": 12, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_19", "name": "杀", "type": "basic", "suit": "diamond", "number": 10, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_20", "name": "杀", "type": "basic", "suit": "diamond", "number": 11, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_21", "name": "杀", "type": "basic", "suit": "diamond", "number": 12, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_22", "name": "杀", "type": "basic", "suit": "spade", "number": 4, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_23", "name": "杀", "type": "basic", "suit": "spade", "number": 7, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_24", "name": "杀", "type": "basic", "suit": "spade", "number": 8, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_25", "name": "杀", "type": "basic", "suit": "club", "number": 4, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_26", "name": "杀", "type": "basic", "suit": "club", "number": 6, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_27", "name": "杀", "type": "basic", "suit": "club", "number": 7, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_28", "name": "杀", "type": "basic", "suit": "club", "number": 8, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_29", "name": "杀", "type": "basic", "suit": "heart", "number": 10, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+  { "id": "sha_30", "name": "杀", "type": "basic", "suit": "heart", "number": 11, "description": "对一名角色使用，令其使用【闪】响应或受到1点伤害" },
+
+  { "id": "huosha_01", "name": "火杀", "type": "basic", "suit": "heart", "number": 4, "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害" },
+  { "id": "huosha_02", "name": "火杀", "type": "basic", "suit": "diamond", "number": 4, "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害" },
+  { "id": "huosha_03", "name": "火杀", "type": "basic", "suit": "diamond", "number": 5, "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害" },
+  { "id": "huosha_04", "name": "火杀", "type": "basic", "suit": "diamond", "number": 8, "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害" },
+  { "id": "huosha_05", "name": "火杀", "type": "basic", "suit": "diamond", "number": 9, "description": "对一名角色使用，令其使用【闪】响应或受到1点火焰伤害" },
+
+  { "id": "leisha_01", "name": "雷杀", "type": "basic", "suit": "spade", "number": 6, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+  { "id": "leisha_02", "name": "雷杀", "type": "basic", "suit": "spade", "number": 7, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+  { "id": "leisha_03", "name": "雷杀", "type": "basic", "suit": "club", "number": 6, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+  { "id": "leisha_04", "name": "雷杀", "type": "basic", "suit": "club", "number": 7, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+  { "id": "leisha_05", "name": "雷杀", "type": "basic", "suit": "club", "number": 8, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+  { "id": "leisha_06", "name": "雷杀", "type": "basic", "suit": "spade", "number": 9, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+  { "id": "leisha_07", "name": "雷杀", "type": "basic", "suit": "spade", "number": 10, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+  { "id": "leisha_08", "name": "雷杀", "type": "basic", "suit": "spade", "number": 11, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+  { "id": "leisha_09", "name": "雷杀", "type": "basic", "suit": "club", "number": 5, "description": "对一名角色使用，令其使用【闪】响应或受到1点雷电伤害" },
+
+  { "id": "shan_01", "name": "闪", "type": "basic", "suit": "heart", "number": 2, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_02", "name": "闪", "type": "basic", "suit": "heart", "number": 11, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_03", "name": "闪", "type": "basic", "suit": "heart", "number": 13, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_04", "name": "闪", "type": "basic", "suit": "diamond", "number": 2, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_05", "name": "闪", "type": "basic", "suit": "diamond", "number": 3, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_06", "name": "闪", "type": "basic", "suit": "diamond", "number": 6, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_07", "name": "闪", "type": "basic", "suit": "diamond", "number": 7, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_08", "name": "闪", "type": "basic", "suit": "diamond", "number": 7, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_09", "name": "闪", "type": "basic", "suit": "diamond", "number": 8, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_10", "name": "闪", "type": "basic", "suit": "diamond", "number": 8, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_11", "name": "闪", "type": "basic", "suit": "diamond", "number": 9, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_12", "name": "闪", "type": "basic", "suit": "diamond", "number": 10, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_13", "name": "闪", "type": "basic", "suit": "diamond", "number": 11, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_14", "name": "闪", "type": "basic", "suit": "diamond", "number": 13, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_15", "name": "闪", "type": "basic", "suit": "heart", "number": 4, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_16", "name": "闪", "type": "basic", "suit": "heart", "number": 5, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_17", "name": "闪", "type": "basic", "suit": "heart", "number": 6, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_18", "name": "闪", "type": "basic", "suit": "heart", "number": 7, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_19", "name": "闪", "type": "basic", "suit": "diamond", "number": 6, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_20", "name": "闪", "type": "basic", "suit": "diamond", "number": 7, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+  { "id": "shan_21", "name": "闪", "type": "basic", "suit": "diamond", "number": 13, "description": "当你成为【杀】的目标时使用，抵消该【杀】" },
+
+  { "id": "tao_01", "name": "桃", "type": "basic", "suit": "heart", "number": 4, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_02", "name": "桃", "type": "basic", "suit": "heart", "number": 6, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_03", "name": "桃", "type": "basic", "suit": "heart", "number": 7, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_04", "name": "桃", "type": "basic", "suit": "heart", "number": 8, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_05", "name": "桃", "type": "basic", "suit": "heart", "number": 9, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_06", "name": "桃", "type": "basic", "suit": "heart", "number": 10, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_07", "name": "桃", "type": "basic", "suit": "heart", "number": 12, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_08", "name": "桃", "type": "basic", "suit": "diamond", "number": 2, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_09", "name": "桃", "type": "basic", "suit": "heart", "number": 8, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_10", "name": "桃", "type": "basic", "suit": "heart", "number": 9, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_11", "name": "桃", "type": "basic", "suit": "diamond", "number": 2, "description": "对自己或濒死角色使用，回复1点体力" },
+  { "id": "tao_12", "name": "桃", "type": "basic", "suit": "diamond", "number": 3, "description": "对自己或濒死角色使用，回复1点体力" },
+
+  { "id": "jiu_01", "name": "酒", "type": "basic", "suit": "spade", "number": 9, "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力" },
+  { "id": "jiu_02", "name": "酒", "type": "basic", "suit": "club", "number": 9, "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力" },
+  { "id": "jiu_03", "name": "酒", "type": "basic", "suit": "diamond", "number": 9, "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力" },
+  { "id": "jiu_04", "name": "酒", "type": "basic", "suit": "spade", "number": 6, "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力" },
+  { "id": "jiu_05", "name": "酒", "type": "basic", "suit": "club", "number": 9, "description": "出牌阶段使用令下一张【杀】伤害+1；濒死时使用回复1点体力" },
+
+  { "id": "wuzhongshengyou_01", "name": "无中生有", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 7, "description": "出牌阶段对自己使用，摸两张牌" },
+  { "id": "wuzhongshengyou_02", "name": "无中生有", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 8, "description": "出牌阶段对自己使用，摸两张牌" },
+
+  { "id": "guohechaiqiao_01", "name": "过河拆桥", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 3, "description": "出牌阶段对一名其他角色使用，弃置其区域内的一张牌" },
+  { "id": "guohechaiqiao_02", "name": "过河拆桥", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 4, "description": "出牌阶段对一名其他角色使用，弃置其区域内的一张牌" },
+  { "id": "guohechaiqiao_03", "name": "过河拆桥", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 12, "description": "出牌阶段对一名其他角色使用，弃置其区域内的一张牌" },
+
+  { "id": "shunshiqianyang_01", "name": "顺手牵羊", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 3, "description": "出牌阶段对距离为1的一名角色使用，获得其区域内的一张牌" },
+  { "id": "shunshiqianyang_02", "name": "顺手牵羊", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 4, "description": "出牌阶段对距离为1的一名角色使用，获得其区域内的一张牌" },
+  { "id": "shunshiqianyang_03", "name": "顺手牵羊", "type": "trick", "subtype": "instantTrick", "suit": "diamond", "number": 3, "description": "出牌阶段对距离为1的一名角色使用，获得其区域内的一张牌" },
+
+  { "id": "juedou_01", "name": "决斗", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 1, "description": "出牌阶段对一名其他角色使用，双方轮流打出【杀】，先不出者受到1点伤害" },
+  { "id": "juedou_02", "name": "决斗", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 1, "description": "出牌阶段对一名其他角色使用，双方轮流打出【杀】，先不出者受到1点伤害" },
+
+  { "id": "jiedaosharen_01", "name": "借刀杀人", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 12, "description": "出牌阶段对一名装备武器的其他角色使用，令其对你指定的角色使用【杀】，否则将武器交给你" },
+
+  { "id": "huogong_01", "name": "火攻", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 2, "description": "出牌阶段对一名有手牌的角色使用，其展示一张手牌，你可弃置同花色手牌令其受到1点火焰伤害" },
+  { "id": "huogong_02", "name": "火攻", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 3, "description": "出牌阶段对一名有手牌的角色使用，其展示一张手牌，你可弃置同花色手牌令其受到1点火焰伤害" },
+
+  { "id": "tiesuolianhuan_01", "name": "铁索连环", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 12, "description": "出牌阶段对1至2名角色使用，横置或重置目标武将牌；可重铸" },
+  { "id": "tiesuolianhuan_02", "name": "铁索连环", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 12, "description": "出牌阶段对1至2名角色使用，横置或重置目标武将牌；可重铸" },
+  { "id": "tiesuolianhuan_03", "name": "铁索连环", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 13, "description": "出牌阶段对1至2名角色使用，横置或重置目标武将牌；可重铸" },
+
+  { "id": "zhijizhibi_01", "name": "知己知彼", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 3, "description": "出牌阶段对一名其他角色使用，观看其手牌或暗置的一张武将牌" },
+  { "id": "zhijizhibi_02", "name": "知己知彼", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 4, "description": "出牌阶段对一名其他角色使用，观看其手牌或暗置的一张武将牌" },
+
+  { "id": "yiyidailao_01", "name": "以逸待劳", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 11, "description": "出牌阶段对至多两名角色使用，目标角色各摸两张牌然后各弃置两张牌" },
+  { "id": "yiyidailao_02", "name": "以逸待劳", "type": "trick", "subtype": "instantTrick", "suit": "diamond", "number": 4, "description": "出牌阶段对至多两名角色使用，目标角色各摸两张牌然后各弃置两张牌" },
+
+  { "id": "yuanjiaojingong_01", "name": "远交近攻", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 9, "description": "出牌阶段对一名其他角色使用，你摸一张牌，然后弃置该角色的一张牌" },
+
+  { "id": "diaohulishan_01", "name": "调虎离山", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 2, "description": "出牌阶段对一名角色使用，该角色于本回合内不计入距离计算且不能被选择为目标" },
+  { "id": "diaohulishan_02", "name": "调虎离山", "type": "trick", "subtype": "instantTrick", "suit": "diamond", "number": 10, "description": "出牌阶段对一名角色使用，该角色于本回合内不计入距离计算且不能被选择为目标" },
+
+  { "id": "chiling_01", "name": "敕令", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 3, "description": "出牌阶段对所有角色使用，未明置武将牌的角色须明置一张或受到1点伤害" },
+
+  { "id": "nanmanruqin_01", "name": "南蛮入侵", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 13, "description": "出牌阶段使用，其他角色须各打出一张【杀】或受到1点伤害" },
+  { "id": "nanmanruqin_02", "name": "南蛮入侵", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 7, "description": "出牌阶段使用，其他角色须各打出一张【杀】或受到1点伤害" },
+
+  { "id": "wanjianqifa_01", "name": "万箭齐发", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 1, "description": "出牌阶段使用，其他角色须各使用一张【闪】或受到1点伤害" },
+
+  { "id": "taoyuanjieyi_01", "name": "桃园结义", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 1, "description": "出牌阶段使用，所有角色各回复1点体力" },
+
+  { "id": "wugufengdeng_01", "name": "五谷丰登", "type": "trick", "subtype": "instantTrick", "suit": "heart", "number": 3, "description": "出牌阶段使用，亮出等同于角色数的牌，每名角色获得其中一张" },
+
+  { "id": "wuxiekeji_01", "name": "无懈可击", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 11, "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果" },
+  { "id": "wuxiekeji_02", "name": "无懈可击", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 13, "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果" },
+  { "id": "wuxiekeji_03", "name": "无懈可击", "type": "trick", "subtype": "instantTrick", "suit": "diamond", "number": 12, "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果" },
+  { "id": "wuxiekeji_04", "name": "无懈可击", "type": "trick", "subtype": "instantTrick", "suit": "spade", "number": 13, "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果" },
+  { "id": "wuxiekeji_05", "name": "无懈可击", "type": "trick", "subtype": "instantTrick", "suit": "club", "number": 13, "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果" },
+  { "id": "wuxiekeji_06", "name": "无懈可击", "type": "trick", "subtype": "instantTrick", "suit": "diamond", "number": 11, "description": "一张锦囊牌生效前使用，抵消该锦囊牌的效果" },
+
+  { "id": "lebusishu_01", "name": "乐不思蜀", "type": "trick", "subtype": "delayedTrick", "suit": "club", "number": 6, "description": "出牌阶段对一名其他角色使用，判定阶段进行判定——若非红桃，跳过出牌阶段" },
+  { "id": "lebusishu_02", "name": "乐不思蜀", "type": "trick", "subtype": "delayedTrick", "suit": "heart", "number": 6, "description": "出牌阶段对一名其他角色使用，判定阶段进行判定——若非红桃，跳过出牌阶段" },
+
+  { "id": "bingliangcunduan_01", "name": "兵粮寸断", "type": "trick", "subtype": "delayedTrick", "suit": "spade", "number": 10, "description": "出牌阶段对距离为1的一名角色使用，判定阶段进行判定——若非梅花，跳过摸牌阶段" },
+  { "id": "bingliangcunduan_02", "name": "兵粮寸断", "type": "trick", "subtype": "delayedTrick", "suit": "club", "number": 10, "description": "出牌阶段对距离为1的一名角色使用，判定阶段进行判定——若非梅花，跳过摸牌阶段" },
+
+  { "id": "shandian_01", "name": "闪电", "type": "trick", "subtype": "delayedTrick", "suit": "spade", "number": 1, "description": "出牌阶段使用并置于自己判定区，在角色间传递——判定为黑桃2-9时受到3点雷电伤害" },
+
+  { "id": "zhugeliannu_01", "name": "诸葛连弩", "type": "equipment", "subtype": "weapon", "suit": "diamond", "number": 1, "range": 1, "description": "你于出牌阶段使用【杀】无次数限制" },
+
+  { "id": "qinggangjian_01", "name": "青釭剑", "type": "equipment", "subtype": "weapon", "suit": "spade", "number": 6, "range": 2, "description": "你的【杀】无视目标角色的防具" },
+
+  { "id": "zhangbashemao_01", "name": "丈八蛇矛", "type": "equipment", "subtype": "weapon", "suit": "spade", "number": 12, "range": 3, "description": "你可以将两张手牌当【杀】使用或打出" },
+
+  { "id": "guanshifu_01", "name": "贯石斧", "type": "equipment", "subtype": "weapon", "suit": "diamond", "number": 5, "range": 3, "description": "你的【杀】被【闪】抵消时，你可弃置两张牌使此【杀】继续生效" },
+
+  { "id": "fangtianhuaji_01", "name": "方天画戟", "type": "equipment", "subtype": "weapon", "suit": "diamond", "number": 12, "range": 4, "description": "你使用的最后一张手牌为【杀】时，可额外选择至多两名目标" },
+
+  { "id": "qilingong_01", "name": "麒麟弓", "type": "equipment", "subtype": "weapon", "suit": "heart", "number": 5, "range": 5, "description": "你的【杀】对目标角色造成伤害时，你可弃置其装备区里的一匹马" },
+
+  { "id": "gudingdao_01", "name": "古锭刀", "type": "equipment", "subtype": "weapon", "suit": "spade", "number": 5, "range": 2, "description": "你的【杀】对目标角色造成伤害时，若该角色没有手牌，此伤害+1" },
+
+  { "id": "zhuqueyushan_01", "name": "朱雀羽扇", "type": "equipment", "subtype": "weapon", "suit": "diamond", "number": 1, "range": 4, "description": "你可以将普通【杀】当【火杀】使用" },
+
+  { "id": "yinyueqiang_01", "name": "银月枪", "type": "equipment", "subtype": "weapon", "suit": "diamond", "number": 12, "range": 3, "description": "当你使用或打出的最后一张手牌为【杀】或【闪】时，你可以立即对一名角色使用一张【杀】" },
+
+  { "id": "cixiongshuanggujian_01", "name": "雌雄双股剑", "type": "equipment", "subtype": "weapon", "suit": "spade", "number": 2, "range": 2, "description": "你对与你性别不同的角色使用【杀】时，其须弃一张手牌或令你摸一张牌" },
+
+  { "id": "baguazhen_01", "name": "八卦阵", "type": "equipment", "subtype": "armor", "suit": "spade", "number": 2, "description": "当你需要使用或打出【闪】时，你可以进行判定——若为红色，视为使用了【闪】" },
+
+  { "id": "renwangdun_01", "name": "仁王盾", "type": "equipment", "subtype": "armor", "suit": "club", "number": 2, "description": "锁定技，黑色的【杀】对你无效" },
+
+  { "id": "tengjia_01", "name": "藤甲", "type": "equipment", "subtype": "armor", "suit": "club", "number": 2, "description": "锁定技，【南蛮入侵】、【万箭齐发】和普通【杀】对你无效；你受到的火焰伤害+1" },
+
+  { "id": "baiyinshizi_01", "name": "白银狮子", "type": "equipment", "subtype": "armor", "suit": "club", "number": 1, "description": "锁定技，你受到的伤害不会超过1点；当此牌离开你的装备区时，你回复1点体力" },
+
+  { "id": "dilu_01", "name": "的卢", "type": "equipment", "subtype": "defensiveHorse", "suit": "club", "number": 5, "description": "其他角色计算与你的距离+1" },
+
+  { "id": "zhuahuangfeidian_01", "name": "爪黄飞电", "type": "equipment", "subtype": "defensiveHorse", "suit": "heart", "number": 13, "description": "其他角色计算与你的距离+1" },
+
+  { "id": "jueying_01", "name": "绝影", "type": "equipment", "subtype": "defensiveHorse", "suit": "spade", "number": 5, "description": "其他角色计算与你的距离+1" },
+
+  { "id": "dayuan_01", "name": "大宛", "type": "equipment", "subtype": "defensiveHorse", "suit": "club", "number": 13, "description": "其他角色计算与你的距离+1" },
+
+  { "id": "chitu_01", "name": "赤兔", "type": "equipment", "subtype": "offensiveHorse", "suit": "heart", "number": 5, "description": "你计算与其他角色的距离-1" },
+
+  { "id": "zixing_01", "name": "紫骍", "type": "equipment", "subtype": "offensiveHorse", "suit": "diamond", "number": 13, "description": "你计算与其他角色的距离-1" },
+
+  { "id": "hualiu_01", "name": "骅骝", "type": "equipment", "subtype": "offensiveHorse", "suit": "diamond", "number": 13, "description": "你计算与其他角色的距离-1" },
+
+  { "id": "dayuan_02", "name": "大宛", "type": "equipment", "subtype": "offensiveHorse", "suit": "spade", "number": 13, "description": "你计算与其他角色的距离-1" },
+
+  { "id": "muniuliuma_01", "name": "木牛流马", "type": "equipment", "subtype": "treasure", "suit": "diamond", "number": 5, "description": "出牌阶段限一次，你可以将一张手牌扣置于此牌上或取回此牌上的一张牌" },
+
+  { "id": "yuxi_01", "name": "玉玺", "type": "equipment", "subtype": "treasure", "suit": "club", "number": 1, "description": "锁定技，当你于出牌阶段前获得明置的武将牌上的技能时，你摸一张牌" }
 ]

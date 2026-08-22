@@ -1,6 +1,12 @@
 #!/usr/bin/env tsx
 /**
- * 生成 packages/data/src/tokens.json，并把 21 张游戏牌并入 cards.json。
+ * 生成 packages/data/src/tokens.json 与 packages/data/src/pack-cards.json。
+ *
+ * 游戏牌目录 21 个文件的去向：
+ *   - 19 张带花色点数的 -> pack-cards.json
+ *   - 2 张蒲元专属装备   -> tokens.json（挂 ownerGeneralId）
+ *
+ * **本脚本不改动 cards.json。** 那 146 张标准牌与本次改动无关。
  *
  * 用法： pnpm tsx scripts/qlhd/build-tokens.ts
  */
@@ -8,6 +14,8 @@ import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { TOKEN_OWNERS } from './manual-mappings.js';
+
+// readFileSync 仅用于读 generals.json 校验 ownerGeneralId；本脚本不读写 cards.json。
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const SRC = resolve(process.env.HOME!, 'qlhd-src/c国战 - Copy');
@@ -34,7 +42,10 @@ function tokenId(category: string, seq: number): string {
  * 会成为谁也不引用的孤儿，而 12 个零件又全都缺 backImage。
  */
 function pairUp(dir: string, assetDir: string, sharedBack?: string) {
-  const files = readdirSync(resolve(SRC, dir));
+  // 必须排序：tokenId 用的是贯穿全流程的全局 seq 计数器，序号直接取决于文件顺序，
+  // 而 readdirSync 不保证跨操作系统/文件系统返回稳定顺序。build-generals.ts 已为
+  // 同一个坑显式排过序（那里是 sorted = [...cards].sort(...)），这里保持一致。
+  const files = readdirSync(resolve(SRC, dir)).sort();
   const fronts = files.filter((f) => !/背面\.(png|jpg)$/i.test(f));
   const backs = new Map(
     files.filter((f) => /背面\.(png|jpg)$/i.test(f)).map((f) => [stem(f), f]),
@@ -116,7 +127,7 @@ function main() {
   }
 
   // —— 保留的君主牌 ——
-  for (const f of readdirSync(resolve(REPO_ROOT, 'assets/generals/emperors'))) {
+  for (const f of readdirSync(resolve(REPO_ROOT, 'assets/generals/emperors')).sort()) {
     if (/背面/.test(f)) continue;
     seq += 1;
     const m = /^国战UI\.EM\d+\.(.*?)\.([^.]+)\.png$/.exec(f);
@@ -188,25 +199,35 @@ function main() {
   console.log(`tokens.json: ${tokens.length} 条`);
   console.log(`  有归属 ${tokens.filter((t) => t.ownerGeneralId).length}`);
 
-  // —— 带花色点数的游戏牌并入 cards.json ——
-  const cardsPath = resolve(REPO_ROOT, 'packages/data/src/cards.json');
-  const cards = JSON.parse(readFileSync(cardsPath, 'utf8')) as Record<string, unknown>[];
-  const base = cards.filter((c) => c.image == null);   // 幂等：先剔除上次追加的
-  let added = 0;
-  for (const { file: f, m } of packCardFiles) {
-    added += 1;
-    base.push({
-      id: `qlhd_card_${String(added).padStart(3, '0')}`,
-      name: m[1],
-      type: 'trick',
-      suit: SUIT[m[2]],
-      number: m[3] === 'A' ? 1 : m[3] === 'J' ? 11 : m[3] === 'Q' ? 12 : m[3] === 'K' ? 13 : Number(m[3]),
-      description: '',
-      image: `cards/${webp(f)}`,
-    });
+  // —— 带花色点数的游戏牌写入 pack-cards.json ——
+  //
+  // **不并入 cards.json。** Card 类型要求 `type: 'basic'|'trick'|'equipment'`、
+  // `description` 和（装备牌的）`subtype`，而这些在只看文件名的前提下无从得知：
+  // 七星宝刀是武器、大明日光铠是防具、遁甲天书是宝物、敕令才是锦囊，把 19 张
+  // 一律写成 `type: 'trick'` 是往仓库里塞错数据，还会撞坏 cards.test.ts 里
+  // 「trick 牌必须有 subtype」「按类型计数」等既有断言。
+  //
+  // 这里只写文件名能确证的四个字段。将来若有人逐张核对了卡面，再补 type/description。
+  const packCards = packCardFiles.map(({ file: f, m }, i) => ({
+    id: `qlhd_card_${String(i + 1).padStart(3, '0')}`,
+    name: m[1],
+    suit: SUIT[m[2]],
+    number: m[3] === 'A' ? 1 : m[3] === 'J' ? 11 : m[3] === 'Q' ? 12 : m[3] === 'K' ? 13 : Number(m[3]),
+    image: `cards/${webp(f)}`,
+  }));
+
+  for (const c of packCards) {
+    if (!existsSync(resolve(REPO_ROOT, 'assets', c.image))) {
+      throw new Error(`游戏牌图片不存在: ${c.image}`);
+    }
   }
-  writeFileSync(cardsPath, JSON.stringify(base, null, 2) + '\n', 'utf8');
-  console.log(`cards.json: 标准牌 ${base.length - added} 条 + 群狼环鼎 ${added} 条`);
+
+  writeFileSync(
+    resolve(REPO_ROOT, 'packages/data/src/pack-cards.json'),
+    JSON.stringify(packCards, null, 2) + '\n',
+    'utf8',
+  );
+  console.log(`pack-cards.json: ${packCards.length} 条`);
 }
 
 main();
