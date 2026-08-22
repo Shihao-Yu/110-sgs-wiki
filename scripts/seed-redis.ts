@@ -14,10 +14,18 @@
  *   UPSTASH_REDIS_REST_URL=... UPSTASH_REDIS_REST_TOKEN=... \
  *     pnpm seed-redis -- --yes --replace
  *
- *   Deletes every general:* / skill:* / skills:by-general:* key, both index
- *   keys, and ALL rating data (ratings:all + ratings:log:*), then seeds fresh.
- *   Used when swapping the entire general pack — stale IDs from the previous
- *   pack would otherwise linger in generals:index and render as ghost pages.
+ *   Deletes every general:* / skills:by-general:* / skill:* key **that is
+ *   referenced by generals:index or skills:index**, both index keys, and ALL
+ *   rating data (ratings:all + ratings:log:*), then seeds fresh.
+ *
+ *   删除是 index 驱动的，不是 SCAN 驱动的 —— 未被两个 index 引用的孤儿值键
+ *   （例如 putGeneral 写完值键后 index 更新失败留下的残骸）不在删除范围内。
+ *   这一点很重要：/generals/[id] 没有设 dynamicParams = false，index 之外的
+ *   id 会走按需渲染并直接读值键，所以残留的孤儿值键才是 ghost page 的真正载体。
+ *   正常路径下不会产生孤儿键；若怀疑历史上有，需另行 SCAN 排查。
+ *
+ *   Add --dry-run to print the exact key set that WOULD be deleted and exit
+ *   without writing anything.
  */
 import "dotenv/config";
 import { readFileSync } from "node:fs";
@@ -33,6 +41,14 @@ const YES = args.has("--yes") || args.has("-y");
 const FORCE = args.has("--force");
 const REPLACE = args.has("--replace");
 const DRY_RUN = args.has("--dry-run");
+
+// --dry-run 只在 --replace 分支里被读取。若不加这道守卫，
+// `--yes --force --dry-run` 会绕过 index 守卫、直接执行一次完整 seed，
+// 把生产数据整体覆写 —— 一个名叫 dry-run 的开关触发了破坏性写入。
+if (DRY_RUN && !REPLACE) {
+  console.error("--dry-run 目前只对 --replace 有效；不带 --replace 时本脚本仍会写入。已中止。");
+  process.exit(2);
+}
 
 const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
 const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
@@ -87,14 +103,44 @@ const faqs = JSON.parse(readFileSync(resolve(dataDir, "faq.json"), "utf8")) as A
     }
 
     if (DRY_RUN) {
+      // 评分是本次唯一不可逆的损失，必须单独、具体地展示它的体量。
+      // 把它混在「generals:index / skills:index / ratings:all  3」这样的行里，
+      // 人看到「3」不会意识到自己正在批准销毁全站评分。
+      const ratingsAll =
+        (await r.get<Record<string, { total?: number }>>("ratings:all")) ?? {};
+      const ratedCount = Object.keys(ratingsAll).length;
+      const totalVotes = Object.values(ratingsAll).reduce(
+        (a, v) => a + (v?.total ?? 0),
+        0,
+      );
+
+      // 旧包有、新包没有的 ID —— 这些 URL 替换后会 404。
+      const newIds = new Set(generals.map((g) => g.id));
+      const vanishing = oldGeneralIds.filter((id) => !newIds.has(id));
+
       console.error(`>>> --dry-run: 以下 ${keys.length + logKeys.length} 个键**将会被删除**，本次不执行任何写操作`);
       console.error(`    general:*            ${oldGeneralIds.length}`);
       console.error(`    skills:by-general:*  ${oldGeneralIds.length}`);
       console.error(`    skill:*              ${oldSkillIds.length}`);
-      console.error(`    generals:index / skills:index / ratings:all   3`);
+      console.error(`    generals:index       1`);
+      console.error(`    skills:index         1`);
       console.error(`    ratings:log:*        ${logKeys.length}${logKeys.length ? ` (${logKeys.join(", ")})` : ""}`);
-      console.error(`>>> 随后会写入 ${generals.length} generals / ${skills.length} skills / ${faqs.length} faqs`);
-      console.error(`>>> dry-run 结束，Redis 未被改动`);
+      console.error(``);
+      console.error(`>>> ⚠️  ratings:all —— 这是不可逆的部分`);
+      console.error(`    ${ratedCount} 名武将有评分，合计 ${totalVotes} 票，删除后无法恢复`);
+      console.error(``);
+      console.error(`>>> 替换后将写入 ${generals.length} generals / ${skills.length} skills / ${faqs.length} faqs`);
+      if (vanishing.length > 0) {
+        console.error(`>>> ⚠️  ${vanishing.length} 个旧 ID 在新包中不存在，其 URL 将变成 404：`);
+        console.error(`    ${vanishing.join(", ")}`);
+      } else {
+        console.error(`>>> 所有旧 ID 在新包中都有对应条目，无 URL 失效`);
+      }
+      console.error(``);
+      console.error(`>>> dry-run 结束，Redis 未被改动。`);
+      console.error(`    注意：本次统计是此刻的快照。dry-run 与真正执行之间若有人投票或`);
+      console.error(`    在 admin 里改动数据，实际删除的键集合会与上面略有出入。`);
+      console.error(`    重跑 dry-run 是安全的（纯只读），执行前可再跑一次确认。`);
       process.exit(0);
     }
 
