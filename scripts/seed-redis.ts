@@ -90,7 +90,7 @@ const faqs = JSON.parse(readFileSync(resolve(dataDir, "faq.json"), "utf8")) as A
       "ratings:all",
     ];
 
-    // ratings:log:YYYYMMDD 需要枚举而不是猜日期；放在删除之前，
+    // ratings:log:YYYY-MM-DD 需要枚举而不是猜日期；放在删除之前，
     // 这样 --dry-run 也能报出完整的待删清单。
     const logKeys: string[] = [];
     {

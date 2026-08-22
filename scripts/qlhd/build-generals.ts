@@ -82,6 +82,7 @@ function main() {
 
   const generals: Out[] = [];
   let eunuchSeq = 0;
+  let xxxSeq = 0;
 
   for (const { parsed, file, dir } of sorted) {
     const key = `${parsed.faction}${parsed.cardNo}`;
@@ -95,8 +96,11 @@ function main() {
         id = `${EUNUCH_PARENT}_m${String(eunuchSeq).padStart(2, '0')}`;
         parentGeneralId = EUNUCH_PARENT;
       } else {
-        // 目前只有魏讽
-        id = `general_${parsed.faction.toLowerCase()}_xxx_${parsed.name}`;
+        // 非十常侍的 XXX 卡号（目前只有魏讽）。**不要把中文姓名拼进 id** ——
+        // validators.ts 的 GENERAL_ID_RE 是 /^general_[a-zA-Z0-9_]+$/，
+        // 非 ASCII id 会让 /session 保存整桌牌局时 422。
+        xxxSeq += 1;
+        id = `general_${parsed.faction.toLowerCase()}_xxx_${String(xxxSeq).padStart(2, '0')}`;
       }
     } else {
       const n = dupCount.get(key) ?? 0;

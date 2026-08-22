@@ -30,3 +30,6 @@ coverage/
 .omx/
 
 .venv-ocr/
+
+# superpowers SDD scratch
+.superpowers/
