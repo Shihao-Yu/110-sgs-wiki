@@ -3,6 +3,10 @@
 import type { Faction } from "@sgs/data";
 import Link from "next/link";
 import { assetUrl } from "@/lib/assets";
+import {
+  getGeneralPackVersion,
+  GENERAL_PACK_VERSION_LABEL,
+} from "../../../../../data/src/types/general";
 
 type GeneralCardProps = {
   id: string;
@@ -31,6 +35,8 @@ export default function GeneralCard({
   image,
 }: GeneralCardProps) {
   const gradient = factionGradient[faction];
+  const packVersion = getGeneralPackVersion(id);
+  const packVersionLabel = GENERAL_PACK_VERSION_LABEL[packVersion];
 
   return (
     <Link
@@ -55,6 +61,12 @@ export default function GeneralCard({
           }}
           src={assetUrl(image)}
         />
+
+        {/* Pack-version tag — both packs coexist and share many names/titles
+            (曹丕、貂蝉、诸葛亮…), so every card needs to say which one it is. */}
+        <span className="absolute right-1.5 top-1.5 z-10 rounded-full bg-ink/75 px-1.5 py-0.5 text-[10px] font-medium leading-none tracking-wide text-ivory shadow-sm dark:bg-night/80 dark:text-ivory-soft">
+          {packVersionLabel}
+        </span>
       </div>
 
       {/* Info area */}
