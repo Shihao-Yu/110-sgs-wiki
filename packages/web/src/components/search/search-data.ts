@@ -11,6 +11,10 @@ import tokensData from "../../../../data/src/tokens.json";
 import cardsData from "../../../../data/src/cards.json";
 import packCardsData from "../../../../data/src/pack-cards.json";
 import faqData from "../../../../data/src/faq.json";
+import {
+  getGeneralPackVersion,
+  GENERAL_PACK_VERSION_LABEL,
+} from "../../../../data/src/types/general";
 
 /* ------------------------------------------------------------------ */
 /*  Shared result type                                                 */
@@ -89,12 +93,15 @@ function buildSearchEntries(): SearchResult[] {
 
   // Generals — searchable by name + title.
   // 十常侍子卡没有独立详情页，链接指向父卡。
+  // 两版共存后同名武将很多（曹丕、貂蝉、诸葛亮……），副标题带版本前缀
+  // 区分，例如「国战 · 魏文帝」/「群狼环鼎 · 荡然由心」。
   for (const g of generals) {
+    const versionLabel = GENERAL_PACK_VERSION_LABEL[getGeneralPackVersion(g.id)];
     entries.push({
       id: g.id,
       type: "general",
       title: g.name,
-      subtitle: g.title,
+      subtitle: `${versionLabel} · ${g.title}`,
       href: `/generals/${g.parentGeneralId ?? g.id}`,
     });
   }

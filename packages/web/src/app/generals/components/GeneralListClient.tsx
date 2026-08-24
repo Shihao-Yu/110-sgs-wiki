@@ -4,8 +4,13 @@ import type { Faction } from "@sgs/data";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RATING_TIERS, type RatingTier } from "@/lib/ratings";
+import {
+  getGeneralPackVersion,
+  type GeneralPackVersion,
+} from "../../../../../data/src/types/general";
 import FactionFilter from "./FactionFilter";
 import GeneralCard from "./GeneralCard";
+import PackVersionFilter from "./PackVersionFilter";
 import RatingFilter, { type RatingFilterValue } from "./RatingFilter";
 import SearchBar from "./SearchBar";
 import SortSelect, { type SortKey } from "./SortSelect";
@@ -35,6 +40,7 @@ const FACTION_ORDER: Record<Faction, number> = {
 };
 
 const VALID_FACTIONS: ReadonlyArray<Faction> = ["WEI", "SHU", "WU", "QUN", "JIN"];
+const VALID_VERSIONS: ReadonlyArray<GeneralPackVersion> = ["guozhan", "qlhd"];
 const VALID_SORTS: ReadonlyArray<SortKey> = ["name", "id", "faction"];
 
 function parseFactions(raw: string | null): Set<Faction> {
@@ -43,6 +49,17 @@ function parseFactions(raw: string | null): Set<Faction> {
   for (const part of raw.split(",")) {
     if ((VALID_FACTIONS as ReadonlyArray<string>).includes(part)) {
       out.add(part as Faction);
+    }
+  }
+  return out;
+}
+
+function parseVersions(raw: string | null): Set<GeneralPackVersion> {
+  if (!raw) return new Set();
+  const out = new Set<GeneralPackVersion>();
+  for (const part of raw.split(",")) {
+    if ((VALID_VERSIONS as ReadonlyArray<string>).includes(part)) {
+      out.add(part as GeneralPackVersion);
     }
   }
   return out;
@@ -75,6 +92,7 @@ export default function GeneralListClient({
   // Lazy-init state from URL on first render so back-nav restores filters.
   const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [factions, setFactions] = useState<Set<Faction>>(() => parseFactions(searchParams.get("faction")));
+  const [packVersions, setPackVersions] = useState<Set<GeneralPackVersion>>(() => parseVersions(searchParams.get("version")));
   const [ratingFilter, setRatingFilter] = useState<RatingFilterValue>(() => parseRating(searchParams.get("rating")));
   const [sortKey, setSortKey] = useState<SortKey>(() => parseSort(searchParams.get("sort")));
 
@@ -88,11 +106,12 @@ export default function GeneralListClient({
     const params = new URLSearchParams();
     if (search.trim()) params.set("q", search.trim());
     if (factions.size > 0) params.set("faction", [...factions].join(","));
+    if (packVersions.size > 0) params.set("version", [...packVersions].join(","));
     if (ratingFilter !== "all") params.set("rating", ratingFilter);
     if (sortKey !== "faction") params.set("sort", sortKey);
     const qs = params.toString();
     router.replace(qs ? `/generals?${qs}` : "/generals", { scroll: false });
-  }, [search, factions, ratingFilter, sortKey, router]);
+  }, [search, factions, packVersions, ratingFilter, sortKey, router]);
 
   /* Restore scroll position from a prior visit, save on scroll. Lets users
    * return to the same card after viewing a general's detail page. */
@@ -132,12 +151,29 @@ export default function GeneralListClient({
     });
   };
 
+  const togglePackVersion = (version: GeneralPackVersion) => {
+    setPackVersions((prev) => {
+      const next = new Set(prev);
+      if (next.has(version)) {
+        next.delete(version);
+      } else {
+        next.add(version);
+      }
+      return next;
+    });
+  };
+
   const filtered = useMemo(() => {
     let result = generals;
 
     // Faction filter
     if (factions.size > 0) {
       result = result.filter((g) => factions.has(g.faction));
+    }
+
+    // Pack version filter (国战 / 群狼环鼎, judged by id prefix)
+    if (packVersions.size > 0) {
+      result = result.filter((g) => packVersions.has(getGeneralPackVersion(g.id)));
     }
 
     // Rating filter (by weighted-average tier)
@@ -177,7 +213,7 @@ export default function GeneralListClient({
     });
 
     return sorted;
-  }, [generals, factions, ratingFilter, search, sortKey]);
+  }, [generals, factions, packVersions, ratingFilter, search, sortKey]);
 
   return (
     <div className="space-y-6">
@@ -191,6 +227,8 @@ export default function GeneralListClient({
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             <FactionFilter onToggle={toggleFaction} selected={factions} />
             <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+            <PackVersionFilter onToggle={togglePackVersion} selected={packVersions} />
+            <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <RatingFilter onChange={setRatingFilter} selected={ratingFilter} />
               <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
@@ -201,7 +239,7 @@ export default function GeneralListClient({
           {/* Result count */}
           <p className="text-xs text-slate-500 dark:text-slate-400">
             共 {filtered.length} 名武将
-            {factions.size > 0 || ratingFilter !== "all" || search.trim()
+            {factions.size > 0 || packVersions.size > 0 || ratingFilter !== "all" || search.trim()
               ? `（已筛选，共 ${generals.length} 名）`
               : ""}
           </p>
@@ -236,6 +274,7 @@ export default function GeneralListClient({
             onClick={() => {
               setSearch("");
               setFactions(new Set());
+              setPackVersions(new Set());
               setRatingFilter("all");
             }}
             type="button"

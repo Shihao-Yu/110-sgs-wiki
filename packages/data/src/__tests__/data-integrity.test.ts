@@ -3,6 +3,7 @@ import generalsData from '../generals.json';
 import skillsData from '../skills.json';
 import tokensData from '../tokens.json';
 import packCardsData from '../pack-cards.json';
+import { getGeneralPackVersion } from '../types/general.js';
 
 interface General {
   id: string;
@@ -14,6 +15,13 @@ interface General {
   subfaction?: string;
   parentGeneralId?: string;
   isAmbitionist?: boolean;
+  [key: string]: unknown;
+}
+
+interface Skill {
+  id: string;
+  name: string;
+  generalIds?: string[];
   [key: string]: unknown;
 }
 
@@ -35,15 +43,23 @@ interface PackCard {
 }
 
 const generals = generalsData as General[];
-const skills = skillsData as unknown[];
+const skills = skillsData as Skill[];
 const tokens = tokensData as Token[];
 const packCards = packCardsData as PackCard[];
 
 const VALID_FACTIONS = new Set(['WEI', 'SHU', 'WU', 'QUN', 'JIN']);
 
+// 国战（旧包）与群狼环鼎（新包）现已合并共存于同一份 generals.json，版本判定
+// 统一走 getGeneralPackVersion（见 types/general.ts），这里不再自行散写 id
+// 前缀比较。
+const qlhdGenerals = generals.filter((g) => getGeneralPackVersion(g.id) === 'qlhd');
+const guozhanGenerals = generals.filter((g) => getGeneralPackVersion(g.id) === 'guozhan');
+
 describe('generals.json', () => {
-  it('has 395 entries', () => {
-    expect(generals).toHaveLength(395);
+  it('has 736 entries: 341 guozhan + 395 qlhd', () => {
+    expect(generals).toHaveLength(736);
+    expect(guozhanGenerals).toHaveLength(341);
+    expect(qlhdGenerals).toHaveLength(395);
   });
 
   it('every general has id, name, faction, image and pack', () => {
@@ -52,7 +68,7 @@ describe('generals.json', () => {
       expect(g.name, `general missing name: ${g.id}`).toBeTruthy();
       expect(g.faction, `general missing faction: ${g.id}`).toBeTruthy();
       expect(g.image, `general missing image: ${g.id}`).toBeTruthy();
-      expect(g.pack, `general missing pack: ${g.id}`).toBe('群狼环鼎');
+      expect(g.pack, `general missing pack: ${g.id}`).toBeTruthy();
     }
   });
 
@@ -62,12 +78,21 @@ describe('generals.json', () => {
     expect(duplicates, `duplicate IDs: ${duplicates.join(', ')}`).toHaveLength(0);
   });
 
+  it('qlhd ids are all prefixed general_qlhd_; guozhan ids never are', () => {
+    for (const g of qlhdGenerals) {
+      expect(g.id.startsWith('general_qlhd_'), `qlhd general missing prefix: ${g.id}`).toBe(true);
+    }
+    for (const g of guozhanGenerals) {
+      expect(g.id.startsWith('general_qlhd_'), `guozhan general unexpectedly prefixed: ${g.id}`).toBe(false);
+    }
+  });
+
   it('every faction and subfaction is a known code', () => {
     for (const g of generals) {
       expect(VALID_FACTIONS.has(g.faction), `${g.id} bad faction ${g.faction}`).toBe(true);
-      // 两条 subfaction 断言都要放进守卫里：全部 395 条中只有 16 条带 subfaction，
-      // 无条件跑 `expect(undefined).not.toBe(<非空字符串>)` 对其余 379 条恒真，
-      // 写着「每个武将副势力≠主势力」却只验证了 4%，是误导。
+      // 两条 subfaction 断言都要放进守卫里：只有一部分武将带 subfaction，
+      // 无条件跑 `expect(undefined).not.toBe(<非空字符串>)` 对没有 subfaction
+      // 的武将恒真，写着「每个武将副势力≠主势力」却没有真正验证到它们，是误导。
       if (g.subfaction) {
         expect(VALID_FACTIONS.has(g.subfaction), `${g.id} bad subfaction ${g.subfaction}`).toBe(true);
         expect(g.subfaction, `${g.id} subfaction equals faction`).not.toBe(g.faction);
@@ -75,25 +100,47 @@ describe('generals.json', () => {
     }
   });
 
-  it('carries no skill data in this pack', () => {
-    for (const g of generals) {
-      expect(g.skills, `general ${g.id} should have empty skills`).toEqual([]);
+  it('every image path is valid for its pack version', () => {
+    for (const g of qlhdGenerals) {
+      expect(
+        g.image.startsWith('generals/') && !g.image.startsWith('generals/guozhan/'),
+        `${g.id} qlhd image should sit directly under generals/: ${g.image}`,
+      ).toBe(true);
+      expect(g.image.endsWith('.webp'), `${g.id} qlhd image not webp: ${g.image}`).toBe(true);
+    }
+    for (const g of guozhanGenerals) {
+      expect(
+        g.image.startsWith('generals/guozhan/'),
+        `${g.id} guozhan image should sit under generals/guozhan/: ${g.image}`,
+      ).toBe(true);
+      expect(g.image.endsWith('.webp'), `${g.id} guozhan image not webp: ${g.image}`).toBe(true);
     }
   });
 
-  it('every image path points under generals/', () => {
-    for (const g of generals) {
-      expect(g.image.startsWith('generals/'), `${g.id} bad image path ${g.image}`).toBe(true);
-      expect(g.image.endsWith('.webp') || g.image.endsWith('.png'), `${g.id} bad ext`).toBe(true);
+  it('qlhd pack has exactly 3 ambitionist, 10 eunuch members and 16 dual-faction generals', () => {
+    expect(qlhdGenerals.filter((g) => g.isAmbitionist)).toHaveLength(3);
+    expect(qlhdGenerals.filter((g) => g.parentGeneralId)).toHaveLength(10);
+    expect(qlhdGenerals.filter((g) => g.subfaction)).toHaveLength(16);
+  });
+
+  it('qlhd pack: skills are always empty and pack label is always 群狼环鼎', () => {
+    for (const g of qlhdGenerals) {
+      expect(g.skills, `qlhd general ${g.id} should have empty skills`).toEqual([]);
+      expect(g.pack, `qlhd general ${g.id} pack mismatch`).toBe('群狼环鼎');
     }
   });
 
-  it('has exactly 3 ambitionist, 10 eunuch members and 16 dual-faction generals', () => {
-    expect(generals.filter((g) => g.isAmbitionist)).toHaveLength(3);
-    expect(generals.filter((g) => g.parentGeneralId)).toHaveLength(10);
-    // 这条计数是上面那个 `if (g.subfaction)` 守卫的配套保险：没有它，
-    // 万一哪天 subfaction 数据整体丢失，被守卫包住的两条断言会全部跳过而测试照样绿。
-    expect(generals.filter((g) => g.subfaction)).toHaveLength(16);
+  it('guozhan pack: skills are not required to be empty (6 generals carry a real, non-placeholder skill)', () => {
+    const skillNameById = new Map(skills.map((s) => [s.id, s.name]));
+    const withRealSkill = guozhanGenerals.filter((g) =>
+      g.skills.some((sid) => skillNameById.get(sid) !== '未知'),
+    );
+    expect(withRealSkill).toHaveLength(6);
+  });
+
+  it('guozhan pack: pack field takes several known values, not a single one', () => {
+    const packValues = new Set(guozhanGenerals.map((g) => g.pack));
+    expect(packValues).toEqual(new Set(['国战', '标准版', '山', '林', '火', '风']));
   });
 
   it('every parentGeneralId resolves to an existing general', () => {
@@ -106,8 +153,17 @@ describe('generals.json', () => {
 });
 
 describe('skills.json', () => {
-  it('is empty — this pack ships images only', () => {
-    expect(skills).toHaveLength(0);
+  it('has 442 entries', () => {
+    expect(skills).toHaveLength(442);
+  });
+
+  it('every general skill reference resolves to a real skill', () => {
+    const skillIds = new Set(skills.map((s) => s.id));
+    for (const g of generals) {
+      for (const sid of g.skills) {
+        expect(skillIds.has(sid), `${g.id} references unknown skill ${sid}`).toBe(true);
+      }
+    }
   });
 });
 

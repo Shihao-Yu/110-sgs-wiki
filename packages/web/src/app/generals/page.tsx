@@ -11,7 +11,7 @@ const section = getNavigationItemBySlug("generals");
 
 export const metadata: Metadata = {
   title: section?.label ?? "武将",
-  description: "三国杀国战武将图鉴 — 群狼环鼎武将包，按势力筛选，按武将名与称号搜索。",
+  description: "三国杀国战武将图鉴 — 国战与群狼环鼎两版武将包共存，按版本、势力筛选，按武将名与称号搜索。",
 };
 
 export default async function GeneralsPage() {
@@ -39,7 +39,7 @@ export default async function GeneralsPage() {
         <span className="eyebrow">武将</span>
         <h1 className="section-title mt-3">武将图鉴</h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
-          浏览群狼环鼎武将包全部 {entries.length} 名武将，按势力筛选，或搜索武将名与称号。
+          浏览国战与群狼环鼎两版武将包共 {entries.length} 名武将，按版本、势力筛选，或搜索武将名与称号。
         </p>
       </header>
 
