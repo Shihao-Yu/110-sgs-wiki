@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * 从解压素材生成 packages/data/src/generals.json（395 条）。
+ * 从解压素材生成 packages/data/src/qlhd-generals.json（395 条，id 带 general_qlhd_ 前缀）。
  *
  * 用法： pnpm tsx scripts/qlhd/build-generals.ts
  */
@@ -14,7 +14,7 @@ import { DUAL_FACTION, UUID_FILE_MAP, EUNUCH_ORDER } from './manual-mappings.js'
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const SRC = resolve(process.env.HOME!, 'qlhd-src/c国战 - Copy');
 const PACK = '群狼环鼎';
-const EUNUCH_PARENT = 'general_qun_000';
+const EUNUCH_PARENT = 'general_qlhd_qun_000';
 
 /** 十常侍目录里这三张是标记牌，不是武将卡。 */
 const NON_GENERAL_IN_EUNUCH_DIR = new Set([
@@ -100,12 +100,14 @@ function main() {
         // validators.ts 的 GENERAL_ID_RE 是 /^general_[a-zA-Z0-9_]+$/，
         // 非 ASCII id 会让 /session 保存整桌牌局时 422。
         xxxSeq += 1;
-        id = `general_${parsed.faction.toLowerCase()}_xxx_${String(xxxSeq).padStart(2, '0')}`;
+        id = `general_qlhd_${parsed.faction.toLowerCase()}_xxx_${String(xxxSeq).padStart(2, '0')}`;
       }
     } else {
       const n = dupCount.get(key) ?? 0;
       dupCount.set(key, n + 1);
-      id = generalIdFor(parsed.faction, parsed.cardNo, n);
+      // generalIdFor 产出不带版本前缀的 id（旧包沿用的格式）；这里补上 qlhd_ 段
+      // 以区分两版共存的数据，同时仍以 general_ 开头，满足 validators.ts 的 GENERAL_ID_RE。
+      id = generalIdFor(parsed.faction, parsed.cardNo, n).replace(/^general_/, 'general_qlhd_');
     }
 
     // 有卡号的十常侍成员（张让 QUN038 / 赵忠 QUN118）也要挂到父卡
@@ -146,7 +148,7 @@ function main() {
     if (!existsSync(p)) throw new Error(`图片不存在: ${g.image} (${g.id} ${g.name})`);
   }
 
-  const dest = resolve(REPO_ROOT, 'packages/data/src/generals.json');
+  const dest = resolve(REPO_ROOT, 'packages/data/src/qlhd-generals.json');
   writeFileSync(dest, JSON.stringify(generals, null, 2) + '\n', 'utf8');
   console.log(`写入 ${generals.length} 条 -> ${dest}`);
   console.log(`  野心家 ${generals.filter((g) => g.isAmbitionist).length}`);
