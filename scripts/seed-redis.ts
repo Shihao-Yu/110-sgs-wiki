@@ -15,8 +15,19 @@
  *     pnpm seed-redis -- --yes --replace
  *
  *   Deletes every general:* / skills:by-general:* / skill:* key **that is
- *   referenced by generals:index or skills:index**, both index keys, and ALL
- *   rating data (ratings:all + ratings:log:*), then seeds fresh.
+ *   referenced by generals:index or skills:index**, both index keys, then
+ *   seeds fresh.
+ *
+ *   Rating data (ratings:all + ratings:log:*) is PRESERVED by default. This
+ *   used to be a full-pack replacement (old generals vanish, so their
+ *   ratings became orphans and were wiped alongside them). The pack strategy
+ *   changed to two versions coexisting: all 341 old-pack general ids are
+ *   still present, unchanged, in the merged 736-entry pack, so ratings
+ *   recorded against those ids are still live data, not orphans. Pass
+ *   --wipe-ratings to opt into the old behavior (deletes ratings:all +
+ *   ratings:log:* too). --wipe-ratings only makes sense together with
+ *   --replace; without --replace it errors out instead of being silently
+ *   ignored.
  *
  *   删除是 index 驱动的，不是 SCAN 驱动的 —— 未被两个 index 引用的孤儿值键
  *   （例如 putGeneral 写完值键后 index 更新失败留下的残骸）不在删除范围内。
@@ -41,12 +52,20 @@ const YES = args.has("--yes") || args.has("-y");
 const FORCE = args.has("--force");
 const REPLACE = args.has("--replace");
 const DRY_RUN = args.has("--dry-run");
+const WIPE_RATINGS = args.has("--wipe-ratings");
 
 // --dry-run 只在 --replace 分支里被读取。若不加这道守卫，
 // `--yes --force --dry-run` 会绕过 index 守卫、直接执行一次完整 seed，
 // 把生产数据整体覆写 —— 一个名叫 dry-run 的开关触发了破坏性写入。
 if (DRY_RUN && !REPLACE) {
   console.error("--dry-run 目前只对 --replace 有效；不带 --replace 时本脚本仍会写入。已中止。");
+  process.exit(2);
+}
+
+// --wipe-ratings 只在 --replace 分支里被读取，本身不该在其他模式下
+// 被静默忽略 —— 那会让人以为传了参数就生效，其实评分完好无损地留在库里。
+if (WIPE_RATINGS && !REPLACE) {
+  console.error("--wipe-ratings 只在 --replace 下有效；不带 --replace 时本脚本不会碰 ratings:*。已中止。");
   process.exit(2);
 }
 
@@ -87,13 +106,14 @@ const faqs = JSON.parse(readFileSync(resolve(dataDir, "faq.json"), "utf8")) as A
       ...oldSkillIds.map((id) => `skill:${id}`),
       "generals:index",
       "skills:index",
-      "ratings:all",
+      ...(WIPE_RATINGS ? ["ratings:all"] : []),
     ];
 
     // ratings:log:YYYY-MM-DD 需要枚举而不是猜日期；放在删除之前，
-    // 这样 --dry-run 也能报出完整的待删清单。
+    // 这样 --dry-run 也能报出完整的待删清单。默认（未加 --wipe-ratings）
+    // 不删评分，也就没必要为了一份不会被删的清单去扫一遍 Redis。
     const logKeys: string[] = [];
-    {
+    if (WIPE_RATINGS) {
       let cursor = "0";
       do {
         const [next, batch] = await r.scan(cursor, { match: "ratings:log:*", count: 200 });
@@ -103,9 +123,9 @@ const faqs = JSON.parse(readFileSync(resolve(dataDir, "faq.json"), "utf8")) as A
     }
 
     if (DRY_RUN) {
-      // 评分是本次唯一不可逆的损失，必须单独、具体地展示它的体量。
-      // 把它混在「generals:index / skills:index / ratings:all  3」这样的行里，
-      // 人看到「3」不会意识到自己正在批准销毁全站评分。
+      // 评分是唯一可能不可逆的部分，必须单独、具体地展示它的体量——
+      // 不论这次是保留还是删除，都不能把它混进「generals:index / skills:index
+      // 2」这样的行里，让人看不出自己正在批准（或放过）全站评分。
       const ratingsAll =
         (await r.get<Record<string, { total?: number }>>("ratings:all")) ?? {};
       const ratedCount = Object.keys(ratingsAll).length;
@@ -124,10 +144,16 @@ const faqs = JSON.parse(readFileSync(resolve(dataDir, "faq.json"), "utf8")) as A
       console.error(`    skill:*              ${oldSkillIds.length}`);
       console.error(`    generals:index       1`);
       console.error(`    skills:index         1`);
-      console.error(`    ratings:log:*        ${logKeys.length}${logKeys.length ? ` (${logKeys.join(", ")})` : ""}`);
-      console.error(``);
-      console.error(`>>> ⚠️  ratings:all —— 这是不可逆的部分`);
-      console.error(`    ${ratedCount} 名武将有评分，合计 ${totalVotes} 票，删除后无法恢复`);
+      if (WIPE_RATINGS) {
+        console.error(`    ratings:log:*        ${logKeys.length}${logKeys.length ? ` (${logKeys.join(", ")})` : ""}`);
+        console.error(``);
+        console.error(`>>> ⚠️  ratings:all —— 这是不可逆的部分`);
+        console.error(`    ${ratedCount} 名武将有评分，合计 ${totalVotes} 票，删除后无法恢复`);
+      } else {
+        console.error(`    ratings:log:*        0（不删除；未加 --wipe-ratings）`);
+        console.error(``);
+        console.error(`>>> ratings:all —— ${ratedCount} 名武将有评分，合计 ${totalVotes} 票（本次保留，未加 --wipe-ratings）`);
+      }
       console.error(``);
       console.error(`>>> 替换后将写入 ${generals.length} generals / ${skills.length} skills / ${faqs.length} faqs`);
       if (vanishing.length > 0) {
