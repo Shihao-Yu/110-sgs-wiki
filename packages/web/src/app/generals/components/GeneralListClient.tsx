@@ -4,9 +4,13 @@ import type { Faction } from "@sgs/data";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RATING_TIERS, type RatingTier } from "@/lib/ratings";
+import {
+  getGeneralPackVersion,
+  type GeneralPackVersion,
+} from "../../../../../data/src/types/general";
 import FactionFilter from "./FactionFilter";
 import GeneralCard from "./GeneralCard";
-import HpFilter from "./HpFilter";
+import PackVersionFilter from "./PackVersionFilter";
 import RatingFilter, { type RatingFilterValue } from "./RatingFilter";
 import SearchBar from "./SearchBar";
 import SortSelect, { type SortKey } from "./SortSelect";
@@ -20,7 +24,6 @@ export type GeneralEntry = {
   faction: Faction;
   hp: number;
   image: string;
-  skillNames: string[];
   averageTier: RatingTier | null;
 };
 
@@ -37,7 +40,7 @@ const FACTION_ORDER: Record<Faction, number> = {
 };
 
 const VALID_FACTIONS: ReadonlyArray<Faction> = ["WEI", "SHU", "WU", "QUN", "JIN"];
-const VALID_HPS = new Set([3, 4, 5]);
+const VALID_VERSIONS: ReadonlyArray<GeneralPackVersion> = ["guozhan", "qlhd"];
 const VALID_SORTS: ReadonlyArray<SortKey> = ["name", "id", "faction"];
 
 function parseFactions(raw: string | null): Set<Faction> {
@@ -51,15 +54,21 @@ function parseFactions(raw: string | null): Set<Faction> {
   return out;
 }
 
+function parseVersions(raw: string | null): Set<GeneralPackVersion> {
+  if (!raw) return new Set();
+  const out = new Set<GeneralPackVersion>();
+  for (const part of raw.split(",")) {
+    if ((VALID_VERSIONS as ReadonlyArray<string>).includes(part)) {
+      out.add(part as GeneralPackVersion);
+    }
+  }
+  return out;
+}
+
 function parseRating(raw: string | null): RatingFilterValue {
   if (raw === "unrated") return "unrated";
   if (raw && (RATING_TIERS as ReadonlyArray<string>).includes(raw)) return raw as RatingTier;
   return "all";
-}
-
-function parseHp(raw: string | null): number {
-  const n = raw == null ? 0 : Number.parseInt(raw, 10);
-  return VALID_HPS.has(n) ? n : 0;
 }
 
 function parseSort(raw: string | null): SortKey {
@@ -70,7 +79,7 @@ function parseSort(raw: string | null): SortKey {
 function fuzzyMatch(text: string, query: string): boolean {
   const lower = text.toLowerCase();
   const q = query.toLowerCase();
-  // Simple substring match -- covers name, title, skill names
+  // Simple substring match -- covers name, title
   return lower.includes(q);
 }
 
@@ -83,7 +92,7 @@ export default function GeneralListClient({
   // Lazy-init state from URL on first render so back-nav restores filters.
   const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [factions, setFactions] = useState<Set<Faction>>(() => parseFactions(searchParams.get("faction")));
-  const [hpFilter, setHpFilter] = useState(() => parseHp(searchParams.get("hp"))); // 0 = all
+  const [packVersions, setPackVersions] = useState<Set<GeneralPackVersion>>(() => parseVersions(searchParams.get("version")));
   const [ratingFilter, setRatingFilter] = useState<RatingFilterValue>(() => parseRating(searchParams.get("rating")));
   const [sortKey, setSortKey] = useState<SortKey>(() => parseSort(searchParams.get("sort")));
 
@@ -97,12 +106,12 @@ export default function GeneralListClient({
     const params = new URLSearchParams();
     if (search.trim()) params.set("q", search.trim());
     if (factions.size > 0) params.set("faction", [...factions].join(","));
-    if (hpFilter > 0) params.set("hp", String(hpFilter));
+    if (packVersions.size > 0) params.set("version", [...packVersions].join(","));
     if (ratingFilter !== "all") params.set("rating", ratingFilter);
     if (sortKey !== "faction") params.set("sort", sortKey);
     const qs = params.toString();
     router.replace(qs ? `/generals?${qs}` : "/generals", { scroll: false });
-  }, [search, factions, hpFilter, ratingFilter, sortKey, router]);
+  }, [search, factions, packVersions, ratingFilter, sortKey, router]);
 
   /* Restore scroll position from a prior visit, save on scroll. Lets users
    * return to the same card after viewing a general's detail page. */
@@ -142,6 +151,18 @@ export default function GeneralListClient({
     });
   };
 
+  const togglePackVersion = (version: GeneralPackVersion) => {
+    setPackVersions((prev) => {
+      const next = new Set(prev);
+      if (next.has(version)) {
+        next.delete(version);
+      } else {
+        next.add(version);
+      }
+      return next;
+    });
+  };
+
   const filtered = useMemo(() => {
     let result = generals;
 
@@ -150,13 +171,9 @@ export default function GeneralListClient({
       result = result.filter((g) => factions.has(g.faction));
     }
 
-    // HP filter
-    if (hpFilter > 0) {
-      if (hpFilter >= 5) {
-        result = result.filter((g) => g.hp >= 5);
-      } else {
-        result = result.filter((g) => g.hp === hpFilter);
-      }
+    // Pack version filter (国战 / 群狼环鼎, judged by id prefix)
+    if (packVersions.size > 0) {
+      result = result.filter((g) => packVersions.has(getGeneralPackVersion(g.id)));
     }
 
     // Rating filter (by weighted-average tier)
@@ -166,14 +183,13 @@ export default function GeneralListClient({
       result = result.filter((g) => g.averageTier === ratingFilter);
     }
 
-    // Search filter (fuzzy match on name, title, skill names, average tier)
+    // Search filter (fuzzy match on name, title, average tier)
     if (search.trim()) {
       const q = search.trim();
       result = result.filter(
         (g) =>
           fuzzyMatch(g.name, q) ||
           fuzzyMatch(g.title, q) ||
-          g.skillNames.some((s) => fuzzyMatch(s, q)) ||
           (g.averageTier != null && fuzzyMatch(g.averageTier, q))
       );
     }
@@ -197,7 +213,7 @@ export default function GeneralListClient({
     });
 
     return sorted;
-  }, [generals, factions, hpFilter, ratingFilter, search, sortKey]);
+  }, [generals, factions, packVersions, ratingFilter, search, sortKey]);
 
   return (
     <div className="space-y-6">
@@ -211,9 +227,9 @@ export default function GeneralListClient({
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             <FactionFilter onToggle={toggleFaction} selected={factions} />
             <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+            <PackVersionFilter onToggle={togglePackVersion} selected={packVersions} />
+            <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-              <HpFilter onChange={setHpFilter} selected={hpFilter} />
-              <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
               <RatingFilter onChange={setRatingFilter} selected={ratingFilter} />
               <div className="hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
               <SortSelect onChange={setSortKey} value={sortKey} />
@@ -223,7 +239,7 @@ export default function GeneralListClient({
           {/* Result count */}
           <p className="text-xs text-slate-500 dark:text-slate-400">
             共 {filtered.length} 名武将
-            {factions.size > 0 || hpFilter > 0 || ratingFilter !== "all" || search.trim()
+            {factions.size > 0 || packVersions.size > 0 || ratingFilter !== "all" || search.trim()
               ? `（已筛选，共 ${generals.length} 名）`
               : ""}
           </p>
@@ -258,7 +274,7 @@ export default function GeneralListClient({
             onClick={() => {
               setSearch("");
               setFactions(new Set());
-              setHpFilter(0);
+              setPackVersions(new Set());
               setRatingFilter("all");
             }}
             type="button"

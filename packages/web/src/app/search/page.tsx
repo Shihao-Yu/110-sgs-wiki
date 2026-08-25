@@ -3,7 +3,7 @@ import SearchResultsClient from "./SearchResultsClient";
 
 export const metadata: Metadata = {
   title: "搜索",
-  description: "三国杀国战 Wiki 全站搜索 — 武将、技能、卡牌、FAQ。",
+  description: "三国杀国战 Wiki 全站搜索 — 武将、标记牌、卡牌、FAQ。",
 };
 
 export default function SearchPage() {

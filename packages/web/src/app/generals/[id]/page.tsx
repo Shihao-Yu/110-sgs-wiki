@@ -11,6 +11,9 @@ import AdminFaqEdit from "./components/AdminFaqEdit";
 import GeneralImage from "./components/GeneralImage";
 import SkillCard from "./components/SkillCard";
 import { assetUrl } from "@/lib/assets";
+import type { Token } from "@sgs/data";
+import tokensData from "../../../../../data/src/tokens.json";
+import TokenStrip from "./components/TokenStrip";
 
 /* ---------- Types for the raw shapes ---------- */
 
@@ -63,7 +66,9 @@ const FACTION_GRADIENT: Record<Faction, string> = {
 
 export async function generateStaticParams() {
   const all = await entityStore.getGenerals();
-  return all.map((g) => ({ id: g.id as unknown as string }));
+  return all
+    .filter((g) => !(g as { parentGeneralId?: string }).parentGeneralId)
+    .map((g) => ({ id: g.id as unknown as string }));
 }
 
 /* ---------- Dynamic metadata ---------- */
@@ -78,7 +83,7 @@ export async function generateMetadata({
   if (!g) return { title: "未找到武将" };
   return {
     title: `${g.name} · ${g.title}`,
-    description: `${g.name}（${g.title}）— ${FACTION_META[g.faction].label}势力，${g.hp}体力。三国杀国战武将详情与技能说明。`,
+    description: `${g.name}（${g.title}）— ${FACTION_META[g.faction].label}势力。三国杀国战武将详情。`,
   };
 }
 
@@ -127,6 +132,20 @@ export default async function GeneralDetailPage({ params }: PageProps) {
 
   /* Visitor ratings (5-tier voting); empty map if KV unavailable */
   const ratings = await entityStore.getRatings();
+
+  /* 关联标记牌（构建期静态数据，不走 Redis） */
+  const allTokens = tokensData as unknown as Token[];
+  const generalTokens = allTokens.filter(
+    (t) => (t.ownerGeneralId as unknown as string) === (general.id as unknown as string),
+  );
+
+  /* 十常侍等父卡的成员子卡 */
+  const memberGenerals = allGeneralsRaw.filter(
+    (g) =>
+      (g as { parentGeneralId?: string }).parentGeneralId ===
+      (general.id as unknown as string),
+  );
+
   const rating = ratings[general.id as unknown as string] ?? null;
 
   return (
@@ -194,28 +213,6 @@ export default async function GeneralDetailPage({ params }: PageProps) {
               </p>
             </div>
 
-            {/* HP hearts */}
-            <div>
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                体力值
-              </p>
-              <div className="flex items-center gap-1.5">
-                {Array.from({ length: general.maxHp }, (_, i) => (
-                  <span
-                    key={i}
-                    className={`block h-5 w-5 rounded-full border shadow-sm ${
-                      i < general.hp
-                        ? "border-red-400/50 bg-red-500 shadow-red-900/30"
-                        : "border-slate-300/50 bg-slate-200 dark:border-slate-600/50 dark:bg-slate-700"
-                    }`}
-                  />
-                ))}
-                <span className="ml-2 text-sm font-medium text-slate-600 dark:text-slate-300">
-                  {general.hp} / {general.maxHp}
-                </span>
-              </div>
-            </div>
-
             {/* Meta info */}
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-500 dark:text-slate-400">
               <span>
@@ -252,6 +249,41 @@ export default async function GeneralDetailPage({ params }: PageProps) {
                 </div>
               );
             })}
+          </div>
+        </section>
+      )}
+
+      {/* 关联标记牌 */}
+      {generalTokens.length > 0 && (
+        <section className="mt-10">
+          <h2 className="section-title mb-5">关联标记牌</h2>
+          <TokenStrip tokens={generalTokens} />
+        </section>
+      )}
+
+      {/* 成员子卡（十常侍） */}
+      {memberGenerals.length > 0 && (
+        <section className="mt-10">
+          <h2 className="section-title mb-5">成员（{memberGenerals.length}）</h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+            {memberGenerals.map((m) => (
+              <figure
+                key={m.id as unknown as string}
+                className="overflow-hidden rounded-xl border border-slate-200/80 bg-white/85 shadow-sm dark:border-slate-800/80 dark:bg-slate-950/80"
+              >
+                <div className="aspect-[3/4] overflow-hidden bg-slate-100 dark:bg-slate-900">
+                  <img
+                    alt={m.name}
+                    className="h-full w-full object-cover object-top"
+                    loading="lazy"
+                    src={assetUrl(m.image)}
+                  />
+                </div>
+                <figcaption className="px-2.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-200">
+                  {m.name}
+                </figcaption>
+              </figure>
+            ))}
           </div>
         </section>
       )}

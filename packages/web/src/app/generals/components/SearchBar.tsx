@@ -26,7 +26,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
       <input
         className="w-full rounded-xl border border-slate-200/80 bg-white/80 py-3 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand/40 focus:outline-none focus:ring-2 focus:ring-brand/20 sm:py-2.5 dark:border-slate-700/80 dark:bg-slate-900/80 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-brand/50 dark:focus:ring-brand/30"
         onChange={(e) => onChange(e.target.value)}
-        placeholder="搜索武将名、称号、技能名…"
+        placeholder="搜索武将名、称号…"
         type="text"
         value={value}
       />

@@ -1,5 +1,13 @@
 #!/usr/bin/env tsx
 /**
+ * ⚠️ 已作废：本脚本属于「群狼环鼎」替换之前的旧数据管线，请勿运行。
+ *
+ * 群狼环鼎替换（2026-08）之后，generals.json / skills.json 由
+ * scripts/qlhd/build-generals.ts 与 build-tokens.ts 生成。
+ * 运行本脚本会用旧数据覆写它们，静默回滚整批替换工作。
+ */
+
+/**
  * One-off: production Redis has Cao Cao's image field set to a stale path
  * (`images/generals/general_wei_001.jpg`) that does not exist on the CDN.
  * The correct path lives in packages/data/src/generals.json.

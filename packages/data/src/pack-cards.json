@@ -1,0 +1,135 @@
+[
+  {
+    "id": "qlhd_card_001",
+    "name": "七星宝刀",
+    "suit": "spade",
+    "number": 13,
+    "image": "cards/七星宝刀.♠.K.webp"
+  },
+  {
+    "id": "qlhd_card_002",
+    "name": "冲应神符",
+    "suit": "heart",
+    "number": 1,
+    "image": "cards/冲应神符.♥.A.webp"
+  },
+  {
+    "id": "qlhd_card_003",
+    "name": "大明日光铠",
+    "suit": "club",
+    "number": 2,
+    "image": "cards/大明日光铠.♣.2.webp"
+  },
+  {
+    "id": "qlhd_card_004",
+    "name": "天雷刃",
+    "suit": "spade",
+    "number": 1,
+    "image": "cards/天雷刃.♠.A.webp"
+  },
+  {
+    "id": "qlhd_card_005",
+    "name": "太极拂尘",
+    "suit": "heart",
+    "number": 1,
+    "image": "cards/太极拂尘.♥.A.webp"
+  },
+  {
+    "id": "qlhd_card_006",
+    "name": "孔明灯",
+    "suit": "diamond",
+    "number": 2,
+    "image": "cards/孔明灯.♦.2.webp"
+  },
+  {
+    "id": "qlhd_card_007",
+    "name": "敕令",
+    "suit": "club",
+    "number": 3,
+    "image": "cards/敕令.♣.3.webp"
+  },
+  {
+    "id": "qlhd_card_008",
+    "name": "水波剑",
+    "suit": "club",
+    "number": 1,
+    "image": "cards/水波剑.♣.A.webp"
+  },
+  {
+    "id": "qlhd_card_009",
+    "name": "混毒弯匕",
+    "suit": "spade",
+    "number": 1,
+    "image": "cards/混毒弯匕.♠.A.webp"
+  },
+  {
+    "id": "qlhd_card_010",
+    "name": "灵宝仙葫",
+    "suit": "heart",
+    "number": 1,
+    "image": "cards/灵宝仙葫.♥.A.webp"
+  },
+  {
+    "id": "qlhd_card_011",
+    "name": "烈淬刃",
+    "suit": "diamond",
+    "number": 1,
+    "image": "cards/烈淬刃.♦.A.webp"
+  },
+  {
+    "id": "qlhd_card_012",
+    "name": "红缎枪",
+    "suit": "heart",
+    "number": 1,
+    "image": "cards/红缎枪.♥.A.webp"
+  },
+  {
+    "id": "qlhd_card_013",
+    "name": "袖箭",
+    "suit": "club",
+    "number": 12,
+    "image": "cards/袖箭.♣.Q.webp"
+  },
+  {
+    "id": "qlhd_card_014",
+    "name": "调虎离山",
+    "suit": "heart",
+    "number": 2,
+    "image": "cards/调虎离山.♥.2.webp"
+  },
+  {
+    "id": "qlhd_card_015",
+    "name": "调虎离山",
+    "suit": "diamond",
+    "number": 10,
+    "image": "cards/调虎离山.♦.10.webp"
+  },
+  {
+    "id": "qlhd_card_016",
+    "name": "遁甲天书",
+    "suit": "spade",
+    "number": 3,
+    "image": "cards/遁甲天书.♠.3.webp"
+  },
+  {
+    "id": "qlhd_card_017",
+    "name": "锦囊袋",
+    "suit": "heart",
+    "number": 1,
+    "image": "cards/锦囊袋.♥.A.webp"
+  },
+  {
+    "id": "qlhd_card_018",
+    "name": "镗甲护心镜",
+    "suit": "club",
+    "number": 2,
+    "image": "cards/镗甲护心镜.♣.2.webp"
+  },
+  {
+    "id": "qlhd_card_019",
+    "name": "霹雳车",
+    "suit": "diamond",
+    "number": 9,
+    "image": "cards/霹雳车.♦.9.webp"
+  }
+]

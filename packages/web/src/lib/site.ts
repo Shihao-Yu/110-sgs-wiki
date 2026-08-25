@@ -9,7 +9,7 @@ export const navigationItems = [
     slug: "generals",
     href: "/generals",
     label: "武将",
-    description: "武将图鉴、技能说明，以及 FAQ 入口。",
+    description: "武将图鉴、标记牌与 FAQ 入口。",
     cardClassName:
       "border-wei/20 bg-gradient-to-br from-wei/10 via-white to-white dark:from-wei/20 dark:via-slate-950 dark:to-slate-900",
     pillClassName:
