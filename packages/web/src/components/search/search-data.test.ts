@@ -36,6 +36,22 @@ describe('search index', () => {
     expect(hits.some((h) => h.type === 'card' && h.title === '七星宝刀')).toBe(true);
   });
 
+  it('点数按 A/J/Q/K 显示，不是 1/11/12/13', () => {
+    // 七星宝刀卡面印的是 ♠K，此前副标题错显示成「♠13」。
+    const hit = search('七星宝刀').find((h) => h.type === 'card');
+    expect(hit?.subtitle).toContain('♠K');
+    expect(hit?.subtitle).not.toContain('13');
+  });
+
+  it('专属牌搜索结果直接指向其武将页', () => {
+    const hit = search('七星宝刀').find((h) => h.type === 'card');
+    expect(hit?.href).toBe('/generals/general_qlhd_shu_061');
+    expect(hit?.subtitle).toContain('诸葛果专属');
+    // 通用牌仍然去卡牌页
+    const generic = search('调虎离山').find((h) => h.type === 'card');
+    expect(generic?.href).toBe('/cards');
+  });
+
   it('十常侍子卡可搜且指向父卡详情页', () => {
     const hits = search('高望');
     const hit = hits.find((h) => h.type === 'general' && h.title === '高望');

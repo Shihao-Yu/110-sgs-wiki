@@ -13,6 +13,9 @@ import SkillCard from "./components/SkillCard";
 import { assetUrl } from "@/lib/assets";
 import type { Token } from "@sgs/data";
 import tokensData from "../../../../../data/src/tokens.json";
+import packCardsData from "../../../../../data/src/pack-cards.json";
+import PackGallery, { type GalleryItem } from "@/components/cards/PackGallery";
+import { suitRank } from "@/lib/card-display";
 import TokenStrip from "./components/TokenStrip";
 
 /* ---------- Types for the raw shapes ---------- */
@@ -139,6 +142,21 @@ export default async function GeneralDetailPage({ params }: PageProps) {
     (t) => (t.ownerGeneralId as unknown as string) === (general.id as unknown as string),
   );
 
+  /* 专属游戏牌：技能文本里以【牌名】点名的那些（如诸葛果的五件宝物） */
+  type RawPackCard = {
+    id: string; name: string; suit: string; number: number;
+    image: string; ownerGeneralId?: string;
+  };
+  const exclusiveCards: GalleryItem[] = (packCardsData as RawPackCard[])
+    .filter((c) => c.ownerGeneralId === (general.id as unknown as string))
+    .map((c) => ({
+      id: c.id,
+      name: c.name,
+      image: c.image,
+      note: suitRank(c.suit, c.number),
+      meta: [{ label: "花色点数", value: suitRank(c.suit, c.number) }],
+    }));
+
   /* 十常侍等父卡的成员子卡 */
   const memberGenerals = allGeneralsRaw.filter(
     (g) =>
@@ -252,6 +270,9 @@ export default async function GeneralDetailPage({ params }: PageProps) {
           </div>
         </section>
       )}
+
+      {/* 专属游戏牌 */}
+      <PackGallery items={exclusiveCards} title="专属牌" />
 
       {/* 关联标记牌 */}
       {generalTokens.length > 0 && (

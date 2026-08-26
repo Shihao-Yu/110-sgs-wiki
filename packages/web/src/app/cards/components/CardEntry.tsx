@@ -1,3 +1,5 @@
+import { displayNumber } from "@/lib/card-display";
+
 /* ------------------------------------------------------------------ */
 /*  Local types (avoids @sgs/data build-order dependency)              */
 /* ------------------------------------------------------------------ */
@@ -28,18 +30,6 @@ const SUIT_COLOR: Record<Suit, string> = {
   heart: "text-red-600 dark:text-red-400",
   diamond: "text-red-600 dark:text-red-400",
 };
-
-/* ------------------------------------------------------------------ */
-/*  Number display (A, 2-10, J, Q, K)                                  */
-/* ------------------------------------------------------------------ */
-
-function displayNumber(n: number): string {
-  if (n === 1) return "A";
-  if (n === 11) return "J";
-  if (n === 12) return "Q";
-  if (n === 13) return "K";
-  return String(n);
-}
 
 /* ------------------------------------------------------------------ */
 /*  Type / subtype labels and styles                                   */

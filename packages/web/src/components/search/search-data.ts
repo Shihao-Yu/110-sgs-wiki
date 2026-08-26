@@ -11,6 +11,7 @@ import tokensData from "../../../../data/src/tokens.json";
 import cardsData from "../../../../data/src/cards.json";
 import packCardsData from "../../../../data/src/pack-cards.json";
 import faqData from "../../../../data/src/faq.json";
+import { suitRank } from "@/lib/card-display";
 
 /* ------------------------------------------------------------------ */
 /*  Shared result type                                                 */
@@ -53,6 +54,7 @@ type RawPackCard = {
   name: string;
   suit: string;
   number: number;
+  ownerGeneralId?: string;
 };
 
 type RawCard = {
@@ -112,16 +114,17 @@ function buildSearchEntries(): SearchResult[] {
   }
 
   // 群狼环鼎新增牌 —— 按名字可搜，副标题给花色点数
-  const SUIT_SIGN: Record<string, string> = {
-    spade: "♠", heart: "♥", club: "♣", diamond: "♦",
-  };
   for (const c of packCards) {
+    // 专属牌直接跳到武将页——那里才有它的上下文；通用牌仍去卡牌页。
+    const owner = c.ownerGeneralId ? generalNameMap.get(c.ownerGeneralId) : undefined;
     entries.push({
       id: c.id,
       type: "card",
       title: c.name,
-      subtitle: `群狼环鼎 ${SUIT_SIGN[c.suit] ?? ""}${c.number}`,
-      href: "/cards",
+      subtitle: owner
+        ? `${owner}专属 ${suitRank(c.suit, c.number)}`
+        : `群狼环鼎 ${suitRank(c.suit, c.number)}`,
+      href: c.ownerGeneralId ? `/generals/${c.ownerGeneralId}` : "/cards",
     });
   }
 

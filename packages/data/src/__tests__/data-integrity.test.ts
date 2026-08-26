@@ -39,6 +39,7 @@ interface PackCard {
   suit: string;
   number: number;
   image: string;
+  ownerGeneralId?: string;
 }
 
 const generals = generalsData as General[];
@@ -209,11 +210,30 @@ describe('pack-cards.json', () => {
   });
 
   it('carries no fabricated type/description/subtype fields', () => {
-    // 这些字段在只看文件名的前提下无从得知，本包刻意不写。
-    // 若将来有人逐张核对了卡面再补，届时同步更新这条断言。
+    // type/description/subtype 在只看文件名的前提下无从得知，本包刻意不写。
+    // ownerGeneralId 是例外：它有独立证据——武将技能文本里以【牌名】点名。
+    const ALLOWED = ['id', 'image', 'name', 'number', 'ownerGeneralId', 'suit'];
     for (const c of packCards) {
-      const keys = Object.keys(c).sort();
-      expect(keys, `${c.id} unexpected fields`).toEqual(['id', 'image', 'name', 'number', 'suit']);
+      for (const k of Object.keys(c)) {
+        expect(ALLOWED, `${c.id} unexpected field ${k}`).toContain(k);
+      }
+    }
+  });
+
+  it('11 cards are exclusive to 5 generals; the rest are generic', () => {
+    // 归属证据来自已移除国战包的技能文本（见 scripts/qlhd/link-pack-cards.py）。
+    // 调虎离山刻意不归属：文聘与吴景的技能都只是把别的牌"当【调虎离山】使用"。
+    const owned = packCards.filter((c) => c.ownerGeneralId);
+    expect(owned).toHaveLength(11);
+    expect(new Set(owned.map((c) => c.ownerGeneralId!)).size).toBe(5);
+    expect(packCards.filter((c) => c.name === '调虎离山').every((c) => !c.ownerGeneralId)).toBe(true);
+  });
+
+  it('every ownerGeneralId resolves to an existing general', () => {
+    const ids = new Set(generals.map((g) => g.id));
+    for (const c of packCards) {
+      if (!c.ownerGeneralId) continue;
+      expect(ids.has(c.ownerGeneralId), `${c.name} orphan owner ${c.ownerGeneralId}`).toBe(true);
     }
   });
 });

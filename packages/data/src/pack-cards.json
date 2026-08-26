@@ -4,14 +4,16 @@
     "name": "七星宝刀",
     "suit": "spade",
     "number": 13,
-    "image": "cards/七星宝刀.♠.K.webp"
+    "image": "cards/七星宝刀.♠.K.webp",
+    "ownerGeneralId": "general_qlhd_shu_061"
   },
   {
     "id": "qlhd_card_002",
     "name": "冲应神符",
     "suit": "heart",
     "number": 1,
-    "image": "cards/冲应神符.♥.A.webp"
+    "image": "cards/冲应神符.♥.A.webp",
+    "ownerGeneralId": "general_qlhd_wu_059"
   },
   {
     "id": "qlhd_card_003",
@@ -25,28 +27,32 @@
     "name": "天雷刃",
     "suit": "spade",
     "number": 1,
-    "image": "cards/天雷刃.♠.A.webp"
+    "image": "cards/天雷刃.♠.A.webp",
+    "ownerGeneralId": "general_qlhd_shu_059"
   },
   {
     "id": "qlhd_card_005",
     "name": "太极拂尘",
     "suit": "heart",
     "number": 1,
-    "image": "cards/太极拂尘.♥.A.webp"
+    "image": "cards/太极拂尘.♥.A.webp",
+    "ownerGeneralId": "general_qlhd_wu_059"
   },
   {
     "id": "qlhd_card_006",
     "name": "孔明灯",
     "suit": "diamond",
     "number": 2,
-    "image": "cards/孔明灯.♦.2.webp"
+    "image": "cards/孔明灯.♦.2.webp",
+    "ownerGeneralId": "general_qlhd_shu_061"
   },
   {
     "id": "qlhd_card_007",
     "name": "敕令",
     "suit": "club",
     "number": 3,
-    "image": "cards/敕令.♣.3.webp"
+    "image": "cards/敕令.♣.3.webp",
+    "ownerGeneralId": "general_qlhd_qun_040"
   },
   {
     "id": "qlhd_card_008",
@@ -67,7 +73,8 @@
     "name": "灵宝仙葫",
     "suit": "heart",
     "number": 1,
-    "image": "cards/灵宝仙葫.♥.A.webp"
+    "image": "cards/灵宝仙葫.♥.A.webp",
+    "ownerGeneralId": "general_qlhd_wu_059"
   },
   {
     "id": "qlhd_card_011",
@@ -88,7 +95,8 @@
     "name": "袖箭",
     "suit": "club",
     "number": 12,
-    "image": "cards/袖箭.♣.Q.webp"
+    "image": "cards/袖箭.♣.Q.webp",
+    "ownerGeneralId": "general_qlhd_shu_061"
   },
   {
     "id": "qlhd_card_014",
@@ -109,14 +117,16 @@
     "name": "遁甲天书",
     "suit": "spade",
     "number": 3,
-    "image": "cards/遁甲天书.♠.3.webp"
+    "image": "cards/遁甲天书.♠.3.webp",
+    "ownerGeneralId": "general_qlhd_shu_061"
   },
   {
     "id": "qlhd_card_017",
     "name": "锦囊袋",
     "suit": "heart",
     "number": 1,
-    "image": "cards/锦囊袋.♥.A.webp"
+    "image": "cards/锦囊袋.♥.A.webp",
+    "ownerGeneralId": "general_qlhd_shu_061"
   },
   {
     "id": "qlhd_card_018",
@@ -130,6 +140,7 @@
     "name": "霹雳车",
     "suit": "diamond",
     "number": 9,
-    "image": "cards/霹雳车.♦.9.webp"
+    "image": "cards/霹雳车.♦.9.webp",
+    "ownerGeneralId": "general_qlhd_wei_062"
   }
 ]

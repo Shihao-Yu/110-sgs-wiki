@@ -6,7 +6,8 @@ import tokensData from "../../../../data/src/tokens.json";
 import packCardsData from "../../../../data/src/pack-cards.json";
 import generalsData from "../../../../data/src/generals.json";
 import CardListClient from "./components/CardListClient";
-import PackGallery, { type GalleryItem } from "./components/PackGallery";
+import PackGallery, { type GalleryItem } from "@/components/cards/PackGallery";
+import { suitRank } from "@/lib/card-display";
 
 const section = getNavigationItemBySlug("cards");
 
@@ -86,7 +87,7 @@ export default function CardsPage() {
   const totalCopies = (cardsData as RawCard[]).length;
 
   type RawToken = {
-    id: string; name: string; image: string;
+    id: string; name: string; image: string; backImage?: string;
     category: string; ownerGeneralId?: string;
   };
   const tokens = tokensData as RawToken[];
@@ -96,29 +97,59 @@ export default function CardsPage() {
 
   type RawPackCard = {
     id: string; name: string; suit: string; number: number; image: string;
+    ownerGeneralId?: string;
   };
-  const SUIT_SIGN: Record<string, string> = {
-    spade: "♠", heart: "♥", club: "♣", diamond: "♦",
-  };
-  const packCards: GalleryItem[] = (packCardsData as RawPackCard[]).map((c) => ({
-    id: c.id,
-    name: c.name,
-    image: c.image,
-    note: `${SUIT_SIGN[c.suit] ?? ""}${c.number}`,
-  }));
+  const packCards: GalleryItem[] = (packCardsData as RawPackCard[]).map((c) => {
+    const owner = c.ownerGeneralId ? generalNames.get(c.ownerGeneralId) : undefined;
+    return {
+      id: c.id,
+      name: c.name,
+      image: c.image,
+      note: `${suitRank(c.suit, c.number)}${owner ? ` · ${owner}` : ""}`,
+      meta: [
+        { label: "花色点数", value: suitRank(c.suit, c.number) },
+        ...(owner && c.ownerGeneralId
+          ? [{ label: "专属武将", value: owner, href: `/generals/${c.ownerGeneralId}` }]
+          : [{ label: "归属", value: "通用牌" }]),
+      ],
+    };
+  });
 
   const tokenItems: GalleryItem[] = tokens
     .filter((t) => t.category === "skill")
-    .map((t) => ({
-      id: t.id,
-      name: t.name,
-      image: t.image,
-      note: t.ownerGeneralId ? generalNames.get(t.ownerGeneralId) : undefined,
-    }));
+    .map((t) => {
+      const owner = t.ownerGeneralId ? generalNames.get(t.ownerGeneralId) : undefined;
+      return {
+        id: t.id,
+        name: t.name,
+        image: t.image,
+        backImage: t.backImage,
+        note: owner,
+        meta:
+          owner && t.ownerGeneralId
+            ? [{ label: "所属武将", value: owner, href: `/generals/${t.ownerGeneralId}` }]
+            : [{ label: "归属", value: "无" }],
+      };
+    });
 
   const moduleItems: GalleryItem[] = tokens
     .filter((t) => t.category === "module")
-    .map((t) => ({ id: t.id, name: t.name, image: t.image }));
+    .map((t) => {
+      const owner = t.ownerGeneralId ? generalNames.get(t.ownerGeneralId) : undefined;
+      return {
+        id: t.id,
+        name: t.name,
+        image: t.image,
+        backImage: t.backImage,
+        note: owner,
+        meta: [
+          { label: "所属模块", value: "大攻车" },
+          ...(owner && t.ownerGeneralId
+            ? [{ label: "所属武将", value: owner, href: `/generals/${t.ownerGeneralId}` }]
+            : []),
+        ],
+      };
+    });
 
   return (
     <div className="page-shell py-8 sm:py-12">
