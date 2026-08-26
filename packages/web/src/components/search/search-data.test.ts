@@ -43,11 +43,23 @@ describe('search index', () => {
     expect(hit!.href).toBe('/generals/general_qlhd_qun_000');
   });
 
-  it('副标题带版本前缀，用于区分两版同名武将（如曹丕）', () => {
+  it('武将副标题就是称号', () => {
     const hits = search('曹丕');
-    const guozhanHit = hits.find((h) => h.type === 'general' && h.id === 'general_wei_014');
-    const qlhdHit = hits.find((h) => h.type === 'general' && h.id === 'general_qlhd_wei_014');
-    expect(guozhanHit?.subtitle).toBe('国战 · 魏文帝');
-    expect(qlhdHit?.subtitle).toBe('群狼环鼎 · 荡然由心');
+    const hit = hits.find((h) => h.type === 'general' && h.id === 'general_qlhd_wei_014');
+    expect(hit?.subtitle).toBe('荡然由心');
+  });
+
+  it('索引里没有已移除的国战包武将', () => {
+    const guozhan = searchEntries.filter(
+      (e) => e.type === 'general' && !e.id.startsWith('general_qlhd_'),
+    );
+    expect(guozhan).toHaveLength(0);
+  });
+
+  it('搜「张奋」同时命中武将与其 14 张大攻车牌', () => {
+    const hits = search('张奋', 100);
+    expect(hits.some((h) => h.type === 'general' && h.title === '张奋')).toBe(true);
+    // 大攻车牌的副标题是拥有者姓名，因此按「张奋」可以搜到整套零件
+    expect(hits.filter((h) => h.type === 'token' && h.subtitle === '张奋')).toHaveLength(14);
   });
 });

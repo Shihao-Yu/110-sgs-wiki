@@ -3,7 +3,6 @@ import generalsData from '../generals.json';
 import skillsData from '../skills.json';
 import tokensData from '../tokens.json';
 import packCardsData from '../pack-cards.json';
-import { getGeneralPackVersion } from '../types/general.js';
 
 interface General {
   id: string;
@@ -49,17 +48,14 @@ const packCards = packCardsData as PackCard[];
 
 const VALID_FACTIONS = new Set(['WEI', 'SHU', 'WU', 'QUN', 'JIN']);
 
-// 国战（旧包）与群狼环鼎（新包）现已合并共存于同一份 generals.json，版本判定
-// 统一走 getGeneralPackVersion（见 types/general.ts），这里不再自行散写 id
-// 前缀比较。
-const qlhdGenerals = generals.filter((g) => getGeneralPackVersion(g.id) === 'qlhd');
-const guozhanGenerals = generals.filter((g) => getGeneralPackVersion(g.id) === 'guozhan');
-
 describe('generals.json', () => {
-  it('has 736 entries: 341 guozhan + 395 qlhd', () => {
-    expect(generals).toHaveLength(736);
-    expect(guozhanGenerals).toHaveLength(341);
-    expect(qlhdGenerals).toHaveLength(395);
+  it('has 395 entries, all from the 群狼环鼎 pack', () => {
+    expect(generals).toHaveLength(395);
+    // 旧国战包已整体移除；id 前缀保留是为了将来并入其他包时不必重编号。
+    for (const g of generals) {
+      expect(g.id.startsWith('general_qlhd_'), `unexpected id: ${g.id}`).toBe(true);
+      expect(g.pack, `${g.id} pack mismatch`).toBe('群狼环鼎');
+    }
   });
 
   it('every general has id, name, faction, image and pack', () => {
@@ -78,15 +74,6 @@ describe('generals.json', () => {
     expect(duplicates, `duplicate IDs: ${duplicates.join(', ')}`).toHaveLength(0);
   });
 
-  it('qlhd ids are all prefixed general_qlhd_; guozhan ids never are', () => {
-    for (const g of qlhdGenerals) {
-      expect(g.id.startsWith('general_qlhd_'), `qlhd general missing prefix: ${g.id}`).toBe(true);
-    }
-    for (const g of guozhanGenerals) {
-      expect(g.id.startsWith('general_qlhd_'), `guozhan general unexpectedly prefixed: ${g.id}`).toBe(false);
-    }
-  });
-
   it('every faction and subfaction is a known code', () => {
     for (const g of generals) {
       expect(VALID_FACTIONS.has(g.faction), `${g.id} bad faction ${g.faction}`).toBe(true);
@@ -100,47 +87,26 @@ describe('generals.json', () => {
     }
   });
 
-  it('every image path is valid for its pack version', () => {
-    for (const g of qlhdGenerals) {
+  it('every image sits directly under generals/ and is a webp', () => {
+    for (const g of generals) {
       expect(
         g.image.startsWith('generals/') && !g.image.startsWith('generals/guozhan/'),
-        `${g.id} qlhd image should sit directly under generals/: ${g.image}`,
+        `${g.id} image should sit directly under generals/: ${g.image}`,
       ).toBe(true);
-      expect(g.image.endsWith('.webp'), `${g.id} qlhd image not webp: ${g.image}`).toBe(true);
-    }
-    for (const g of guozhanGenerals) {
-      expect(
-        g.image.startsWith('generals/guozhan/'),
-        `${g.id} guozhan image should sit under generals/guozhan/: ${g.image}`,
-      ).toBe(true);
-      expect(g.image.endsWith('.webp'), `${g.id} guozhan image not webp: ${g.image}`).toBe(true);
+      expect(g.image.endsWith('.webp'), `${g.id} image not webp: ${g.image}`).toBe(true);
     }
   });
 
-  it('qlhd pack has exactly 3 ambitionist, 10 eunuch members and 16 dual-faction generals', () => {
-    expect(qlhdGenerals.filter((g) => g.isAmbitionist)).toHaveLength(3);
-    expect(qlhdGenerals.filter((g) => g.parentGeneralId)).toHaveLength(10);
-    expect(qlhdGenerals.filter((g) => g.subfaction)).toHaveLength(16);
+  it('has exactly 3 ambitionist, 10 eunuch members and 16 dual-faction generals', () => {
+    expect(generals.filter((g) => g.isAmbitionist)).toHaveLength(3);
+    expect(generals.filter((g) => g.parentGeneralId)).toHaveLength(10);
+    expect(generals.filter((g) => g.subfaction)).toHaveLength(16);
   });
 
-  it('qlhd pack: skills are always empty and pack label is always 群狼环鼎', () => {
-    for (const g of qlhdGenerals) {
-      expect(g.skills, `qlhd general ${g.id} should have empty skills`).toEqual([]);
-      expect(g.pack, `qlhd general ${g.id} pack mismatch`).toBe('群狼环鼎');
+  it('skills are always empty — the pack ships art only, no skill text', () => {
+    for (const g of generals) {
+      expect(g.skills, `${g.id} should have empty skills`).toEqual([]);
     }
-  });
-
-  it('guozhan pack: skills are not required to be empty (6 generals carry a real, non-placeholder skill)', () => {
-    const skillNameById = new Map(skills.map((s) => [s.id, s.name]));
-    const withRealSkill = guozhanGenerals.filter((g) =>
-      g.skills.some((sid) => skillNameById.get(sid) !== '未知'),
-    );
-    expect(withRealSkill).toHaveLength(6);
-  });
-
-  it('guozhan pack: pack field takes several known values, not a single one', () => {
-    const packValues = new Set(guozhanGenerals.map((g) => g.pack));
-    expect(packValues).toEqual(new Set(['国战', '标准版', '山', '林', '火', '风']));
   });
 
   it('every parentGeneralId resolves to an existing general', () => {
@@ -153,17 +119,12 @@ describe('generals.json', () => {
 });
 
 describe('skills.json', () => {
-  it('has 442 entries', () => {
+  // 这 442 条来自已移除的国战包，现无任何武将引用它们，属惰性数据。
+  // 保留是为了将来若补录群狼环鼎技能文本时有现成结构可用。
+  it('has 442 entries and none of them are referenced by a general', () => {
     expect(skills).toHaveLength(442);
-  });
-
-  it('every general skill reference resolves to a real skill', () => {
-    const skillIds = new Set(skills.map((s) => s.id));
-    for (const g of generals) {
-      for (const sid of g.skills) {
-        expect(skillIds.has(sid), `${g.id} references unknown skill ${sid}`).toBe(true);
-      }
-    }
+    const referenced = new Set(generals.flatMap((g) => g.skills));
+    expect(referenced.size).toBe(0);
   });
 });
 
@@ -188,10 +149,33 @@ describe('tokens.json', () => {
     expect(orphans, `orphan token owners:\n${orphans.join('\n')}`).toHaveLength(0);
   });
 
-  it('module tokens all belong to the 大攻车 module', () => {
-    for (const t of tokens) {
-      if (t.category !== 'module') continue;
+  it('only 福利卡 is left without an owner', () => {
+    // 福利卡卡面署名条只写「福利卡」，效果面向「第一个死亡的角色」，与具体
+    // 武将无关 —— 这是解图后的结论，不是漏填。其余 43 张都必须有归属。
+    const unowned = tokens.filter((t) => !t.ownerGeneralId).map((t) => t.name);
+    expect(unowned).toEqual(['福利卡']);
+  });
+
+  it('all 14 大攻车 cards belong to 张奋', () => {
+    const zhangFen = generals.find((g) => g.name === '张奋');
+    expect(zhangFen, '张奋 missing from generals.json').toBeDefined();
+    const siege = tokens.filter((t) => t.category === 'module');
+    expect(siege).toHaveLength(14);
+    for (const t of siege) {
       expect((t as { module?: string }).module, `${t.name} missing module`).toBe('大攻车');
+      expect(t.ownerGeneralId, `${t.name} not linked to 张奋`).toBe(zhangFen!.id);
+    }
+  });
+
+  it('all 6 签 cards belong to 周群', () => {
+    const zhouQun = generals.find((g) => g.name === '周群');
+    expect(zhouQun, '周群 missing from generals.json').toBeDefined();
+    const lots = tokens.filter((t) => t.name.endsWith('签'));
+    expect(lots.map((t) => t.name).sort()).toEqual(
+      ['上上签', '上签', '下下签', '下签', '中签', '命运签'].sort(),
+    );
+    for (const t of lots) {
+      expect(t.ownerGeneralId, `${t.name} not linked to 周群`).toBe(zhouQun!.id);
     }
   });
 });
