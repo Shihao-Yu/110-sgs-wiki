@@ -220,12 +220,12 @@ describe('pack-cards.json', () => {
     }
   });
 
-  it('11 cards are exclusive to 5 generals; the rest are generic', () => {
+  it('12 cards are exclusive to 6 generals; the rest are generic', () => {
     // 归属证据来自已移除国战包的技能文本（见 scripts/qlhd/link-pack-cards.py）。
     // 调虎离山刻意不归属：文聘与吴景的技能都只是把别的牌"当【调虎离山】使用"。
     const owned = packCards.filter((c) => c.ownerGeneralId);
-    expect(owned).toHaveLength(11);
-    expect(new Set(owned.map((c) => c.ownerGeneralId!)).size).toBe(5);
+    expect(owned).toHaveLength(12);
+    expect(new Set(owned.map((c) => c.ownerGeneralId!)).size).toBe(6);
     expect(packCards.filter((c) => c.name === '调虎离山').every((c) => !c.ownerGeneralId)).toBe(true);
   });
 

@@ -36,6 +36,11 @@ OWNERS = {
     "敕令":     "general_qlhd_qun_040",
     # 刘晔「破垣」：将【霹雳车】置入装备区
     "霹雳车":   "general_qlhd_wei_062",
+    # 马钧「巧思」：表演"水转百戏图"赢取相应的牌。
+    # 注意这一条搜不到牌名——OCR 文本在「来赢取相应的牌」之后就断了（紧接着
+    # 是发行商水印），后面列举的牌名根本没被识别出来。归属由用户提供并经技能
+    # 文本佐证：巧思确以"水转百戏图"赢牌，而镗甲护心镜是防具牌。
+    "镗甲护心镜": "general_qlhd_wei_063",
 }
 
 generals = json.loads((DATA / "generals.json").read_text(encoding="utf-8"))

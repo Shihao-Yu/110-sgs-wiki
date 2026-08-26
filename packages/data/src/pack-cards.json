@@ -133,7 +133,8 @@
     "name": "镗甲护心镜",
     "suit": "club",
     "number": 2,
-    "image": "cards/镗甲护心镜.♣.2.webp"
+    "image": "cards/镗甲护心镜.♣.2.webp",
+    "ownerGeneralId": "general_qlhd_wei_063"
   },
   {
     "id": "qlhd_card_019",
