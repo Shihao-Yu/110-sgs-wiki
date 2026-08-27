@@ -220,13 +220,25 @@ describe('pack-cards.json', () => {
     }
   });
 
-  it('12 cards are exclusive to 6 generals; the rest are generic', () => {
-    // 归属证据来自已移除国战包的技能文本（见 scripts/qlhd/link-pack-cards.py）。
+  it('16 cards are exclusive to 6 generals; the rest are generic', () => {
+    // 归属依据见 scripts/qlhd/link-pack-cards.py。
     // 调虎离山刻意不归属：文聘与吴景的技能都只是把别的牌"当【调虎离山】使用"。
     const owned = packCards.filter((c) => c.ownerGeneralId);
-    expect(owned).toHaveLength(12);
+    expect(owned).toHaveLength(16);
     expect(new Set(owned.map((c) => c.ownerGeneralId!)).size).toBe(6);
     expect(packCards.filter((c) => c.name === '调虎离山').every((c) => !c.ownerGeneralId)).toBe(true);
+  });
+
+  it('蒲元 owns all five 铸刃 weapons — one per suit, plus 天雷刃', () => {
+    const puYuan = generals.find((g) => g.name === '蒲元');
+    expect(puYuan).toBeDefined();
+    const his = packCards.filter((c) => c.ownerGeneralId === puYuan!.id);
+    expect(his.map((c) => c.name).sort()).toEqual(
+      ['天雷刃', '水波剑', '混毒弯匕', '烈淬刃', '红缎枪'].sort(),
+    );
+    // 铸刃换的是"与弃置牌花色相同的装备"，故四把常规刃恰好四花色各一。
+    const regular = his.filter((c) => c.name !== '天雷刃');
+    expect(new Set(regular.map((c) => c.suit)).size).toBe(4);
   });
 
   it('every ownerGeneralId resolves to an existing general', () => {

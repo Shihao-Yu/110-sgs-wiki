@@ -59,14 +59,16 @@
     "name": "水波剑",
     "suit": "club",
     "number": 1,
-    "image": "cards/水波剑.♣.A.webp"
+    "image": "cards/水波剑.♣.A.webp",
+    "ownerGeneralId": "general_qlhd_shu_059"
   },
   {
     "id": "qlhd_card_009",
     "name": "混毒弯匕",
     "suit": "spade",
     "number": 1,
-    "image": "cards/混毒弯匕.♠.A.webp"
+    "image": "cards/混毒弯匕.♠.A.webp",
+    "ownerGeneralId": "general_qlhd_shu_059"
   },
   {
     "id": "qlhd_card_010",
@@ -81,14 +83,16 @@
     "name": "烈淬刃",
     "suit": "diamond",
     "number": 1,
-    "image": "cards/烈淬刃.♦.A.webp"
+    "image": "cards/烈淬刃.♦.A.webp",
+    "ownerGeneralId": "general_qlhd_shu_059"
   },
   {
     "id": "qlhd_card_012",
     "name": "红缎枪",
     "suit": "heart",
     "number": 1,
-    "image": "cards/红缎枪.♥.A.webp"
+    "image": "cards/红缎枪.♥.A.webp",
+    "ownerGeneralId": "general_qlhd_shu_059"
   },
   {
     "id": "qlhd_card_013",

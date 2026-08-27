@@ -117,6 +117,11 @@ export default function GeneralPicker({
         <ul
           id={listId}
           role="listbox"
+          /* data-picker-open 是给外层 .panel 的钩子：.panel 带 backdrop-filter，
+             会创建层叠上下文，把这里的 z-20 关在里面，导致下拉被固定在视口底部的
+             保存栏盖住。SessionPlayer 用 has-[[data-picker-open]] 在下拉打开时
+             临时抬高整张卡的层级来解决。 */
+          data-picker-open=""
           className="absolute left-0 right-0 z-20 mt-1 max-h-72 overflow-y-auto rounded border border-slate-300/60 bg-paper-mist/95 text-sm shadow-lg dark:border-slate-700/60 dark:bg-paper-deep/95"
         >
           {filtered.length === 0 ? (

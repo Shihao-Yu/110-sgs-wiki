@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SessionPlayer from "./SessionPlayer";
+import StickySaveBar from "./StickySaveBar";
 import InlineConfirm from "@/components/admin/InlineConfirm";
 import { toast } from "@/components/admin/Toaster";
 import { SESSION_MAX_PLAYERS, SESSION_MIN_PLAYERS } from "@/lib/validators";
@@ -319,6 +320,15 @@ export default function SessionEditor({
           );
         })}
       </div>
+
+      {isDirty && (
+        <StickySaveBar
+          error={saveError}
+          onDiscard={discardChanges}
+          onSave={save}
+          saving={saving}
+        />
+      )}
     </div>
   );
 }

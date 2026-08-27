@@ -43,7 +43,9 @@ export default function SessionPlayer({
   }
 
   return (
-    <div className="panel ornate-corner space-y-4 p-4 sm:p-5">
+    // has-[[data-picker-open]]:z-20 —— 选将下拉打开时把这张卡抬到底部保存栏
+    // （fixed z-10）之上，否则下拉末尾的选项会被栏挡住点不到。
+    <div className="panel ornate-corner space-y-4 p-4 sm:p-5 has-[[data-picker-open]]:z-20">
       <div className="flex items-center justify-between gap-3">
         <input
           aria-label={`玩家 ${index + 1} 名字`}
